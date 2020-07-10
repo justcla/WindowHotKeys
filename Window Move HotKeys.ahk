@@ -246,7 +246,7 @@ return
 ; ==== Special Move/Resize commands ====
 ; ======================================
 
-!+#PgUp::
+!+#PgDn::
 ; Increase window size (both width and height)
 WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
 XDir := 1
@@ -256,7 +256,7 @@ NewH := WinH + (MoveAmount * XDir)
 WinMove, A, , , , NewW, NewH
 return
 
-!+#PgDn::
+!+#PgUp::
 ; Reduce window size (both width and height)
 WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
 XDir := -1
