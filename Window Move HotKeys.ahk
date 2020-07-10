@@ -29,6 +29,17 @@ MoveAmount = 50 ; The number of pixels to move when resizing windows
 ; ==== Move Window commands ====
 ; ================================
 
+; Diagnostics
+^#/::
+; Show current window information (X,Y,Width,Height)
+ShowWindowInfo()
+return
+
+^+#/::
+; Display screen information
+ShowScreenInfo()
+return
+
 ; ---- Small window movements ----
 
 ^#Left::
@@ -37,11 +48,41 @@ WinGet, ActiveWinState, MinMax, A ; Get the Maximized state of the active window
 if (ActiveWinState != 0)
   return  ; Only resize a window that is in Restored mode
 WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-NewX := WinX - MoveAmount
-; Stop the window from moving off the page
-if (NewX < 0)
-  NewX = 0
-WinMove, A, , %NewX%, WinY, WinW, WinH
+newX := WinX - MoveAmount
+
+; Is the window moving off the current monitor?
+currentMonLeftEdge := GetCurrentLeftWorkingEdge()
+;MsgBox Current Left Edge: %currentMonLeftEdge%
+; If the newX is < the TopLeft of the current monitor,
+if (newX < currentMonLeftEdge) {
+    ; then it's moving to the monitor to the left - if one exists
+;    MsgBox Moving off the monitor
+    ; Is there a monitor on the left?
+    currentMon := GetWindowNumber()
+    if (currentMon > 1) {
+        ; Find the right-most working edge of the monitor to the left
+        newMon := currentMon - 1
+        rightEdge := GetRightWorkingEdge(newMon)
+;        MsgBox New edge: %rightEdge%
+        ; Set the new X to be one movement less than the right edge
+        newX := rightEdge - MoveAmount
+    }
+}
+
+;currentMon := GetWindowNumber()
+;newMon := GetMonForXY(WinX, WinY)
+;MsgBox CurrentMon:`t%currentMon%`nNewMon:`t%newMon%
+;if (newMon < currentMon)
+;    MsgBox Moving off the monitor
+
+; Stop the window auto-expanding if it hits the left edge
+;MsgBox Left edge = %newX%
+;if (newX >= -100 && newX <= 100) {
+;  newX = -2000
+;  MsgBox Too close to edge 'n Setting left edge = %newX%
+;}
+
+WinMove, A, , %newX%
 return
 
 ^#Right::
@@ -306,13 +347,79 @@ GetWindowNumber()
 {
     ; Get the Active window
     WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
+    return GetMonForXY(WinX, WinY)
+;    SysGet, numMonitors, MonitorCount
+;    Loop %numMonitors% {
+;        SysGet, monitor, MonitorWorkArea, %A_Index%
+;        if (monitorLeft <= WinX && WinX <= monitorRight && monitorTop <= WinY && WinY <= monitorBottom){
+;            ; We have found the monitor that this window sits inside (at least the top-left corner)
+;            return %A_Index%
+;        }
+;    }
+;    return 1    ; If we can't find a matching window, just return 1 (Primary)
+}
+
+GetMonForXY(WinX, WinY)
+{
     SysGet, numMonitors, MonitorCount
     Loop %numMonitors% {
-        SysGet, monitor, MonitorWorkArea, %A_Index%
-        if (monitorLeft <= WinX && WinX <= monitorRight && monitorTop <= WinY && WinY <= monitorBottom){
-            ; We have found the monitor that this window sits inside (at least the top-left corner)
+        SysGet, mon, Monitor, %A_Index%
+        if (monLeft <= WinX && WinX <= monRight && monTop <= WinY && WinY <= monBottom){
+            ; We have found the monitor for the given X/Y co-ords
             return %A_Index%
         }
     }
     return 1    ; If we can't find a matching window, just return 1 (Primary)
+}
+
+ShowWindowInfo()
+{
+    WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
+    MsgBox Window info (X,Y,W,H): %WinX%, %WinY%, %WinW%, %WinH%
+    return
+}
+
+ShowScreenInfo()
+{
+    SysGet, MonitorCount, MonitorCount
+    SysGet, MonitorPrimary, MonitorPrimary
+    MsgBox, Monitor Count:`t%MonitorCount%`nPrimary Monitor:`t%MonitorPrimary%
+    Loop, %MonitorCount%
+    {
+        SysGet, MonitorName, MonitorName, %A_Index%
+        SysGet, Monitor, Monitor, %A_Index%
+        SysGet, MonitorWorkArea, MonitorWorkArea, %A_Index%
+        MsgBox, Monitor:`t#%A_Index%`nName:`t%MonitorName%`nLeft:`t%MonitorLeft% (%MonitorWorkAreaLeft% work)`nTop:`t%MonitorTop% (%MonitorWorkAreaTop% work)`nRight:`t%MonitorRight% (%MonitorWorkAreaRight% work)`nBottom:`t%MonitorBottom% (%MonitorWorkAreaBottom% work)
+    }
+    return
+}
+
+OtherScreenInfo()
+{
+    ; Print info for each monitor
+    SysGet, numMonitors, MonitorCount
+    Loop %numMonitors% {
+        ; Get the info for this monitor
+        SysGet, mon, MonitorWorkArea, %A_Index%
+        ; Print out the co-ordinates of the screen
+        MsgBox Monitor: %A_Index% Top corner: [%monLeft%, %monTop%] Bottom corner: [%monRight%, %monBottom%]
+    }
+    return
+}
+
+GetCurrentLeftWorkingEdge()
+{
+    return GetLeftWorkingEdge(GetWindowNumber())
+}
+
+GetLeftWorkingEdge(windowNum)
+{
+    SysGet, mon, MonitorWorkArea, %windowNum%
+    return %monLeft%
+}
+
+GetRightWorkingEdge(windowNum)
+{
+    SysGet, mon, MonitorWorkArea, %windowNum%
+    return %monRight%
 }
