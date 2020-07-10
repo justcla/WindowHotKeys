@@ -13,3 +13,7 @@ From [answers.microsoft.com](https://answers.microsoft.com/en-us/windows/forum/a
 - Your personal startup folder should be C:\Users\<user name>\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup.
 - The All Users startup folder should be C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup.
 - Enable viewing of hidden folders to see them.
+
+## Move window to edges
+
+![Move window to edges with Home/End/PgUp/PgDn/Del](https://user-images.githubusercontent.com/17131343/87170961-64238380-c315-11ea-9200-8f23f4b1669f.png)
