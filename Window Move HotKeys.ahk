@@ -31,6 +31,7 @@ LimitX := Screen_X - EdgeBuffer
 LimitY := Screen_Y - EdgeBuffer
 
 MoveAmount = 50 ; The number of pixels to move when resizing windows
+ResizeRatio := 3/4 ; The portion of the window to cover when resizing to Home
 
 ; ================================
 ; ==== Move Window commands ====
@@ -266,12 +267,12 @@ NewH := WinH + (MoveAmount * XDir)
 WinMove, A, , , , NewW, NewH
 return
 
-; Resize to a quarter of the screen size
-!+#Del::
+; Resize to three-quarters of the screen size
+!+#Home::
 EnsureWindowIsRestored()
 WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-NewW := Screen_X / 2 ; Half window width
-NewH := Screen_Y / 2 ; Half window height
+NewW := Screen_X * ResizeRatio ; three-quarters of window width
+NewH := Screen_Y * ResizeRatio ; three-quarters of window height
 WinMove, A, , , , NewW, NewH
 return
 
