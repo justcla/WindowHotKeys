@@ -1,6 +1,8 @@
 # WindowHotKeys
 Shortcuts to move and resize windows in Windows.
 
+![Alt+Win HotKeys logo](https://user-images.githubusercontent.com/17131343/87220588-6f73bf00-c3a8-11ea-9ae1-1919b0ad552c.png)
+
 Uses [AutoHotkey](https://www.autohotkey.com/).
 
 Works for Windows 10
