@@ -13,7 +13,7 @@ Download the [latest release](https://github.com/justcla/WindowHotKeys/releases/
 
 ## Usage (Keyboard Shortcuts)
 
-### Alt+Win = Move Window
+### Move Window *(Alt+Win)*
 The following table lists the default shortcut combinations for **moving windows**.
 
 Keyboard Shortcut | Action
@@ -40,7 +40,7 @@ Alt+Win + NumPad 7 | Move window to the Top Left Corner
 Alt+Win + NumPad 8 | Move window to the Top Edge
 Alt+Win + NumPad 9 | Move window to the Top Right Corner
 
-### Alt+Win+Shift = Resize Window
+### Resize Window *(Alt+Win+Shift)*
 The following table lists the default shortcut combinations for **resizing windows**.
 
 **Note:** Minor resize actions occur on the RIGHT and BOTTOM edges of the window.
@@ -54,10 +54,16 @@ Alt+Win+Shift + Left | Resize window narrower | Ddecrease width
 Alt+Win+Shift + Right | Resize window wider | Increase width
 Alt+Win+Shift + PgUp | Resize window smaller | Decrease width and height
 Alt+Win+Shift + PgDn | Resize window larger | Increase width and height
+
+### Special Move/Resize commands
+Keyboard Shortcut | Action | Description
+--- | --- | ---
 **Major Resize shortcuts** |
-Alt+Win+Shift + Enter | Resize to full extent of monitor | Max width and height of monitor
+Alt+Win + Enter<br><br>Alt+Win+Shift + Enter | Resize to full extent of monitor | Max width and height of monitor
 Alt+Win+Shift + Home | Resize to three quarters of monitor size| 3/4 width and height of monitor
-**Special Move/Resize commands** |
+Alt+Win+Shift + Del | Resize to half the monitor size| 1/2 width and height of monitor
+**Restore Size / Position** |
+Alt+Win + BackSpace | Restore window to previous position (not size)
 Alt+Win+Shift + BackSpace | Restore window to previous size and position
 
 ## Technical details:

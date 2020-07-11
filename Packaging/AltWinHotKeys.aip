@@ -6,7 +6,7 @@
     <ROW Property="AI_IA_ENABLE" Value="1"/>
     <ROW Property="AI_PREDEF_LCONDS_PROPS" Value="AI_DETECTED_ALL"/>
     <ROW Property="ALLUSERS" Value="1" MultiBuildValue="DefaultBuild:"/>
-    <ROW Property="ARPCOMMENTS" Value="This installer database contains the logic and data required to install [|ProductName]." ValueLocId="*"/>
+    <ROW Property="ARPCOMMENTS" Value="Provides keyboard shortcuts to Move and Resize windows" ValueLocId="*"/>
     <ROW Property="ARPHELPLINK" Value="https://github.com/justcla/WindowHotKeys/blob/master/README.md"/>
     <ROW Property="ARPNOMODIFY" MultiBuildValue="DefaultBuild:1"/>
     <ROW Property="ARPNOREPAIR" Value="1"/>
@@ -17,7 +17,7 @@
     <ROW Property="ProductCode" Value="1033:{3BFF70B6-7373-457B-9CDA-ABFD41DC87DF} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="Alt+Win HotKeys"/>
-    <ROW Property="ProductVersion" Value="1.0.0" Type="32"/>
+    <ROW Property="ProductVersion" Value="1.0.2" Type="32"/>
     <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{ED42B1B5-3014-4135-BB12-5C58FFB8B478}"/>
@@ -51,7 +51,7 @@
     <ATTRIBUTE name="CurrentFeature" value="MainFeature"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFilesComponent">
-    <ROW File="AltWinKeysv0.1.exe" Component_="AltWinKeysv0.1.exe" FileName="ALTWIN~2.EXE|AltWin-HotKeys.exe" Attributes="0" SourcePath="AltWinKeys-v0.1.exe" SelfReg="false" DigSign="true"/>
+    <ROW File="AltWinKeysv0.1.exe" Component_="AltWinKeysv0.1.exe" FileName="ALTWIN~2.EXE|AltWin-HotKeys.exe" Attributes="0" SourcePath="AltWin-HotKeys.exe" SelfReg="false" DigSign="true"/>
     <ROW File="InstallationReadme.txt" Component_="InstallationReadme.txt" FileName="INSTAL~1.TXT|Installation-Readme.txt" Attributes="0" SourcePath="Installation-Readme.txt" SelfReg="false"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.custcomp.MsiEmbeddedUIComponent">
