@@ -1,7 +1,9 @@
-# WindowHotKeys
+# Alt+Win HotKeys
 Shortcuts to move and resize windows in Windows.
 
 ![Alt+Win HotKeys logo](https://user-images.githubusercontent.com/17131343/87220588-6f73bf00-c3a8-11ea-9ae1-1919b0ad552c.png)
+
+Download the [latest release](https://github.com/justcla/WindowHotKeys/releases/latest) self-installer (MSI) for Windows
 
 Uses [AutoHotkey](https://www.autohotkey.com/).
 
