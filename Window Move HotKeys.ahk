@@ -307,6 +307,43 @@ EnsureWindowIsRestored()
 WinMove, A, , WinX, WinY, WinW, WinH
 return
 
+; ==============================
+; ===== 4-column Layout ========
+; ==============================
+
+!#1::
+; Move to Column 1 of 4-column layout
+MoveToFourColumnLayout(1)
+return
+
+!#2::
+; Move to Column 2 of 4-column layout
+MoveToFourColumnLayout(2)
+return
+
+!#3::
+; Move to Column 3 of 4-column layout
+MoveToFourColumnLayout(3)
+return
+
+!#4::
+; Move to Column 1 of 4-column layout
+MoveToFourColumnLayout(4)
+return
+
+!#,::
+; Move to the Column to the Left
+GoToColNum := GetPrevColNum()
+; MsgBox GoToColNum: %GoToColNum%
+MoveToFourColumnLayout(GoToColNum)
+return
+
+!#.::
+; Move to the Column to the Right
+GoToColNum := GetNextColNum()
+; MsgBox GoToColNum: %GoToColNum%
+MoveToFourColumnLayout(GoToColNum)
+return
 
 ; ========================
 ; ===== Functions ========
@@ -332,4 +369,87 @@ GetWindowNumber()
         }
     }
     return 1    ; If we can't find a matching window, just return 1 (Primary)
+}
+
+MoveToFourColumnLayout(ColNum) {
+    ; MsgBox Moving to column #%ColNum%
+    ; Get active window and monitor details
+    WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
+    WinNum := GetWindowNumber()
+    SysGet, Mon, MonitorWorkArea, %WinNum%
+    ; MsgBox, Mon (P) - Left: %MonLeft% -- Top: %MonTop% -- Right: %MonRight% -- Bottom %MonBottom%.
+    TaskBarW = 0 ; This should be set >0 if the Taskbar is on the left or right.
+    TaskBarH = 50 ; Allow for the Windows Taskbar to be visible - Set this to 0 if Taskbar on AutoHide
+    ; MonWorkingWidth := A_ScreenWidth - TaskBarW
+    MonWorkingHeight := A_ScreenHeight - TaskBarH
+    MonWorkingWidth := MonRight - MonLeft - TaskBarW
+    ; MonWorkingHeight := MonTop - MonBottom - TaskBarH
+    ; Generate new co-ordinates
+    ColWidth := MonWorkingWidth * (1/4) ; With 4-columns layout, width is one quarter of the screen
+    AdjustX := 10 ; Adjustment amount to fix small window offset issue
+    NewX := MonLeft + ((ColNum-1) * ColWidth) - AdjustX ; Should be monitor left + offset (colNum-1 * colWidth)
+    NewY := MonTop   ; Should be monitor top
+    NewW := (MonWorkingWidth / 4) + (AdjustX * 2) ; Set to 1/4 mon width for 4-column layout
+    NewH := MonWorkingHeight    ; full window height
+    ; MsgBox, Moving to X,Y = %NewX%,%NewY% and W,H = %NewW%,%NewH%
+    WinMove, A, , NewX, NewY, NewW, NewH
+    return
+}
+
+GetPrevColNum() {
+    return GetCurrentColNum(true)
+}
+GetNextColNum() {
+    return GetCurrentColNum(false)
+}
+
+GetCurrentColNum(bGetPrevious)
+{
+    ; Get active window and monitor details
+    WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
+    WinNum := GetWindowNumber()
+    SysGet, Mon, MonitorWorkArea, %WinNum%
+    ; MsgBox, Mon (P) - Left: %MonLeft% -- Top: %MonTop% -- Right: %MonRight% -- Bottom %MonBottom%.
+    TaskBarW = 0 ; This should be set >0 if the Taskbar is on the left or right.
+    TaskBarH = 50 ; Allow for the Windows Taskbar to be visible - Set this to 0 if Taskbar on AutoHide
+    ; MonWorkingWidth := A_ScreenWidth - TaskBarW
+    MonWorkingHeight := A_ScreenHeight - TaskBarH
+    MonWorkingWidth := MonRight - MonLeft - TaskBarW
+    ; MonWorkingHeight := MonTop - MonBottom - TaskBarH
+    ; Generate new co-ordinates
+    ColWidth := MonWorkingWidth * (1/4) ; With 4-columns layout, width is one quarter of the screen
+    AdjustX := 10 ; Adjustment amount to fix small window offset issue
+
+    ; Where is the current top corner of the active window?
+    DistanceFromLeft := WinX - MonLeft
+    Col1X := MonLeft
+    Col2X := MonLeft + ColWidth
+    Col3X := MonLeft + (ColWidth * 2)
+    Col4X := MonLeft + (ColWidth * 3)
+    ; MsgBox ColEdges: %Col1X%, %Col2X%, %Col3X%, %Col4X%
+    ; MsgBox WinX = %WinX%
+    AdjustedWinX := WinX + AdjustX
+    ; MsgBox AdjustedWinX = %AdjustedWinX%
+    ; If WinX is currently on a column boundary, return ColNum based on bGetPrevious
+    if (AdjustedWinX == Col1X) {
+        CurrentCol := (bGetPrevious ? 1 : 2)   ; Note: Effective no-op on move-prev when already hard left
+    } else if (AdjustedWinX == Col2X) {
+        CurrentCol := (bGetPrevious ? 1 : 3)
+    } else if (AdjustedWinX == Col3X) {
+        CurrentCol := (bGetPrevious ? 2 : 4)
+    } else if (AdjustedWinX == Col4X) {
+        CurrentCol := (bGetPrevious ? 3 : 4)   ; Note: Effective no-op on move-next when already hard right
+    }
+    ; Now handle the window in between column boundaries
+    else if (AdjustedWinX < Col2X) {
+        CurrentCol := (bGetPrevious ? 1 : 2)
+    } else if (AdjustedWinX < Col3X) {
+        CurrentCol := (bGetPrevious ? 2 : 3)
+    } else if (AdjustedWinX < Col4X) {
+        CurrentCol := (bGetPrevious ? 3 : 4)
+    } else {
+        CurrentCol := 4  ; Snap into 4th column if WinX already partly in 4th column
+    }
+    ; MsgBox Current column = %CurrentCol%
+    return CurrentCol
 }
