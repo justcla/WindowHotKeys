@@ -17,7 +17,7 @@
     <ROW Property="ProductCode" Value="1033:{3BFF70B6-7373-457B-9CDA-ABFD41DC87DF} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="Alt+Win HotKeys"/>
-    <ROW Property="ProductVersion" Value="1.0.2" Type="32"/>
+    <ROW Property="ProductVersion" Value="1.1.0" Type="32"/>
     <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{ED42B1B5-3014-4135-BB12-5C58FFB8B478}"/>
