@@ -345,6 +345,42 @@ GoToColNum := GetNextColNum()
 MoveToFourColumnLayout(GoToColNum)
 return
 
+;=== Move and Resize to fit 4-Column layout ==
+
+!+#1::
+; Resize to Column 1 of 4-column layout
+ResizeToFourColumnLayout(1)
+return
+
+!+#2::
+; Resize to Column 2 of 4-column layout
+ResizeToFourColumnLayout(2)
+return
+
+!+#3::
+; Resize to Column 3 of 4-column layout
+ResizeToFourColumnLayout(3)
+return
+
+!+#4::
+; Resize to Column 4 of 4-column layout
+ResizeToFourColumnLayout(4)
+return
+
+!+#,::
+; Move to the Column to the Left
+GoToColNum := GetPrevColNum()
+; MsgBox GoToColNum: %GoToColNum%
+ResizeToFourColumnLayout(GoToColNum)
+return
+
+!+#.::
+; Move to the Column to the Right
+GoToColNum := GetNextColNum()
+; MsgBox GoToColNum: %GoToColNum%
+ResizeToFourColumnLayout(GoToColNum)
+return
+
 ; ========================
 ; ===== Functions ========
 ; ========================
@@ -372,6 +408,21 @@ GetWindowNumber()
 }
 
 MoveToFourColumnLayout(ColNum) {
+    ; Get active window and monitor details
+    WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
+    SysGet, Mon, MonitorWorkArea, GetWindowNumber()
+    TaskBarW = 0 ; This should be set >0 if the Taskbar is on the left or right.
+    MonWorkingWidth := MonRight - MonLeft - TaskBarW
+    ; Generate new co-ordinates
+    ColWidth := MonWorkingWidth * (1/4) ; With 4-columns layout, width is one quarter of the screen
+    AdjustX := 10 ; Adjustment amount to fix small window offset issue
+    NewX := MonLeft + ((ColNum-1) * ColWidth) - AdjustX ; Should be monitor left + offset (colNum-1 * colWidth)
+    ; Move window
+    WinMove, A, , NewX, , ,
+    return
+}
+
+ResizeToFourColumnLayout(ColNum) {
     ; MsgBox Moving to column #%ColNum%
     ; Get active window and monitor details
     WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
