@@ -67,6 +67,29 @@ Alt+Win+Shift + Del | Resize to half the monitor size| 1/2 width and height of m
 Alt+Win + BackSpace | Restore window to previous position (not size)
 Alt+Win+Shift + BackSpace | Restore window to previous size and position
 
+### 4-Column Layout shortcuts
+
+Use the following shortcuts to align and resize windows to fit four vertical columns across the screen.
+Useful for very wide monitors.
+
+Keyboard Shortcut | Action
+--- | ---
+**Move window (no resize)** | [ *Align left edge of window with column grid* ] |
+Alt+Win + 1 | Move window to Column 1
+Alt+Win + 2 | Move window to Column 2
+Alt+Win + 3 | Move window to Column 3
+Alt+Win + 4 | Move window to Column 4
+Alt+Win + ,(<) | Move window to the Column on the Left
+Alt+Win + .(>) | Move window to the Column on the Right
+**Move and Resize shortcuts** | [ *Snap to Column grid (move and resize)* ] |
+Alt+Win+Shift + 1 | Snap window to Column 1
+Alt+Win+Shift + 2 | Snap window to Column 2
+Alt+Win+Shift + 3 | Snap window to Column 3
+Alt+Win+Shift + 4 | Snap window to Column 4
+Alt+Win+Shift + ,(<) | Snap window to the Column on the Left
+Alt+Win+Shift + .(>) | Snap window to the Column on the Right
+
+
 ## Technical details:
 Uses [AutoHotkey](https://www.autohotkey.com/).
 
