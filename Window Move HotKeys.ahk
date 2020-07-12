@@ -143,33 +143,38 @@ return
 
 !#Numpad5::
 !#Del::
-; Center the window
-EnsureWindowIsRestored() ; First, ensure the window is restored
-WinNum := GetWindowNumber()
-SysGet, Mon, MonitorWorkArea, %WinNum%
-; Set the screen variables
-;MsgBox, Mon (P) - Left: %MonLeft% -- Top: %MonTop% -- Right: %MonRight% -- Bottom %MonBottom%.
-ScreenW := MonLeft - MonRight
-if (ScreenW < 0)
-    ScreenW := -ScreenW
-ScreenH := MonBottom - MonTop
-if (ScreenY < 0)
-    ScreenY := -ScreenY
-WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-; Check width and height are within screen dimension; else adjust
-NewW := WinW
-if (NewW > ScreenW)
-  NewW := ScreenW
-NewH := WinH
-if (NewH > ScreenH)
-  NewH := ScreenH
-; Now set the position based on the (new) dimensions
-;MsgBox ScreenW = %ScreenW%, NewW = %NewW%, MonLeft = %MonLeft%
-NewX := (ScreenW/2) - (NewW/2) + MonLeft ; Adjust for monitor offset
-NewY := (ScreenH/2) - (NewH/2) + MonTop ; Adjust for monitor offset
-;MsgBox Move to: %NewX%, %NewY%, %NewW%, %NewH%
-WinMove, A, , %NewX%, %NewY%, NewW, NewH
+MoveWindowToCenter()
 return
+
+MoveWindowToCenter() {
+    ; Center the window
+    EnsureWindowIsRestored() ; First, ensure the window is restored
+    WinNum := GetWindowNumber()
+    SysGet, Mon, MonitorWorkArea, %WinNum%
+    ; Set the screen variables
+    ;MsgBox, Mon (P) - Left: %MonLeft% -- Top: %MonTop% -- Right: %MonRight% -- Bottom %MonBottom%.
+    ScreenW := MonLeft - MonRight
+    if (ScreenW < 0)
+        ScreenW := -ScreenW
+    ScreenH := MonBottom - MonTop
+    if (ScreenY < 0)
+        ScreenY := -ScreenY
+    WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
+    ; Check width and height are within screen dimension; else adjust
+    NewW := WinW
+    if (NewW > ScreenW)
+      NewW := ScreenW
+    NewH := WinH
+    if (NewH > ScreenH)
+      NewH := ScreenH
+    ; Now set the position based on the (new) dimensions
+    ;MsgBox ScreenW = %ScreenW%, NewW = %NewW%, MonLeft = %MonLeft%
+    NewX := (ScreenW/2) - (NewW/2) + MonLeft ; Adjust for monitor offset
+    NewY := (ScreenH/2) - (NewH/2) + MonTop ; Adjust for monitor offset
+    ;MsgBox Move to: %NewX%, %NewY%, %NewW%, %NewH%
+    WinMove, A, , %NewX%, %NewY%, NewW, NewH
+    return
+}
 
 ; -- Corners --
 
@@ -274,6 +279,7 @@ WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
 NewW := Screen_X * ResizeRatio ; three-quarters of window width
 NewH := Screen_Y * ResizeRatio ; three-quarters of window height
 WinMove, A, , , , NewW, NewH
+MoveWindowToCenter()
 return
 
 ; Resize to half of the screen size
@@ -283,6 +289,7 @@ WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
 NewW := Screen_X * (1/2) ; half of window width
 NewH := Screen_Y * (1/2) ; half of window height
 WinMove, A, , , , NewW, NewH
+MoveWindowToCenter()
 return
 
 !#Enter::

@@ -61,8 +61,8 @@ Keyboard Shortcut | Action | Description
 --- | --- | ---
 **Major Resize shortcuts** |
 Alt+Win + Enter<br><br>Alt+Win+Shift + Enter | Resize to full extent of monitor | Max width and height of monitor
-Alt+Win+Shift + Home | Resize to three quarters of monitor size| 3/4 width and height of monitor
-Alt+Win+Shift + Del | Resize to half the monitor size| 1/2 width and height of monitor
+Alt+Win+Shift + Home | Center and Resize to three quarters of monitor size| 3/4 width and height of monitor
+Alt+Win+Shift + Del | Center and Resize to half the monitor size| 1/2 width and height of monitor
 **Restore Size / Position** |
 Alt+Win + BackSpace | Restore window to previous position (not size)
 Alt+Win+Shift + BackSpace | Restore window to previous size and position
