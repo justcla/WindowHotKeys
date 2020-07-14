@@ -46,9 +46,6 @@ if (ActiveWinState != 0)
   return  ; Only resize a window that is in Restored mode
 WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
 NewX := WinX - MoveAmount
-; Stop the window from moving off the page
-if (NewX < 0)
-  NewX = 0
 WinMove, A, , %NewX%, WinY, WinW, WinH
 return
 
@@ -60,9 +57,6 @@ if (ActiveWinState != 0)
 ; MsgBox Move window to the Right
 WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
 NewX := WinX + MoveAmount
-; Stop the window from moving off the page
-if (NewX > LimitX)
-  NewX := LimitX
 WinMove, A, , %NewX%, WinY, WinW, WinH
 return
 
@@ -74,9 +68,6 @@ if (ActiveWinState != 0)
 ; MsgBox Move window Up
 WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
 NewY := WinY - MoveAmount
-; Stop the window from moving off the page
-if (NewY < 0)
-  NewY := 0
 WinMove, A, , , %NewY%
 return
 
@@ -88,9 +79,6 @@ if (ActiveWinState != 0)
 ; MsgBox Move window Down
 WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
 NewY := WinY + MoveAmount
-; Stop the window from moving off the page
-if (NewY > LimitY)
-  NewY := LimitY
 WinMove, A, , , %NewY%
 return
 
@@ -125,7 +113,7 @@ EnsureWindowIsRestored()
 WinNum := GetWindowNumber()
 SysGet, Mon, MonitorWorkArea, %WinNum%
 ;MsgBox, Mon (P) - Left: %MonLeft% -- Top: %MonTop% -- Right: %MonRight% -- Bottom %MonBottom%.
-WinMove, A, , %MonLeft%
+WinMove, A, , MonLeft
 return
 
 !#End::
@@ -181,34 +169,43 @@ MoveWindowToCenter() {
 !#Numpad7::
 EnsureWindowIsRestored()
 ; Move window to Top-Left
-WinMove, A, , 0, 0
+WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
+WinNum := GetWindowNumber()
+SysGet, Mon, MonitorWorkArea, %WinNum%
+WinMove, A, , MonLeft, MonTop
 return
 
 !#Numpad9::
 EnsureWindowIsRestored()
 ; Move window to Top-Right
 WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-NewX := Screen_X - WinW
-NewY := 0 ; Top of the screen
-WinMove, A, , %NewX%, %NewY%
+WinNum := GetWindowNumber()
+SysGet, Mon, MonitorWorkArea, %WinNum%
+NewX := MonRight - WinW
+NewY := MonTop
+WinMove, A, , NewX, NewY
 return
 
 !#Numpad1::
 EnsureWindowIsRestored()
 ; Move window to Bottom-Left
 WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-NewX := 0 ; Far left of screen
-NewY := Screen_Y - WinH
-WinMove, A, , %NewX%, %NewY%
+WinNum := GetWindowNumber()
+SysGet, Mon, MonitorWorkArea, %WinNum%
+NewX := MonLeft ; Far left of screen
+NewY := MonBottom - WinH
+WinMove, A, , NewX, NewY
 return
 
 !#Numpad3::
 EnsureWindowIsRestored()
 ; Move window to Bottom-Right
 WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-NewX := Screen_X - WinW
-NewY := Screen_Y - WinH
-WinMove, A, , %NewX%, %NewY%
+WinNum := GetWindowNumber()
+SysGet, Mon, MonitorWorkArea, %WinNum%
+NewX := MonRight - WinW
+NewY := MonBottom - WinH
+WinMove, A, , NewX, NewY
 return
 
 
