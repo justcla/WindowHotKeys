@@ -314,6 +314,15 @@ EnsureWindowIsRestored()
 WinMove, A, , WinX, WinY, WinW, WinH
 return
 
+; ===============================
+; ===== Tile and Cascade ========
+; ===============================
+
+!#F12::
+!+#F12::
+DllCall( "CascadeWindows", uInt,0, Int,4, Int,0, Int,0, Int,0 )
+return
+
 ; ==============================
 ; ===== 4-column Layout ========
 ; ==============================
