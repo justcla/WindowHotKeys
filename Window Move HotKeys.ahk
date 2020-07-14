@@ -318,8 +318,28 @@ return
 ; ===== Tile and Cascade ========
 ; ===============================
 
+; -----
+; Credit to: https://autohotkey.com/board/topic/80580-how-to-programmatically-tile-cascade-windows/
+; -----
+; Tile windows vertically : DllCall( "TileWindows", uInt,0, Int,0, Int,0, Int,0, Int,0 )
+; Tile windows horizontally : DllCall( "TileWindows", uInt,0, Int,1, Int,0, Int,0, Int,0 )
+; Cascade windows : DllCall( "CascadeWindows", uInt,0, Int,4, Int,0, Int,0, Int,0 )
+
+!#V::
+!+#V::
+; Tile windows vertically
+DllCall( "TileWindows", uInt,0, Int,0, Int,0, Int,0, Int,0 )
+return
+
+!#H::
+!+#H::
+; Tile windows vertically
+DllCall( "TileWindows", uInt,0, Int,0, Int,0, Int,0, Int,0 )
+return
+
 !#F12::
 !+#F12::
+; Cascade windows
 DllCall( "CascadeWindows", uInt,0, Int,4, Int,0, Int,0, Int,0 )
 return
 
