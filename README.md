@@ -4,7 +4,7 @@ Shortcuts to move and resize windows in Windows.
 ![Alt+Win HotKeys logo](https://user-images.githubusercontent.com/17131343/87220588-6f73bf00-c3a8-11ea-9ae1-1919b0ad552c.png)
 
 * Download the [latest release](https://github.com/justcla/WindowHotKeys/releases/latest) self-installer (MSI) for Windows
-* Download the executable [AltWin-HotKeys.exe](https://github.com/justcla/WindowHotKeys/blob/master/Packaging/AltWin-HotKeys.exe)
+* Download the executable [AltWin-HotKeys.exe](https://github.com/justcla/WindowHotKeys/raw/master/Packaging/AltWin-HotKeys.exe)
 
 #### Move Window - Alt+Win + Up/Down/Left/Right/Home/End/PgUp/PgDn/Del]
 
@@ -70,6 +70,10 @@ Alt+Win+Shift + Del | Center and Resize to half the monitor size| 1/2 width and 
 **Restore Size / Position** |
 Alt+Win + BackSpace | Restore window to previous position (not size)
 Alt+Win+Shift + BackSpace | Restore window to previous size and position
+**Tile and Cascade** |
+Alt+Win + V<br><br>Alt+Win+Shift + V | Tile windows Vertically
+Alt+Win + H<br><br>Alt+Win+Shift + H | Tile windows Horizontally
+Alt+Win + F12<br><br>Alt+Win+Shift + F12 | Cascade windows
 
 ### 4-Column Layout shortcuts
 
