@@ -6,6 +6,10 @@ Shortcuts to move and resize windows in Windows.
 * Download the [latest release](https://github.com/justcla/WindowHotKeys/releases/latest) self-installer (MSI) for Windows
 * Download the executable [AltWin-HotKeys.exe](https://github.com/justcla/WindowHotKeys/blob/master/Packaging/AltWin-HotKeys.exe)
 
+#### Move Window - Alt+Win + Up/Down/Left/Right/Home/End/PgUp/PgDn/Del]
+
+![Move window with Alt+Win + (direction)](https://user-images.githubusercontent.com/17131343/87409660-9c261180-c608-11ea-94ea-2fffb94a1461.png)
+
 #### Example: Move window to monitor edges
 
 ![Move window to monitor edges with Home/End/PgUp/PgDn/Del](https://user-images.githubusercontent.com/17131343/87170961-64238380-c315-11ea-9200-8f23f4b1669f.png)
