@@ -293,9 +293,13 @@ return
 !+#Enter::
 ; Move and Resize window to full screen
 WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-NewH := Screen_Y ; Set the window width equal to the width of the screen less the taskbar
-NewW := Screen_X ; Set the window height equal to the height of the screen
-WinMove, A, , 0, 0, NewW, NewH
+WinNum := GetWindowNumber()
+SysGet, Mon, MonitorWorkArea, %WinNum%
+NewX := MonLeft
+NewY := MonTop
+NewH := MonBottom - MonTop ; Set the window height equal to the height of the screen
+NewW := MonRight - MonLeft ; Set the window width equal to the width of the screen less the taskbar
+WinMove, A, , NewX, NewY, NewW, NewH
 return
 
 !#Backspace::
