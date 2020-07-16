@@ -8,17 +8,7 @@ Shortcuts to move and resize windows in Windows.
 
 #### Move Window - Alt+Win + Up/Down/Left/Right/Home/End/PgUp/PgDn/Del]
 
-![![Move window with Alt+Win + (direction)](https://user-images.githubusercontent.com/17131343/87409660-9c261180-c608-11ea-94ea-2fffb94a1461.png)](https://www.youtube.com/watch?v=iSf4AKjFQLs)(https://www.youtube.com/watch?v=iSf4AKjFQLs)
-
-Inside iFrame
-
-<img src="https://www.youtube.com/embed/iSf4AKjFQLs?start=18" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></img>
-
-
-
-#### Example: Move window to monitor edges
-
-![Move window to monitor edges with Home/End/PgUp/PgDn/Del](https://user-images.githubusercontent.com/17131343/87170961-64238380-c315-11ea-9200-8f23f4b1669f.png)
+[![Move window with Alt+Win + (direction)](https://user-images.githubusercontent.com/17131343/87670959-ed263900-c7b3-11ea-9575-bf87f05f28fb.png)](https://www.youtube.com/watch?v=iSf4AKjFQLs&t=18)
 
 **Shortcuts:** Alt+Win + [Home/End/PgUp/PgDn/Del] = Move to corresponding monitor edge
 
