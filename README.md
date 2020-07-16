@@ -7,14 +7,21 @@ Shortcuts to move and resize windows in Windows.
 * Download the executable [AltWin-HotKeys.exe](https://github.com/justcla/WindowHotKeys/raw/master/Packaging/AltWin-HotKeys.exe)
 
 #### Move Window - Alt+Win + Up/Down/Left/Right/Home/End/PgUp/PgDn/Del]
+#### Resize Window - Alt+Win+Shift + Up/Down/Left/Right/Home/End/PgUp/PgDn/Del]
 
 ![Move window with Alt+Win + (direction)](https://user-images.githubusercontent.com/17131343/87409660-9c261180-c608-11ea-94ea-2fffb94a1461.png)
 
-#### Example: Move window to monitor edges
+**Move Window:** Alt+Win + [Up/Down/Left/Right/PgUp/PgDn/Home/End/Del]
 
-![Move window to monitor edges with Home/End/PgUp/PgDn/Del](https://user-images.githubusercontent.com/17131343/87170961-64238380-c315-11ea-9200-8f23f4b1669f.png)
+**Resize Window:** Alt+Win+Shift + [Up/Down/Left/Right/PgUp/PgDn/Home/End/Del]
 
-**Shortcuts:** Alt+Win + [Home/End/PgUp/PgDn/Del] = Move to corresponding monitor edge
+**Special move/resize:** Alt+Win+Shift + [Enter/Home/Del]
+
+**4-column layout (move):** Alt+Win + [1/2/3/4/,(<)/.(>)]
+
+**4-column layout (snap):** Alt+Win+Shift + [1/2/3/4/,(<)/.(>)]
+
+**Tile/Cascade:** Alt+Win + [H/V/F12]
 
 ## Usage (Keyboard Shortcuts)
 
