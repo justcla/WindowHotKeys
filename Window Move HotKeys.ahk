@@ -77,94 +77,101 @@ Return ; End initialization
 ; ==== Move Window commands ====
 ; ================================
 
+MoveWindow(A, NewX, NewY, NewW, NewH)
+{
+    EnsureWindowIsRestored()
+    ; Move and resize the window
+    WinMove, A, , NewX, NewY, NewW, NewH
+    return
+}
+
 ; ---- Small window movements ----
 
 MoveLeft:
-; Block Move and Resize actions if the window is Maximized or Minimized
-WinGet, ActiveWinState, MinMax, A ; Get the Maximized state of the active window (WinState: -1=Min,0=Restored,1=Max)
-if (ActiveWinState != 0)
-  return  ; Only resize a window that is in Restored mode
 WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
 NewX := WinX - MoveAmount
-WinMove, A, , %NewX%, WinY, WinW, WinH
+MoveWindow(A, NewX, WinY, WinW, WinH)
 return
 
 MoveRight:
-; Block Move and Resize actions if the window is Maximized or Minimized
-WinGet, ActiveWinState, MinMax, A ; Get the Maximized state of the active window (WinState: -1=Min,0=Restored,1=Max)
-if (ActiveWinState != 0)
-  return  ; Only resize a window that is in Restored mode
-; MsgBox Move window to the Right
 WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
 NewX := WinX + MoveAmount
-WinMove, A, , %NewX%, WinY, WinW, WinH
+MoveWindow(A, NewX, WinY, WinW, WinH)
 return
 
 MoveUp:
-; Block Move and Resize actions if the window is Maximized or Minimized
-WinGet, ActiveWinState, MinMax, A ; Get the Maximized state of the active window (WinState: -1=Min,0=Restored,1=Max)
-if (ActiveWinState != 0)
-  return  ; Only resize a window that is in Restored mode
-; MsgBox Move window Up
 WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
 NewY := WinY - MoveAmount
-WinMove, A, , , %NewY%
+MoveWindow(A, WinX, NewY, WinW, WinH)
 return
 
 MoveDown:
-; Block Move and Resize actions if the window is Maximized or Minimized
-WinGet, ActiveWinState, MinMax, A ; Get the Maximized state of the active window (WinState: -1=Min,0=Restored,1=Max)
-if (ActiveWinState != 0)
-  return  ; Only resize a window that is in Restored mode
-; MsgBox Move window Down
 WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
 NewY := WinY + MoveAmount
-WinMove, A, , , %NewY%
+MoveWindow(A, WinX, NewY, WinW, WinH)
 return
 
 ; ------------------------------
 ; ---- Move to Screen Edges ----
 ; ------------------------------
 
+MoveToEdge(Edge)
+{
+    ; Get monitor and window dimensions
+    SysGet, Mon, MonitorWorkArea, GetWindowNumber()
+    WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
+
+    ; Set window coordinates
+    if InStr(Edge, "Left")
+        NewX := MonLeft
+    if InStr(Edge, "Right")
+        NewX := MonRight - WinW
+    if InStr(Edge, "Top")
+        NewY := MonTop
+    if InStr(Edge, "Bottom")
+        NewY := MonBottom - WinH
+
+    ; MsgBox NewX/NewY = %NewX%,%NewY%
+    MoveWindow(A, NewX, NewY, WinW, WinH)
+    return
+}
+
 !#Numpad8::
 MoveTop:
-EnsureWindowIsRestored()
-; MsgBox Move window to the Top
-WinNum := GetWindowNumber()
-SysGet, Mon, MonitorWorkArea, %WinNum%
-WinMove, A, , , %MonTop%
+MoveToEdge("Top")
 return
 
 !#Numpad2::
 MoveBottom:
-EnsureWindowIsRestored()
-; MsgBox Move window to the bottom of the screen (allow for Windows Taskbar)
-WinNum := GetWindowNumber()
-SysGet, Mon, MonitorWorkArea, %WinNum%
-WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-NewY := MonBottom - WinH
-WinMove, A, , , NewY
+MoveToEdge("Bottom")
 return
 
 !#Numpad4::
 MoveHardLeft:
-EnsureWindowIsRestored()
-; MsgBox Move window to the far left
-WinNum := GetWindowNumber()
-SysGet, Mon, MonitorWorkArea, %WinNum%
-;MsgBox, Mon (P) - Left: %MonLeft% -- Top: %MonTop% -- Right: %MonRight% -- Bottom %MonBottom%.
-WinMove, A, , MonLeft
+MoveToEdge("HardLeft")
 return
 
 !#End::
 MoveHardRight:
-EnsureWindowIsRestored()
-; MsgBox Move window to the far right
-WinNum := GetWindowNumber()
-SysGet, Mon, MonitorWorkArea, %WinNum%
-WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-NewX := MonRight - WinW
-WinMove, A, , %NewX%,
+MoveToEdge("HardRight")
+return
+
+; -- Corners --
+
+MoveTopLeft:
+MoveToEdge("TopLeft")
+return
+
+MoveTopRight:
+MoveToEdge("TopRight")
+return
+
+MoveBottomLeft:
+MoveToEdge("BottomLeft")
+return
+
+MoveBottomRight:
+MoveToEdge("BottomLeft")
 return
 
 ; -- Center --
@@ -175,79 +182,33 @@ MoveWindowToCenter()
 return
 
 MoveWindowToCenter() {
-    ; Center the window
     EnsureWindowIsRestored() ; First, ensure the window is restored
-    WinNum := GetWindowNumber()
-    SysGet, Mon, MonitorWorkArea, %WinNum%
-    ; Set the screen variables
-    ;MsgBox, Mon (P) - Left: %MonLeft% -- Top: %MonTop% -- Right: %MonRight% -- Bottom %MonBottom%.
-    ScreenW := MonLeft - MonRight
-    if (ScreenW < 0)
-        ScreenW := -ScreenW
-    ScreenH := MonBottom - MonTop
-    if (ScreenY < 0)
-        ScreenY := -ScreenY
-    WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-    ; Check width and height are within screen dimension; else adjust
-    NewW := WinW
-    if (NewW > ScreenW)
-      NewW := ScreenW
-    NewH := WinH
-    if (NewH > ScreenH)
-      NewH := ScreenH
-    ; Now set the position based on the (new) dimensions
-    ;MsgBox ScreenW = %ScreenW%, NewW = %NewW%, MonLeft = %MonLeft%
-    NewX := (ScreenW/2) - (NewW/2) + MonLeft ; Adjust for monitor offset
-    NewY := (ScreenH/2) - (NewH/2) + MonTop ; Adjust for monitor offset
-    ;MsgBox Move to: %NewX%, %NewY%, %NewW%, %NewH%
-    WinMove, A, , %NewX%, %NewY%, NewW, NewH
+    GetCenterCoordinates(A, NewX, NewY, NewW, NewH)
+    ; MsgBox Move to: %NewX%, %NewY%, %NewW%, %NewH%
+    WinMove, A, , NewX, NewY, NewW, NewH
     return
 }
 
-; -- Corners --
+GetCenterCoordinates(ByRef A, ByRef NewX, ByRef NewY, ByRef NewW, ByRef NewH)
+{
+    ; Set the screen variables
+    SysGet, Mon, MonitorWorkArea, GetWindowNumber()
+    ScreenW := MonLeft - MonRight
+    if (ScreenW < 0) ScreenW := -ScreenW
+    ScreenH := MonBottom - MonTop
+    if (ScreenY < 0) ScreenY := -ScreenY
 
-MoveTopLeft:
-EnsureWindowIsRestored()
-; Move window to Top-Left
-WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-WinNum := GetWindowNumber()
-SysGet, Mon, MonitorWorkArea, %WinNum%
-WinMove, A, , MonLeft, MonTop
-return
+    WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
 
-MoveTopRight:
-EnsureWindowIsRestored()
-; Move window to Top-Right
-WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-WinNum := GetWindowNumber()
-SysGet, Mon, MonitorWorkArea, %WinNum%
-NewX := MonRight - WinW
-NewY := MonTop
-WinMove, A, , NewX, NewY
-return
+    ; Check width and height are within screen dimension; else adjust
+    NewW := WinW > ScreenW ? ScreenW : NewW
+    NewW := NewW > ScreenW ? ScreenW : WinW
 
-MoveBottomLeft:
-EnsureWindowIsRestored()
-; Move window to Bottom-Left
-WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-WinNum := GetWindowNumber()
-SysGet, Mon, MonitorWorkArea, %WinNum%
-NewX := MonLeft ; Far left of screen
-NewY := MonBottom - WinH
-WinMove, A, , NewX, NewY
-return
-
-MoveBottomRight:
-EnsureWindowIsRestored()
-; Move window to Bottom-Right
-WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-WinNum := GetWindowNumber()
-SysGet, Mon, MonitorWorkArea, %WinNum%
-NewX := MonRight - WinW
-NewY := MonBottom - WinH
-WinMove, A, , NewX, NewY
-return
-
+    ; Calculate the position based on the (new) dimensions
+    ; MsgBox ScreenW = %ScreenW%, NewW = %NewW%, NewH = %NewH%, MonLeft = %MonLeft%
+    NewX := (ScreenW/2) - (NewW/2) + MonLeft ; Adjust for monitor offset
+    NewY := (ScreenH/2) - (NewH/2) + MonTop ; Adjust for monitor offset
+}
 
 ; ================================
 ; ==== Resize Window commands ====
