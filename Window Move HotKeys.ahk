@@ -33,13 +33,49 @@ LimitY := Screen_Y - EdgeBuffer
 MoveAmount = 50 ; The number of pixels to move when resizing windows
 ResizeRatio := 3/4 ; The portion of the window to cover when resizing to Home
 
+; ==== Initialization Section ====
+
+; ==============================================
+; ==== Define the shortcut key combinations ====
+; ==============================================
+
+Keys_MoveRight = !#Right
+Keys_MoveLeft = !#Left
+Keys_MoveUp = !#Up
+Keys_MoveDown = !#Down
+Keys_MoveTop = !#PgUp
+Keys_MoveBottom = !#PgDn
+Keys_MoveHardLeft = !#Home
+Keys_MoveHardRight = !#End
+Keys_MoveTopLeft = !#Numpad7
+Keys_MoveTopRight = !#Numpad9
+Keys_MoveBottomLeft = !#Numpad1
+Keys_MoveBottomRight = !#Numpad3
+Keys_MoveCenter = !#Del
+
+Hotkey, %Keys_MoveLeft%, MoveLeft
+Hotkey, %Keys_MoveRight%, MoveRight
+Hotkey, %Keys_MoveUp%, MoveUp
+Hotkey, %Keys_MoveDown%, MoveDown
+Hotkey, %Keys_MoveTop%, MoveTop
+Hotkey, %Keys_MoveBottom%, MoveBottom
+Hotkey, %Keys_MoveHardLeft%, MoveHardLeft
+Hotkey, %Keys_MoveHardRight%, MoveHardRight
+Hotkey, %Keys_MoveTopLeft%, MoveTopLeft
+Hotkey, %Keys_MoveTopRight%, MoveTopRight
+Hotkey, %Keys_MoveBottomLeft%, MoveBottomRight
+Hotkey, %Keys_MoveBottomRight%, MoveBottomRight
+Hotkey, %Keys_MoveCenter%, MoveCenter
+
+Return ; End initialization
+
 ; ================================
 ; ==== Move Window commands ====
 ; ================================
 
 ; ---- Small window movements ----
 
-!#Left::
+MoveLeft:
 ; Block Move and Resize actions if the window is Maximized or Minimized
 WinGet, ActiveWinState, MinMax, A ; Get the Maximized state of the active window (WinState: -1=Min,0=Restored,1=Max)
 if (ActiveWinState != 0)
@@ -49,7 +85,7 @@ NewX := WinX - MoveAmount
 WinMove, A, , %NewX%, WinY, WinW, WinH
 return
 
-!#Right::
+MoveRight:
 ; Block Move and Resize actions if the window is Maximized or Minimized
 WinGet, ActiveWinState, MinMax, A ; Get the Maximized state of the active window (WinState: -1=Min,0=Restored,1=Max)
 if (ActiveWinState != 0)
@@ -60,7 +96,7 @@ NewX := WinX + MoveAmount
 WinMove, A, , %NewX%, WinY, WinW, WinH
 return
 
-!#Up::
+MoveUp:
 ; Block Move and Resize actions if the window is Maximized or Minimized
 WinGet, ActiveWinState, MinMax, A ; Get the Maximized state of the active window (WinState: -1=Min,0=Restored,1=Max)
 if (ActiveWinState != 0)
@@ -71,7 +107,7 @@ NewY := WinY - MoveAmount
 WinMove, A, , , %NewY%
 return
 
-!#Down::
+MoveDown:
 ; Block Move and Resize actions if the window is Maximized or Minimized
 WinGet, ActiveWinState, MinMax, A ; Get the Maximized state of the active window (WinState: -1=Min,0=Restored,1=Max)
 if (ActiveWinState != 0)
@@ -86,8 +122,8 @@ return
 ; ---- Move to Screen Edges ----
 ; ------------------------------
 
-!#PgUp::
 !#Numpad8::
+MoveTop:
 EnsureWindowIsRestored()
 ; MsgBox Move window to the Top
 WinNum := GetWindowNumber()
@@ -95,8 +131,8 @@ SysGet, Mon, MonitorWorkArea, %WinNum%
 WinMove, A, , , %MonTop%
 return
 
-!#PgDn::
 !#Numpad2::
+MoveBottom:
 EnsureWindowIsRestored()
 ; MsgBox Move window to the bottom of the screen (allow for Windows Taskbar)
 WinNum := GetWindowNumber()
@@ -106,8 +142,8 @@ NewY := MonBottom - WinH
 WinMove, A, , , NewY
 return
 
-!#Home::
 !#Numpad4::
+MoveHardLeft:
 EnsureWindowIsRestored()
 ; MsgBox Move window to the far left
 WinNum := GetWindowNumber()
@@ -117,7 +153,7 @@ WinMove, A, , MonLeft
 return
 
 !#End::
-!#Numpad6::
+MoveHardRight:
 EnsureWindowIsRestored()
 ; MsgBox Move window to the far right
 WinNum := GetWindowNumber()
@@ -130,7 +166,7 @@ return
 ; -- Center --
 
 !#Numpad5::
-!#Del::
+MoveCenter:
 MoveWindowToCenter()
 return
 
@@ -166,7 +202,7 @@ MoveWindowToCenter() {
 
 ; -- Corners --
 
-!#Numpad7::
+MoveTopLeft:
 EnsureWindowIsRestored()
 ; Move window to Top-Left
 WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
@@ -175,7 +211,7 @@ SysGet, Mon, MonitorWorkArea, %WinNum%
 WinMove, A, , MonLeft, MonTop
 return
 
-!#Numpad9::
+MoveTopRight:
 EnsureWindowIsRestored()
 ; Move window to Top-Right
 WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
@@ -186,7 +222,7 @@ NewY := MonTop
 WinMove, A, , NewX, NewY
 return
 
-!#Numpad1::
+MoveBottomLeft:
 EnsureWindowIsRestored()
 ; Move window to Bottom-Left
 WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
@@ -197,7 +233,7 @@ NewY := MonBottom - WinH
 WinMove, A, , NewX, NewY
 return
 
-!#Numpad3::
+MoveBottomRight:
 EnsureWindowIsRestored()
 ; Move window to Bottom-Right
 WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
