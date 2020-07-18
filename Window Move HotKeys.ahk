@@ -183,31 +183,28 @@ return
 
 MoveWindowToCenter() {
     EnsureWindowIsRestored() ; First, ensure the window is restored
-    GetCenterCoordinates(A, NewX, NewY, NewW, NewH)
-    ; MsgBox Move to: %NewX%, %NewY%, %NewW%, %NewH%
-    WinMove, A, , NewX, NewY, NewW, NewH
+    WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
+    GetCenterCoordinates(A, NewX, NewY, WinW, WinH)
+    ; MsgBox Move to: %NewX%, %NewY%, %WinW%, %WinH%
+    WinMove, A, , NewX, NewY, WinW, WinH
     return
 }
 
-GetCenterCoordinates(ByRef A, ByRef NewX, ByRef NewY, ByRef NewW, ByRef NewH)
+GetCenterCoordinates(ByRef A, ByRef NewX, ByRef NewY, WinW, WinH)
 {
     ; Set the screen variables
     SysGet, Mon, MonitorWorkArea, GetWindowNumber()
-    ScreenW := MonLeft - MonRight
-    if (ScreenW < 0) ScreenW := -ScreenW
-    ScreenH := MonBottom - MonTop
-    if (ScreenY < 0) ScreenY := -ScreenY
+    ScreenW := Abs(MonLeft - MonRight)
+    ScreenH := Abs(MonBottom - MonTop)
 
-    WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-
-    ; Check width and height are within screen dimension; else adjust
-    NewW := WinW > ScreenW ? ScreenW : NewW
-    NewW := NewW > ScreenW ? ScreenW : WinW
-
-    ; Calculate the position based on the (new) dimensions
+    ; Calculate the position based on the given dimensions [W|H]
     ; MsgBox ScreenW = %ScreenW%, NewW = %NewW%, NewH = %NewH%, MonLeft = %MonLeft%
-    NewX := (ScreenW/2) - (NewW/2) + MonLeft ; Adjust for monitor offset
-    NewY := (ScreenH/2) - (NewH/2) + MonTop ; Adjust for monitor offset
+    NewX := (ScreenW-WinW)/2 + MonLeft ; Adjust for monitor offset
+    NewY := (ScreenH-WinH)/2 + MonTop ; Adjust for monitor offset
+
+    ; Don't allow the Top or Left of the window to be positioned off the visible screen area
+    NewX := NewX < MonLeft ? MonLeft : NewX
+    NewY := NewY < MonTop ? MonTop : NewY
 }
 
 ; ================================
