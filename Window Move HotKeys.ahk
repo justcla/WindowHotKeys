@@ -39,19 +39,23 @@ ResizeRatio := 3/4 ; The portion of the window to cover when resizing to Home
 ; ==== Define the shortcut key combinations ====
 ; ==============================================
 
-Keys_MoveRight = !#Right
-Keys_MoveLeft = !#Left
-Keys_MoveUp = !#Up
-Keys_MoveDown = !#Down
-Keys_MoveTop = !#PgUp
-Keys_MoveBottom = !#PgDn
-Keys_MoveHardLeft = !#Home
-Keys_MoveHardRight = !#End
-Keys_MoveTopLeft = !#Numpad7
-Keys_MoveTopRight = !#Numpad9
-Keys_MoveBottomLeft = !#Numpad1
-Keys_MoveBottomRight = !#Numpad3
-Keys_MoveCenter = !#Del
+; Read the shortcut keys from the settings file (or fall back on defaults)
+
+HotkeySettingsFile = HotkeySettings.ini
+
+IniRead, Keys_MoveLeft, HotkeySettingsFile, Shortcuts, Keys_MoveLeft, !#Left
+IniRead, Keys_MoveRight, HotkeySettingsFile, Shortcuts, Keys_MoveRight, !#Right
+IniRead, Keys_MoveUp, HotkeySettingsFile, Shortcuts, Keys_MoveUp, !#Up
+IniRead, Keys_MoveDown, HotkeySettingsFile, Shortcuts, Keys_MoveDown, !#Down
+IniRead, Keys_MoveTop, HotkeySettingsFile, Shortcuts, Keys_MoveTop, !#PgUp
+IniRead, Keys_MoveBottom, HotkeySettingsFile, Shortcuts, Keys_MoveBottom, !#PgDn
+IniRead, Keys_MoveHardLeft, HotkeySettingsFile, Shortcuts, Keys_MoveHardLeft, !#Home
+IniRead, Keys_MoveHardRight, HotkeySettingsFile, Shortcuts, Keys_MoveHardRight, !#End
+IniRead, Keys_MoveTopLeft, HotkeySettingsFile, Shortcuts, Keys_MoveTopLeft, !#Numpad7
+IniRead, Keys_MoveTopRight, HotkeySettingsFile, Shortcuts, Keys_MoveTopRight, !#Numpad9
+IniRead, Keys_MoveBottomLeft, HotkeySettingsFile, Shortcuts, Keys_MoveBottomLeft, !#Numpad1
+IniRead, Keys_MoveBottomRight, HotkeySettingsFile, Shortcuts, Keys_MoveBottomRight, !#Numpad3
+IniRead, Keys_MoveCenter, HotkeySettingsFile, Shortcuts, Keys_MoveCenter, !#Del
 
 Hotkey, %Keys_MoveLeft%, MoveLeft
 Hotkey, %Keys_MoveRight%, MoveRight
