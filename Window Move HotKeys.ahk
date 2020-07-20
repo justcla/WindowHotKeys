@@ -60,10 +60,26 @@ IniRead, Keys_MoveTopRight, HotkeySettingsFile, Shortcuts, Keys_MoveTopRight, !#
 IniRead, Keys_MoveBottomLeft, HotkeySettingsFile, Shortcuts, Keys_MoveBottomLeft, !#Numpad1
 IniRead, Keys_MoveBottomRight, HotkeySettingsFile, Shortcuts, Keys_MoveBottomRight, !#Numpad3
 IniRead, Keys_MoveCenter, HotkeySettingsFile, Shortcuts, Keys_MoveCenter, !#Del
-IniRead, Keys_MoveCenter2, HotkeySettingsFile, Shortcuts, Keys_MoveCenter2, !#Del
+IniRead, Keys_MoveCenter2, HotkeySettingsFile, Shortcuts, Keys_MoveCenter2, !#Numpad5
+
+IniRead, Keys_ResizeLeft, HotkeySettingsFile, Shortcuts, Keys_ResizeLeft, !+#Left
+IniRead, Keys_ResizeRight, HotkeySettingsFile, Shortcuts, Keys_ResizeLeft, !+#Right
+IniRead, Keys_ResizeUp, HotkeySettingsFile, Shortcuts, Keys_ResizeUp, !+#Up
+IniRead, Keys_ResizeDown, HotkeySettingsFile, Shortcuts, Keys_ResizeDown, !+#Down
+IniRead, Keys_ResizeLarger, HotkeySettingsFile, Shortcuts, Keys_ResizeLarger, !+#PgDn
+IniRead, Keys_ResizeSmaller, HotkeySettingsFile, Shortcuts, Keys_ResizeSmaller, !+#PgUp
+IniRead, Keys_ResizeHalfScreen, HotkeySettingsFile, Shortcuts, Keys_ResizeHalfScreen, !+#Del
+IniRead, Keys_ResizeThreeQuarterScreen, HotkeySettingsFile, Shortcuts, Keys_ResizeThreeQuarterScreen, !+#Home
+IniRead, Keys_ResizeFullScreen, HotkeySettingsFile, Shortcuts, Keys_ResizeFullScreen, !#Enter
+IniRead, Keys_ResizeFullScreen2, HotkeySettingsFile, Shortcuts, Keys_ResizeFullScreen2, !+#Enter
+
+IniRead, Keys_RestoreToPreviousPosn, HotkeySettingsFile, Shortcuts, Keys_RestoreToPreviousPosn, !#Backspace
+IniRead, Keys_RestoreToPreviousPosnAndSize, HotkeySettingsFile, Shortcuts, Keys_RestoreToPreviousPosnAndSize, !+#Backspace
+
 
 ; Link the shortcuts with the corresponding actions
 
+; "Move" commands
 Hotkey, %Keys_MoveLeft%, MoveLeft
 Hotkey, %Keys_MoveRight%, MoveRight
 Hotkey, %Keys_MoveUp%, MoveUp
@@ -82,6 +98,21 @@ Hotkey, %Keys_MoveBottomLeft%, MoveBottomRight
 Hotkey, %Keys_MoveBottomRight%, MoveBottomRight
 Hotkey, %Keys_MoveCenter%, MoveCenter
 Hotkey, %Keys_MoveCenter2%, MoveCenter2
+; "Resize" commands
+Hotkey, %Keys_ResizeLeft%, ResizeLeft
+Hotkey, %Keys_ResizeRight%, ResizeRight
+Hotkey, %Keys_ResizeUp%, ResizeUp
+Hotkey, %Keys_ResizeDown%, ResizeDown
+Hotkey, %Keys_ResizeLarger%, ResizeLarger
+Hotkey, %Keys_ResizeSmaller%, ResizeSmaller
+Hotkey, %Keys_ResizeHalfScreen%, ResizeHalfScreen
+Hotkey, %Keys_ResizeThreeQuarterScreen%, ResizeThreeQuarterScreen
+Hotkey, %Keys_ResizeFullScreen%, ResizeFullScreen
+Hotkey, %Keys_ResizeFullScreen2%, ResizeFullScreen2
+; "Restore" commands
+Hotkey, %Keys_RestoreToPreviousPosn%, RestoreToPreviousPosn
+Hotkey, %Keys_RestoreToPreviousPosnAndSize%, RestoreToPreviousPosnAndSize
+
 
 Return ; End initialization
 
@@ -222,7 +253,7 @@ GetCenterCoordinates(ByRef A, ByRef NewX, ByRef NewY, WinW, WinH)
 ; ==== Resize Window commands ====
 ; ================================
 
-!+#Left::
+ResizeLeft:
 ; MsgBox, Resize window left
 XDir := -1
 WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
@@ -230,7 +261,7 @@ NewW := WinW + (MoveAmount * XDir)
 WinMove, A, , , , NewW,
 return
 
-!+#Right::
+ResizeRight:
 ; MsgBox, Resize window right
 XDir := 1
 WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
@@ -238,7 +269,7 @@ NewW := WinW + (MoveAmount * XDir)
 WinMove, A, , , , NewW,
 return
 
-!+#Up::
+ResizeUp:
 ; MsgBox, Resize window up
 YDir := -1
 WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
@@ -246,7 +277,7 @@ NewH := WinH + (MoveAmount * YDir)
 WinMove, A, , , , , NewH
 return
 
-!+#Down::
+ResizeDown:
 ; MsgBox, Resize window down
 YDir := 1
 WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
@@ -258,7 +289,7 @@ return
 ; ==== Special Move/Resize commands ====
 ; ======================================
 
-!+#PgDn::
+ResizeLarger:
 ; Increase window size (both width and height)
 WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
 XDir := 1
@@ -268,7 +299,7 @@ NewH := WinH + (MoveAmount * XDir)
 WinMove, A, , , , NewW, NewH
 return
 
-!+#PgUp::
+ResizeSmaller:
 ; Reduce window size (both width and height)
 WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
 XDir := -1
@@ -279,7 +310,7 @@ WinMove, A, , , , NewW, NewH
 return
 
 ; Resize to half of the screen size
-!+#Del::
+ResizeHalfScreen:
 EnsureWindowIsRestored() ; First, ensure the window is restored
 ; WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
 SysGet, Mon, MonitorWorkArea, GetWindowNumber()
@@ -291,7 +322,7 @@ WinMove, A, , NewX, NewY, NewW, NewH
 return
 
 ; Resize to three-quarters of the screen size
-!+#Home::
+ResizeThreeQuarterScreen:
 EnsureWindowIsRestored() ; First, ensure the window is restored
 ; WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
 SysGet, Mon, MonitorWorkArea, GetWindowNumber()
@@ -302,8 +333,8 @@ GetCenterCoordinates(A, NewX, NewY, NewW, NewH)
 WinMove, A, , NewX, NewY, NewW, NewH
 return
 
-!#Enter::
-!+#Enter::
+ResizeFullScreen:
+ResizeFullScreen2:
 ; Move and Resize window to full screen
 WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
 SysGet, Mon, MonitorWorkArea, GetWindowNumber()
@@ -314,14 +345,14 @@ NewW := MonRight - MonLeft ; Set the window width equal to the width of the scre
 WinMove, A, , NewX, NewY, NewW, NewH
 return
 
-!#Backspace::
+RestoreToPreviousPosn:
 EnsureWindowIsRestored()
 ; Restore to the previous position (Posn only - not size)
 WinGetPos, , , , , A  ; "A" to get the active window's pos.
 WinMove, A, , WinX, WinY
 return
 
-!+#Backspace::
+RestoreToPreviousPosnAndSize:
 EnsureWindowIsRestored()
 ; Restore to the previous window size and position
 WinMove, A, , WinX, WinY, WinW, WinH
