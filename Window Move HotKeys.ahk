@@ -48,28 +48,40 @@ IniRead, Keys_MoveRight, HotkeySettingsFile, Shortcuts, Keys_MoveRight, !#Right
 IniRead, Keys_MoveUp, HotkeySettingsFile, Shortcuts, Keys_MoveUp, !#Up
 IniRead, Keys_MoveDown, HotkeySettingsFile, Shortcuts, Keys_MoveDown, !#Down
 IniRead, Keys_MoveTop, HotkeySettingsFile, Shortcuts, Keys_MoveTop, !#PgUp
+IniRead, Keys_MoveTop2, HotkeySettingsFile, Shortcuts, Keys_MoveTop2, !#Numpad8
 IniRead, Keys_MoveBottom, HotkeySettingsFile, Shortcuts, Keys_MoveBottom, !#PgDn
+IniRead, Keys_MoveBottom2, HotkeySettingsFile, Shortcuts, Keys_MoveBottom2, !#Numpad2
 IniRead, Keys_MoveHardLeft, HotkeySettingsFile, Shortcuts, Keys_MoveHardLeft, !#Home
+IniRead, Keys_MoveHardLeft2, HotkeySettingsFile, Shortcuts, Keys_MoveHardLeft2, !#Numpad4
 IniRead, Keys_MoveHardRight, HotkeySettingsFile, Shortcuts, Keys_MoveHardRight, !#End
+IniRead, Keys_MoveHardRight2, HotkeySettingsFile, Shortcuts, Keys_MoveHardRight2, !#Numpad6
 IniRead, Keys_MoveTopLeft, HotkeySettingsFile, Shortcuts, Keys_MoveTopLeft, !#Numpad7
 IniRead, Keys_MoveTopRight, HotkeySettingsFile, Shortcuts, Keys_MoveTopRight, !#Numpad9
 IniRead, Keys_MoveBottomLeft, HotkeySettingsFile, Shortcuts, Keys_MoveBottomLeft, !#Numpad1
 IniRead, Keys_MoveBottomRight, HotkeySettingsFile, Shortcuts, Keys_MoveBottomRight, !#Numpad3
 IniRead, Keys_MoveCenter, HotkeySettingsFile, Shortcuts, Keys_MoveCenter, !#Del
+IniRead, Keys_MoveCenter2, HotkeySettingsFile, Shortcuts, Keys_MoveCenter2, !#Del
+
+; Link the shortcuts with the corresponding actions
 
 Hotkey, %Keys_MoveLeft%, MoveLeft
 Hotkey, %Keys_MoveRight%, MoveRight
 Hotkey, %Keys_MoveUp%, MoveUp
 Hotkey, %Keys_MoveDown%, MoveDown
 Hotkey, %Keys_MoveTop%, MoveTop
+Hotkey, %Keys_MoveTop2%, MoveTop
 Hotkey, %Keys_MoveBottom%, MoveBottom
+Hotkey, %Keys_MoveBottom2%, MoveBottom
 Hotkey, %Keys_MoveHardLeft%, MoveHardLeft
+Hotkey, %Keys_MoveHardLeft2%, MoveHardLeft
 Hotkey, %Keys_MoveHardRight%, MoveHardRight
+Hotkey, %Keys_MoveHardRight2%, MoveHardRight
 Hotkey, %Keys_MoveTopLeft%, MoveTopLeft
 Hotkey, %Keys_MoveTopRight%, MoveTopRight
 Hotkey, %Keys_MoveBottomLeft%, MoveBottomRight
 Hotkey, %Keys_MoveBottomRight%, MoveBottomRight
 Hotkey, %Keys_MoveCenter%, MoveCenter
+Hotkey, %Keys_MoveCenter2%, MoveCenter2
 
 Return ; End initialization
 
@@ -136,23 +148,23 @@ MoveToEdge(Edge)
     return
 }
 
-!#Numpad8::
 MoveTop:
+MoveTop2:
 MoveToEdge("Top")
 return
 
-!#Numpad2::
 MoveBottom:
+MoveBottom2:
 MoveToEdge("Bottom")
 return
 
-!#Numpad4::
 MoveHardLeft:
+MoveHardLeft2:
 MoveToEdge("HardLeft")
 return
 
-!#End::
 MoveHardRight:
+MoveHardRight2:
 MoveToEdge("HardRight")
 return
 
@@ -176,8 +188,8 @@ return
 
 ; -- Center --
 
-!#Numpad5::
 MoveCenter:
+MoveCenter2:
 MoveWindowToCenter()
 return
 
