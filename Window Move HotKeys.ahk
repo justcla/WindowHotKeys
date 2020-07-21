@@ -41,43 +41,45 @@ ResizeRatio := 3/4 ; The portion of the window to cover when resizing to Home
 
 ; Read the shortcut keys from the settings file (or fall back on defaults)
 
-HotkeySettingsFile = HotkeySettings.ini
+; Alternative keyboard layouts
+HotkeySettingsFile = HotkeySettings.ini  ; Alt+Win shortcuts
+; HotkeySettingsFile = HotkeySettings-CtrlWin.ini   ; Ctrl+Win shortcuts
 
-IniRead, Keys_MoveLeft, HotkeySettingsFile, Shortcuts, Keys_MoveLeft, !#Left
-IniRead, Keys_MoveRight, HotkeySettingsFile, Shortcuts, Keys_MoveRight, !#Right
-IniRead, Keys_MoveUp, HotkeySettingsFile, Shortcuts, Keys_MoveUp, !#Up
-IniRead, Keys_MoveDown, HotkeySettingsFile, Shortcuts, Keys_MoveDown, !#Down
-IniRead, Keys_MoveTop, HotkeySettingsFile, Shortcuts, Keys_MoveTop, !#PgUp
-IniRead, Keys_MoveTop2, HotkeySettingsFile, Shortcuts, Keys_MoveTop2, !#Numpad8
-IniRead, Keys_MoveBottom, HotkeySettingsFile, Shortcuts, Keys_MoveBottom, !#PgDn
-IniRead, Keys_MoveBottom2, HotkeySettingsFile, Shortcuts, Keys_MoveBottom2, !#Numpad2
-IniRead, Keys_MoveHardLeft, HotkeySettingsFile, Shortcuts, Keys_MoveHardLeft, !#Home
-IniRead, Keys_MoveHardLeft2, HotkeySettingsFile, Shortcuts, Keys_MoveHardLeft2, !#Numpad4
-IniRead, Keys_MoveHardRight, HotkeySettingsFile, Shortcuts, Keys_MoveHardRight, !#End
-IniRead, Keys_MoveHardRight2, HotkeySettingsFile, Shortcuts, Keys_MoveHardRight2, !#Numpad6
-IniRead, Keys_MoveTopLeft, HotkeySettingsFile, Shortcuts, Keys_MoveTopLeft, !#Numpad7
-IniRead, Keys_MoveTopRight, HotkeySettingsFile, Shortcuts, Keys_MoveTopRight, !#Numpad9
-IniRead, Keys_MoveBottomLeft, HotkeySettingsFile, Shortcuts, Keys_MoveBottomLeft, !#Numpad1
-IniRead, Keys_MoveBottomRight, HotkeySettingsFile, Shortcuts, Keys_MoveBottomRight, !#Numpad3
-IniRead, Keys_MoveCenter, HotkeySettingsFile, Shortcuts, Keys_MoveCenter, !#Del
-IniRead, Keys_MoveCenter2, HotkeySettingsFile, Shortcuts, Keys_MoveCenter2, !#Numpad5
+IniRead, Keys_MoveLeft, %HotkeySettingsFile%, Shortcuts, Keys_MoveLeft, !#Left
+IniRead, Keys_MoveRight, %HotkeySettingsFile%, Shortcuts, Keys_MoveRight, !#Right
+IniRead, Keys_MoveUp, %HotkeySettingsFile%, Shortcuts, Keys_MoveUp, !#Up
+IniRead, Keys_MoveDown, %HotkeySettingsFile%, Shortcuts, Keys_MoveDown, !#Down
+IniRead, Keys_MoveTop, %HotkeySettingsFile%, Shortcuts, Keys_MoveTop, !#PgUp
+IniRead, Keys_MoveTop2, %HotkeySettingsFile%, Shortcuts, Keys_MoveTop2, !#Numpad8
+IniRead, Keys_MoveBottom, %HotkeySettingsFile%, Shortcuts, Keys_MoveBottom, !#PgDn
+IniRead, Keys_MoveBottom2, %HotkeySettingsFile%, Shortcuts, Keys_MoveBottom2, !#Numpad2
+IniRead, Keys_MoveHardLeft, %HotkeySettingsFile%, Shortcuts, Keys_MoveHardLeft, !#Home
+IniRead, Keys_MoveHardLeft2, %HotkeySettingsFile%, Shortcuts, Keys_MoveHardLeft2, !#Numpad4
+IniRead, Keys_MoveHardRight, %HotkeySettingsFile%, Shortcuts, Keys_MoveHardRight, !#End
+IniRead, Keys_MoveHardRight2, %HotkeySettingsFile%, Shortcuts, Keys_MoveHardRight2, !#Numpad6
+IniRead, Keys_MoveTopLeft, %HotkeySettingsFile%, Shortcuts, Keys_MoveTopLeft, !#Numpad7
+IniRead, Keys_MoveTopRight, %HotkeySettingsFile%, Shortcuts, Keys_MoveTopRight, !#Numpad9
+IniRead, Keys_MoveBottomLeft, %HotkeySettingsFile%, Shortcuts, Keys_MoveBottomLeft, !#Numpad1
+IniRead, Keys_MoveBottomRight, %HotkeySettingsFile%, Shortcuts, Keys_MoveBottomRight, !#Numpad3
+IniRead, Keys_MoveCenter, %HotkeySettingsFile%, Shortcuts, Keys_MoveCenter, !#Del
+IniRead, Keys_MoveCenter2, %HotkeySettingsFile%, Shortcuts, Keys_MoveCenter2, !#Numpad5
 
-IniRead, Keys_ResizeLeft, HotkeySettingsFile, Shortcuts, Keys_ResizeLeft, !+#Left
-IniRead, Keys_ResizeRight, HotkeySettingsFile, Shortcuts, Keys_ResizeLeft, !+#Right
-IniRead, Keys_ResizeUp, HotkeySettingsFile, Shortcuts, Keys_ResizeUp, !+#Up
-IniRead, Keys_ResizeDown, HotkeySettingsFile, Shortcuts, Keys_ResizeDown, !+#Down
-IniRead, Keys_ResizeLarger, HotkeySettingsFile, Shortcuts, Keys_ResizeLarger, !+#PgDn
-IniRead, Keys_ResizeSmaller, HotkeySettingsFile, Shortcuts, Keys_ResizeSmaller, !+#PgUp
-IniRead, Keys_ResizeHalfScreen, HotkeySettingsFile, Shortcuts, Keys_ResizeHalfScreen, !+#Del
-IniRead, Keys_ResizeThreeQuarterScreen, HotkeySettingsFile, Shortcuts, Keys_ResizeThreeQuarterScreen, !+#Home
-IniRead, Keys_ResizeFullScreen, HotkeySettingsFile, Shortcuts, Keys_ResizeFullScreen, !#Enter
-IniRead, Keys_ResizeFullScreen2, HotkeySettingsFile, Shortcuts, Keys_ResizeFullScreen2, !+#Enter
+IniRead, Keys_ResizeLeft, %HotkeySettingsFile%, Shortcuts, Keys_ResizeLeft, !+#Left
+IniRead, Keys_ResizeRight, %HotkeySettingsFile%, Shortcuts, Keys_ResizeLeft, !+#Right
+IniRead, Keys_ResizeUp, %HotkeySettingsFile%, Shortcuts, Keys_ResizeUp, !+#Up
+IniRead, Keys_ResizeDown, %HotkeySettingsFile%, Shortcuts, Keys_ResizeDown, !+#Down
+IniRead, Keys_ResizeLarger, %HotkeySettingsFile%, Shortcuts, Keys_ResizeLarger, !+#PgDn
+IniRead, Keys_ResizeSmaller, %HotkeySettingsFile%, Shortcuts, Keys_ResizeSmaller, !+#PgUp
+IniRead, Keys_ResizeHalfScreen, %HotkeySettingsFile%, Shortcuts, Keys_ResizeHalfScreen, !+#Del
+IniRead, Keys_ResizeThreeQuarterScreen, %HotkeySettingsFile%, Shortcuts, Keys_ResizeThreeQuarterScreen, !+#Home
+IniRead, Keys_ResizeFullScreen, %HotkeySettingsFile%, Shortcuts, Keys_ResizeFullScreen, !#Enter
+IniRead, Keys_ResizeFullScreen2, %HotkeySettingsFile%, Shortcuts, Keys_ResizeFullScreen2, !+#Enter
 
-IniRead, Keys_RestoreToPreviousPosn, HotkeySettingsFile, Shortcuts, Keys_RestoreToPreviousPosn, !#Backspace
-IniRead, Keys_RestoreToPreviousPosnAndSize, HotkeySettingsFile, Shortcuts, Keys_RestoreToPreviousPosnAndSize, !+#Backspace
+IniRead, Keys_RestoreToPreviousPosn, %HotkeySettingsFile%, Shortcuts, Keys_RestoreToPreviousPosn, !#Backspace
+IniRead, Keys_RestoreToPreviousPosnAndSize, %HotkeySettingsFile%, Shortcuts, Keys_RestoreToPreviousPosnAndSize, !+#Backspace
 
-IniRead, Keys_SwitchToPreviousDesktop, HotkeySettingsFile, Shortcuts, Keys_SwitchToPreviousDesktop, ^#,
-IniRead, Keys_SwitchToNextDesktop, HotkeySettingsFile, Shortcuts, Keys_SwitchToNextDesktop, ^#.
+IniRead, Keys_SwitchToPreviousDesktop, %HotkeySettingsFile%, Shortcuts, Keys_SwitchToPreviousDesktop, ^#,
+IniRead, Keys_SwitchToNextDesktop, %HotkeySettingsFile%, Shortcuts, Keys_SwitchToNextDesktop, ^#.
 
 ; Link the shortcuts with the corresponding actions
 
