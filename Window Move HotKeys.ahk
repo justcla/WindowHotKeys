@@ -94,7 +94,7 @@ Hotkey, %Keys_MoveHardRight%, MoveHardRight
 Hotkey, %Keys_MoveHardRight2%, MoveHardRight
 Hotkey, %Keys_MoveTopLeft%, MoveTopLeft
 Hotkey, %Keys_MoveTopRight%, MoveTopRight
-Hotkey, %Keys_MoveBottomLeft%, MoveBottomRight
+Hotkey, %Keys_MoveBottomLeft%, MoveBottomLeft
 Hotkey, %Keys_MoveBottomRight%, MoveBottomRight
 Hotkey, %Keys_MoveCenter%, MoveCenter
 Hotkey, %Keys_MoveCenter2%, MoveCenter2
@@ -214,7 +214,7 @@ MoveToEdge("BottomLeft")
 return
 
 MoveBottomRight:
-MoveToEdge("BottomLeft")
+MoveToEdge("BottomRight")
 return
 
 ; -- Center --
