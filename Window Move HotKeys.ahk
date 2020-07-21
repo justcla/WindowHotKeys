@@ -76,6 +76,8 @@ IniRead, Keys_ResizeFullScreen2, HotkeySettingsFile, Shortcuts, Keys_ResizeFullS
 IniRead, Keys_RestoreToPreviousPosn, HotkeySettingsFile, Shortcuts, Keys_RestoreToPreviousPosn, !#Backspace
 IniRead, Keys_RestoreToPreviousPosnAndSize, HotkeySettingsFile, Shortcuts, Keys_RestoreToPreviousPosnAndSize, !+#Backspace
 
+IniRead, Keys_SwitchToPreviousDesktop, HotkeySettingsFile, Shortcuts, Keys_SwitchToPreviousDesktop, ^#,
+IniRead, Keys_SwitchToNextDesktop, HotkeySettingsFile, Shortcuts, Keys_SwitchToNextDesktop, ^#.
 
 ; Link the shortcuts with the corresponding actions
 
@@ -111,7 +113,9 @@ Hotkey, %Keys_ResizeFullScreen%, ResizeFullScreen
 Hotkey, %Keys_ResizeFullScreen2%, ResizeFullScreen2
 ; "Restore" commands
 Hotkey, %Keys_RestoreToPreviousPosn%, RestoreToPreviousPosn
-Hotkey, %Keys_RestoreToPreviousPosnAndSize%, RestoreToPreviousPosnAndSize
+; Virtual Desktop commands
+Hotkey, %Keys_SwitchToPreviousDesktop%, SwitchToPreviousDesktop
+Hotkey, %Keys_SwitchToNextDesktop%, SwitchToNextDesktop
 
 
 Return ; End initialization
@@ -459,6 +463,20 @@ return
 GoToColNum := GetNextColNum()
 ; MsgBox GoToColNum: %GoToColNum%
 ResizeToFourColumnLayout(GoToColNum)
+return
+
+; ==============================
+; ===== Switch desktops ========
+; ==============================
+
+; Credit to: https://www.autohotkey.com/boards/viewtopic.php?t=17941
+
+SwitchToPreviousDesktop:
+send {LWin down}{LCtrl down}{Left}{LCtrl up}{LWin up}  ; switch to previous virtual desktop
+return
+
+SwitchToNextDesktop:
+send {LWin down}{LCtrl down}{Right}{LCtrl up}{LWin up}   ; switch to next virtual desktop
 return
 
 ; ========================
