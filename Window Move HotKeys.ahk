@@ -67,7 +67,7 @@ IniRead, Keys_MoveCenter, %ShortcutsFile%, Shortcuts, Keys_MoveCenter, !#Del
 IniRead, Keys_MoveCenter2, %ShortcutsFile%, Shortcuts, Keys_MoveCenter2, !#Numpad5
 
 IniRead, Keys_ResizeLeft, %ShortcutsFile%, Shortcuts, Keys_ResizeLeft, !+#Left
-IniRead, Keys_ResizeRight, %ShortcutsFile%, Shortcuts, Keys_ResizeLeft, !+#Right
+IniRead, Keys_ResizeRight, %ShortcutsFile%, Shortcuts, Keys_ResizeRight, !+#Right
 IniRead, Keys_ResizeUp, %ShortcutsFile%, Shortcuts, Keys_ResizeUp, !+#Up
 IniRead, Keys_ResizeDown, %ShortcutsFile%, Shortcuts, Keys_ResizeDown, !+#Down
 IniRead, Keys_ResizeLarger, %ShortcutsFile%, Shortcuts, Keys_ResizeLarger, !+#PgDn
@@ -128,38 +128,37 @@ Return ; End initialization
 ; ==== Move Window commands ====
 ; ================================
 
-MoveWindow(A, NewX, NewY, NewW, NewH)
+MoveWindow(A, NewX, NewY)
 {
     EnsureWindowIsRestored()
-    ; Move and resize the window
-    WinMove, A, , NewX, NewY, NewW, NewH
+    WinMove, A, , NewX, NewY
     return
+}
+
+DoMove(xChange:=0, yChange:=0)
+{
+    WinGetPos, WinX, WinY, WinW, WinH, A  ; Get active window ('A') posn (X/Y) and size (W/H)
+    NewX := WinX + xChange
+    NewY := WinY + yChange
+    MoveWindow(A, NewX, NewY)
 }
 
 ; ---- Small window movements ----
 
 MoveLeft:
-WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-NewX := WinX - MoveAmount
-MoveWindow(A, NewX, WinY, WinW, WinH)
+DoMove(-MoveAmount, 0)
 return
 
 MoveRight:
-WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-NewX := WinX + MoveAmount
-MoveWindow(A, NewX, WinY, WinW, WinH)
+DoMove(MoveAmount, 0)
 return
 
 MoveUp:
-WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-NewY := WinY - MoveAmount
-MoveWindow(A, WinX, NewY, WinW, WinH)
+DoMove(0, -MoveAmount)
 return
 
 MoveDown:
-WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-NewY := WinY + MoveAmount
-MoveWindow(A, WinX, NewY, WinW, WinH)
+DoMove(0, MoveAmount)
 return
 
 ; ------------------------------
@@ -183,7 +182,7 @@ MoveToEdge(Edge)
         NewY := MonBottom - WinH
 
     ; MsgBox NewX/NewY = %NewX%,%NewY%
-    MoveWindow(A, NewX, NewY, WinW, WinH)
+    MoveWindow(A, NewX, NewY)
     return
 }
 
@@ -235,7 +234,7 @@ return
 MoveWindowToCenter() {
     EnsureWindowIsRestored() ; First, ensure the window is restored
     WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-    GetCenterCoordinates(A, NewX, NewY, WinW, WinH)
+    GetCenterCoordinates(A, NewX, NewY, WinW, WinH)  ; Returns NewX and NewY and 'A'
     ; MsgBox Move to: %NewX%, %NewY%, %WinW%, %WinH%
     WinMove, A, , NewX, NewY, WinW, WinH
     return
@@ -415,7 +414,7 @@ MoveToFourColumnLayout(3)
 return
 
 !#4::
-; Move to Column 1 of 4-column layout
+; Move to Column 4 of 4-column layout
 MoveToFourColumnLayout(4)
 return
 
