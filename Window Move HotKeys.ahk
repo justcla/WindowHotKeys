@@ -83,6 +83,13 @@ IniRead, Keys_RestoreToPreviousPosnAndSize, %ShortcutsFile%, Shortcuts, Keys_Res
 IniRead, Keys_SwitchToPreviousDesktop, %ShortcutsFile%, Shortcuts, Keys_SwitchToPreviousDesktop, ^#,
 IniRead, Keys_SwitchToNextDesktop, %ShortcutsFile%, Shortcuts, Keys_SwitchToNextDesktop, ^#.
 
+IniRead, Keys_TileWindowsVertically, %ShortcutsFile%, Shortcuts, Keys_TileWindowsVertically, !#V
+IniRead, Keys_TileWindowsVertically2, %ShortcutsFile%, Shortcuts, Keys_TileWindowsVertically2, !+#V
+IniRead, Keys_TileWindowsHorizontally, %ShortcutsFile%, Shortcuts, Keys_TileWindowsHorizontally, !#H
+IniRead, Keys_TileWindowsHorizontally2, %ShortcutsFile%, Shortcuts, Keys_TileWindowsHorizontally2, !+#H
+IniRead, Keys_CascadeWindows, %ShortcutsFile%, Shortcuts, Keys_CascadeWindows, !#C
+IniRead, Keys_CascadeWindows2, %ShortcutsFile%, Shortcuts, Keys_CascadeWindows2, !+#C
+
 ; Link the shortcuts with the corresponding actions
 
 ; "Move" commands
@@ -120,6 +127,13 @@ Hotkey, %Keys_RestoreToPreviousPosn%, RestoreToPreviousPosn
 ; Virtual Desktop commands
 Hotkey, %Keys_SwitchToPreviousDesktop%, SwitchToPreviousDesktop
 Hotkey, %Keys_SwitchToNextDesktop%, SwitchToNextDesktop
+; Tile and Cascade windows
+Hotkey, %Keys_TileWindowsVertically%, TileWindowsVertically
+Hotkey, %Keys_TileWindowsHorizontally%, TileWindowsHorizontally
+Hotkey, %Keys_TileWindowsVertically2%, TileWindowsVertically2
+Hotkey, %Keys_TileWindowsHorizontally2%, TileWindowsHorizontally2
+Hotkey, %Keys_CascadeWindows%, CascadeWindows
+Hotkey, %Keys_CascadeWindows2%, CascadeWindows2
 
 
 Return ; End initialization
@@ -376,21 +390,18 @@ return
 ; Tile windows horizontally : DllCall( "TileWindows", uInt,0, Int,1, Int,0, Int,0, Int,0 )
 ; Cascade windows : DllCall( "CascadeWindows", uInt,0, Int,4, Int,0, Int,0, Int,0 )
 
-!#V::
-!+#V::
-; Tile windows vertically
+TileWindowsVertically:
+TileWindowsVertically2:
 DllCall( "TileWindows", uInt,0, Int,0, Int,0, Int,0, Int,0 )
 return
 
-!#H::
-!+#H::
-; Tile windows vertically
+TileWindowsHorizontally:
+TileWindowsHorizontally2:
 DllCall( "TileWindows", uInt,0, Int,0, Int,0, Int,0, Int,0 )
 return
 
-!#F12::
-!+#F12::
-; Cascade windows
+CascadeWindows:
+CascadeWindows2:
 DllCall( "CascadeWindows", uInt,0, Int,4, Int,0, Int,0, Int,0 )
 return
 
