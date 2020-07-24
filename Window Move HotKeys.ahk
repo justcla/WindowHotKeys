@@ -182,7 +182,8 @@ return
 MoveToEdge(Edge)
 {
     ; Get monitor and window dimensions
-    SysGet, Mon, MonitorWorkArea, GetWindowNumber()
+    WinNum := GetWindowNumber()
+    SysGet, Mon, MonitorWorkArea, %WinNum%
     WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
 
     ; Set window coordinates
@@ -523,7 +524,8 @@ GetWindowNumber()
 MoveToFourColumnLayout(ColNum) {
     ; Get active window and monitor details
     WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-    SysGet, Mon, MonitorWorkArea, GetWindowNumber()
+    WinNum := GetWindowNumber()
+    SysGet, Mon, MonitorWorkArea, %WinNum%
     TaskBarW = 0 ; This should be set >0 if the Taskbar is on the left or right.
     MonWorkingWidth := MonRight - MonLeft - TaskBarW
     ; Generate new co-ordinates
