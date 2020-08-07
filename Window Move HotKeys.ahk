@@ -9,7 +9,6 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 ; Notes:
 ; WinGetPos, X, Y, W, H, A  ; "A" to get the active window's pos.
 ; MsgBox, The active window is at %X%`,%Y% with width and height [%W%, %H%]
-; MsgBox, Screen_X(%Screen_X%) Screen_Y(%Screen_Y%) NewX(%NewX%)
 
 ; Hoy Key Symbols
 ; Symbol	#	= Win (Windows logo key)
@@ -19,17 +18,6 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 ; Symbol	& = An ampersand may be used between any two keys or mouse buttons to combine them into a custom hotkey.
 
 ; Global variables
-TaskBarW = 0 ; This should be set >0 if the Taskbar is on the left or right.
-TaskBarH = 50 ; Allow for the Windows Taskbar to be visible - Set this to 0 if Taskbar on AutoHide
-; Maybe the best way to calculate the taskbar height is to maximize a window and then check its height.
-
-Screen_X := A_ScreenWidth - TaskBarW
-Screen_Y := A_ScreenHeight - TaskBarH
-
-EdgeBuffer = 50
-LimitX := Screen_X - EdgeBuffer
-LimitY := Screen_Y - EdgeBuffer
-
 MoveAmount = 50 ; The number of pixels to move when resizing windows
 ResizeRatio := 3/4 ; The portion of the window to cover when resizing to Home
 
