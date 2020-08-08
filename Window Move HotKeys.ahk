@@ -17,15 +17,11 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 ; Symbol	+	= Shift
 ; Symbol	& = An ampersand may be used between any two keys or mouse buttons to combine them into a custom hotkey.
 
-; Global variables
-MoveAmount = 50 ; The number of pixels to move when resizing windows
-ResizeRatio := 3/4 ; The portion of the window to cover when resizing to Home
-
+; ==============================================
 ; ==== Initialization Section ====
+; ==============================================
 
-; ==============================================
 ; ==== Define the shortcut key combinations ====
-; ==============================================
 
 ; Read the shortcut keys from the settings file (or fall back on defaults)
 
@@ -34,6 +30,8 @@ SettingsFile = HotkeySettings.ini  ; Alt+Win shortcuts
 
 ; Read user-preference for shortcut combinations (each defined in a separate shortcutsDef INI file)
 IniRead, ShortcutsFile, %SettingsFile%, General, ShortcutDefs, ShortcutDefs-AltWin.ini
+; Global settings
+IniRead, PixelsPerStep, %SettingsFile%, Settings, PixelsPerStep, 50
 
 ;Move
 IniRead, Keys_MoveLeft, %ShortcutsFile%, Shortcuts, Keys_MoveLeft, !#Left
@@ -222,29 +220,29 @@ return
 ; ================================
 
 ResizeLeft:
-DoResize(-1, 0)
+DoMoveAndResize( , , -1, 0)
 return
 
 ResizeRight:
-DoResize(1, 0)
+DoMoveAndResize( , , 1, 0)
 return
 
 ResizeUp:
-DoResize(0, -1)
+DoMoveAndResize( , , 0, -1)
 return
 
 ResizeDown:
-DoResize(0, 1)
+DoMoveAndResize( , , 0, 1)
 return
 
 ResizeLarger:
 ; Increase window size (both width and height)
-DoResize(1, 1)
+DoMoveAndResize( , , 1, 1)
 return
 
 ResizeSmaller:
 ; Reduce window size (both width and height)
-DoResize(-1, -1)
+DoMoveAndResize( , , -1, -1)
 return
 
 ; ======================================
@@ -439,14 +437,15 @@ MoveToEdge(Edge)
     return
 }
 
-DoResize(GrowW, GrowH)
-{
-    DoMoveAndResize( , , GrowW, GrowH)
-}
-
 DoMoveAndResize(MoveX:=0, MoveY:=0, GrowW:=0, GrowH:=0)
 {
     GetMoveCoordinates(A, NewX, NewY, NewW, NewH, MoveX, MoveY, GrowW, GrowH)
+    RestoreMoveAndResize(A, NewX, NewY, NewW, NewH)
+}
+
+DoResizeAndCenter(WinNum, NewW, NewH)
+{
+    GetCenterCoordinates(A, WinNum, NewX, NewY, NewW, NewH)
     RestoreMoveAndResize(A, NewX, NewY, NewW, NewH)
 }
 
@@ -454,8 +453,14 @@ ResizeAndCenter(Ratio)
 {
     WinNum := GetWindowNumber()
     CalculateSizeByWinRatio(NewW, NewH, WinNum, Ratio)
-    GetCenterCoordinates(A, WinNum, NewX, NewY, NewW, NewH)
-    RestoreMoveAndResize(A, NewX, NewY, NewW, NewH)
+    DoResizeAndCenter(WinNum, NewW, NewH)
+}
+
+MoveWindowToCenter() {
+    WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
+    WinNum := GetWindowNumber()
+    DoResizeAndCenter(WinNum, WinW, WinH)
+    return
 }
 
 CalculateSizeByWinRatio(ByRef NewW, ByRef NewH, WinNum, Ratio)
@@ -468,28 +473,19 @@ CalculateSizeByWinRatio(ByRef NewW, ByRef NewH, WinNum, Ratio)
 
 RestoreMoveAndResize(A, NewX, NewY, NewW, NewH)
 {
-    EnsureWindowIsRestored() ; First, ensure the window is restored
+    EnsureWindowIsRestored() ; Always ensure the window is restored before any move or resize operation
+;     MsgBox Move to: %NewX%, %NewY%, %WinW%, %WinH%
     WinMove, A, , NewX, NewY, NewW, NewH
-}
-
-MoveWindowToCenter() {
-    WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-    WinNum := GetWindowNumber()
-    GetCenterCoordinates(A, WinNum, NewX, NewY, WinW, WinH)  ; Returns NewX and NewY and 'A'
-    ; MsgBox Move to: %NewX%, %NewY%, %WinW%, %WinH%
-    EnsureWindowIsRestored() ; First, ensure the window is restored
-    WinMove, A, , NewX, NewY, WinW, WinH
-    return
 }
 
 GetMoveCoordinates(ByRef A, ByRef NewX, ByRef NewY, ByRef NewW, ByRef NewH, MovX:=0, MovY:=0, GrowW:=0, GrowH:=0)
 {
-    MoveAmount = 50 ; The number of pixels to move when resizing windows
+    global PixelsPerStep ; The number of pixels to move/grow (multiplied by MovX,MovY,GrowW,GrowH)
     WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-    NewW := WinW + (MoveAmount * GrowW)
-    NewH := WinH + (MoveAmount * GrowH)
-    NewX := WinX + (MoveAmount * MovX)
-    NewY := WinY + (MoveAmount * MovY)
+    NewW := WinW + (PixelsPerStep * GrowW)
+    NewH := WinH + (PixelsPerStep * GrowH)
+    NewX := WinX + (PixelsPerStep * MovX)
+    NewY := WinY + (PixelsPerStep * MovY)
 }
 
 GetCenterCoordinates(ByRef A, WinNum, ByRef NewX, ByRef NewY, WinW, WinH)
@@ -502,10 +498,6 @@ GetCenterCoordinates(ByRef A, WinNum, ByRef NewX, ByRef NewY, WinW, WinH)
     ; Calculate the position based on the given dimensions [W|H]
     NewX := (ScreenW-WinW)/2 + MonLeft ; Adjust for monitor offset
     NewY := (ScreenH-WinH)/2 + MonTop ; Adjust for monitor offset
-
-    ; Don't allow the Top or Left of the window to be positioned off the visible screen area
-    NewX := NewX < MonLeft ? MonLeft : NewX
-    NewY := NewY < MonTop ? MonTop : NewY
 }
 
 EnsureWindowIsRestored()
