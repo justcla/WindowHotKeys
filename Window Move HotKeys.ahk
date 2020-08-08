@@ -35,6 +35,7 @@ SettingsFile = HotkeySettings.ini  ; Alt+Win shortcuts
 ; Read user-preference for shortcut combinations (each defined in a separate shortcutsDef INI file)
 IniRead, ShortcutsFile, %SettingsFile%, General, ShortcutDefs, ShortcutDefs-AltWin.ini
 
+;Move
 IniRead, Keys_MoveLeft, %ShortcutsFile%, Shortcuts, Keys_MoveLeft, !#Left
 IniRead, Keys_MoveRight, %ShortcutsFile%, Shortcuts, Keys_MoveRight, !#Right
 IniRead, Keys_MoveUp, %ShortcutsFile%, Shortcuts, Keys_MoveUp, !#Up
@@ -54,12 +55,22 @@ IniRead, Keys_MoveBottomRight, %ShortcutsFile%, Shortcuts, Keys_MoveBottomRight,
 IniRead, Keys_MoveCenter, %ShortcutsFile%, Shortcuts, Keys_MoveCenter, !#Del
 IniRead, Keys_MoveCenter2, %ShortcutsFile%, Shortcuts, Keys_MoveCenter2, !#Numpad5
 
+;Resize (only)
 IniRead, Keys_ResizeLeft, %ShortcutsFile%, Shortcuts, Keys_ResizeLeft, !+#Left
 IniRead, Keys_ResizeRight, %ShortcutsFile%, Shortcuts, Keys_ResizeRight, !+#Right
 IniRead, Keys_ResizeUp, %ShortcutsFile%, Shortcuts, Keys_ResizeUp, !+#Up
 IniRead, Keys_ResizeDown, %ShortcutsFile%, Shortcuts, Keys_ResizeDown, !+#Down
 IniRead, Keys_ResizeLarger, %ShortcutsFile%, Shortcuts, Keys_ResizeLarger, !+#PgDn
 IniRead, Keys_ResizeSmaller, %ShortcutsFile%, Shortcuts, Keys_ResizeSmaller, !+#PgUp
+;Resize and move
+IniRead, Keys_Grow, %ShortcutsFile%, Shortcuts, Keys_Grow, !+#=
+IniRead, Keys_Grow2, %ShortcutsFile%, Shortcuts, Keys_Grow2, !+#NumpadAdd
+IniRead, Keys_Grow3, %ShortcutsFile%, Shortcuts, Keys_Grow3, !#=
+IniRead, Keys_Grow4, %ShortcutsFile%, Shortcuts, Keys_Grow4, !#NumpadAdd
+IniRead, Keys_Shrink, %ShortcutsFile%, Shortcuts, Keys_Shrink, !+#-
+IniRead, Keys_Shrink2, %ShortcutsFile%, Shortcuts, Keys_Shrink2, !+#NumpadSub
+IniRead, Keys_Shrink3, %ShortcutsFile%, Shortcuts, Keys_Shrink3, !#-
+IniRead, Keys_Shrink4, %ShortcutsFile%, Shortcuts, Keys_Shrink4, !#NumpadSub
 IniRead, Keys_ResizeHalfScreen, %ShortcutsFile%, Shortcuts, Keys_ResizeHalfScreen, !+#Del
 IniRead, Keys_ResizeThreeQuarterScreen, %ShortcutsFile%, Shortcuts, Keys_ResizeThreeQuarterScreen, !+#Home
 IniRead, Keys_ResizeFullScreen, %ShortcutsFile%, Shortcuts, Keys_ResizeFullScreen, !#Enter
@@ -106,6 +117,15 @@ Hotkey, %Keys_ResizeUp%, ResizeUp
 Hotkey, %Keys_ResizeDown%, ResizeDown
 Hotkey, %Keys_ResizeLarger%, ResizeLarger
 Hotkey, %Keys_ResizeSmaller%, ResizeSmaller
+; Resize+Move commands
+Hotkey, %Keys_Grow%, Grow
+Hotkey, %Keys_Grow2%, Grow2
+Hotkey, %Keys_Grow3%, Grow3
+Hotkey, %Keys_Grow4%, Grow4
+Hotkey, %Keys_Shrink%, Shrink
+Hotkey, %Keys_Shrink2%, Shrink2
+Hotkey, %Keys_Shrink3%, Shrink3
+Hotkey, %Keys_Shrink4%, Shrink4
 Hotkey, %Keys_ResizeHalfScreen%, ResizeHalfScreen
 Hotkey, %Keys_ResizeThreeQuarterScreen%, ResizeThreeQuarterScreen
 Hotkey, %Keys_ResizeFullScreen%, ResizeFullScreen
@@ -244,6 +264,16 @@ MoveWindowToCenter() {
     return
 }
 
+GetMoveCoordinates(ByRef A, ByRef NewX, ByRef NewY, ByRef NewW, ByRef NewH, MovX:=0, MovY:=0, GrowW:=0, GrowH:=0)
+{
+    MoveAmount = 50 ; The number of pixels to move when resizing windows
+    WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
+    NewW := WinW + (MoveAmount * GrowW)
+    NewH := WinH + (MoveAmount * GrowH)
+    NewX := WinX + (MoveAmount * MovX)
+    NewY := WinY + (MoveAmount * MovY)
+}
+
 GetCenterCoordinates(ByRef A, WinNum, ByRef NewX, ByRef NewY, WinW, WinH)
 {
     ; Set the screen variables
@@ -318,6 +348,24 @@ YDir := -1
 NewW := WinW + (MoveAmount * XDir)
 NewH := WinH + (MoveAmount * XDir)
 WinMove, A, , , , NewW, NewH
+return
+
+Grow:
+Grow2:
+Grow3:
+Grow4:
+; Increase window size (both width and height) in both directions
+GetMoveCoordinates(A, NewX, NewY, NewW, NewH, -1, -1, 2, 2)
+WinMove, A, , NewX, NewY, NewW, NewH
+return
+
+Shrink:
+Shrink2:
+Shrink3:
+Shrink4:
+; Decrease window size (both width and height) in both directions
+GetMoveCoordinates(A, NewX, NewY, NewW, NewH, 1, 1, -2, -2)
+WinMove, A, , NewX, NewY, NewW, NewH
 return
 
 ; Resize to half of the screen size

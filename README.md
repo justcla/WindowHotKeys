@@ -12,7 +12,7 @@ Shortcuts to move and resize windows in Windows.
 
 **Resize Window:** Alt+Win+Shift + [Up/Down/Left/Right/PgUp/PgDn/Home/End/Del]
 
-**Special move/resize:** Alt+Win+Shift + [Enter/Home/Del]
+**Special move/resize:** Alt+Win+Shift + [Plus/Minus/Enter/Home/Del]
 
 **4-column layout (move):** Alt+Win + [1/2/3/4/,(<)/.(>)]
 
@@ -59,14 +59,17 @@ Keyboard Shortcut | Action | Description
 **Minor Resize shortcuts** | [ *Resize window by 50px* ] |
 Alt+Win+Shift + Up | Resize window shorter | Decrease height
 Alt+Win+Shift + Down | Resize window taller | Increase height
-Alt+Win+Shift + Left | Resize window narrower | Ddecrease width
+Alt+Win+Shift + Left | Resize window narrower | Decrease width
 Alt+Win+Shift + Right | Resize window wider | Increase width
-Alt+Win+Shift + PgUp | Resize window smaller | Decrease width and height
-Alt+Win+Shift + PgDn | Resize window larger | Increase width and height
+Alt+Win+Shift + PgUp | Resize window smaller | Decrease width and height from bottom right corner
+Alt+Win+Shift + PgDn | Resize window larger | Increase width and height from bottom right corner
 
 ### Special Move/Resize commands
 Keyboard Shortcut | Action | Description
 --- | --- | ---
+**Resize from Center** |
+Alt+Win + Minus<br><br>Alt+Win+Shift + Minus (-/NumMinus) | Shrink window | Decrease width and height from center
+Alt+Win + Plus<br><br>Alt+Win+Shift + Plus (=/NumPlus) | Grow window | Increase width and height from center
 **Major Resize shortcuts** |
 Alt+Win + Enter<br><br>Alt+Win+Shift + Enter | Resize to full extent of monitor | Max width and height of monitor
 Alt+Win+Shift + Home | Center and Resize to three quarters of monitor size| 3/4 width and height of monitor
