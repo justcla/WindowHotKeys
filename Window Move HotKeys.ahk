@@ -150,64 +150,27 @@ Return ; End initialization
 ; ==== Move Window commands ====
 ; ================================
 
-MoveWindow(A, NewX, NewY)
-{
-    EnsureWindowIsRestored()
-    WinMove, A, , NewX, NewY
-    return
-}
-
-DoMove(xChange:=0, yChange:=0)
-{
-    WinGetPos, WinX, WinY, WinW, WinH, A  ; Get active window ('A') posn (X/Y) and size (W/H)
-    NewX := WinX + xChange
-    NewY := WinY + yChange
-    MoveWindow(A, NewX, NewY)
-}
-
 ; ---- Small window movements ----
 
 MoveLeft:
-DoMove(-MoveAmount, 0)
+DoMoveAndResize(-1, 0)
 return
 
 MoveRight:
-DoMove(MoveAmount, 0)
+DoMoveAndResize(1, 0)
 return
 
 MoveUp:
-DoMove(0, -MoveAmount)
+DoMoveAndResize(0, -1)
 return
 
 MoveDown:
-DoMove(0, MoveAmount)
+DoMoveAndResize(0, 1)
 return
 
 ; ------------------------------
 ; ---- Move to Screen Edges ----
 ; ------------------------------
-
-MoveToEdge(Edge)
-{
-    ; Get monitor and window dimensions
-    WinNum := GetWindowNumber()
-    SysGet, Mon, MonitorWorkArea, %WinNum%
-    WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-
-    ; Set window coordinates
-    if InStr(Edge, "Left")
-        NewX := MonLeft
-    if InStr(Edge, "Right")
-        NewX := MonRight - WinW
-    if InStr(Edge, "Top")
-        NewY := MonTop
-    if InStr(Edge, "Bottom")
-        NewY := MonBottom - WinH
-
-    ; MsgBox NewX/NewY = %NewX%,%NewY%
-    MoveWindow(A, NewX, NewY)
-    return
-}
 
 MoveTop:
 MoveTop2:
@@ -254,109 +217,46 @@ MoveCenter2:
 MoveWindowToCenter()
 return
 
-MoveWindowToCenter() {
-    EnsureWindowIsRestored() ; First, ensure the window is restored
-    WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-    WinNum := GetWindowNumber()
-    GetCenterCoordinates(A, WinNum, NewX, NewY, WinW, WinH)  ; Returns NewX and NewY and 'A'
-    ; MsgBox Move to: %NewX%, %NewY%, %WinW%, %WinH%
-    WinMove, A, , NewX, NewY, WinW, WinH
-    return
-}
-
-GetMoveCoordinates(ByRef A, ByRef NewX, ByRef NewY, ByRef NewW, ByRef NewH, MovX:=0, MovY:=0, GrowW:=0, GrowH:=0)
-{
-    MoveAmount = 50 ; The number of pixels to move when resizing windows
-    WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-    NewW := WinW + (MoveAmount * GrowW)
-    NewH := WinH + (MoveAmount * GrowH)
-    NewX := WinX + (MoveAmount * MovX)
-    NewY := WinY + (MoveAmount * MovY)
-}
-
-GetCenterCoordinates(ByRef A, WinNum, ByRef NewX, ByRef NewY, WinW, WinH)
-{
-    ; Set the screen variables
-    SysGet, Mon, MonitorWorkArea, %WinNum%
-    ScreenW := MonRight - MonLeft
-    ScreenH := MonBottom - MonTop
-
-    ; Calculate the position based on the given dimensions [W|H]
-    NewX := (ScreenW-WinW)/2 + MonLeft ; Adjust for monitor offset
-    NewY := (ScreenH-WinH)/2 + MonTop ; Adjust for monitor offset
-
-    ; Don't allow the Top or Left of the window to be positioned off the visible screen area
-    NewX := NewX < MonLeft ? MonLeft : NewX
-    NewY := NewY < MonTop ? MonTop : NewY
-}
-
 ; ================================
 ; ==== Resize Window commands ====
 ; ================================
 
 ResizeLeft:
-; MsgBox, Resize window left
-XDir := -1
-WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-NewW := WinW + (MoveAmount * XDir)
-WinMove, A, , , , NewW,
+DoResize(-1, 0)
 return
 
 ResizeRight:
-; MsgBox, Resize window right
-XDir := 1
-WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-NewW := WinW + (MoveAmount * XDir)
-WinMove, A, , , , NewW,
+DoResize(1, 0)
 return
 
 ResizeUp:
-; MsgBox, Resize window up
-YDir := -1
-WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-NewH := WinH + (MoveAmount * YDir)
-WinMove, A, , , , , NewH
+DoResize(0, -1)
 return
 
 ResizeDown:
-; MsgBox, Resize window down
-YDir := 1
-WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-NewH := WinH + (MoveAmount * YDir)
-WinMove, A, , , , , NewH
+DoResize(0, 1)
+return
+
+ResizeLarger:
+; Increase window size (both width and height)
+DoResize(1, 1)
+return
+
+ResizeSmaller:
+; Reduce window size (both width and height)
+DoResize(-1, -1)
 return
 
 ; ======================================
 ; ==== Special Move/Resize commands ====
 ; ======================================
 
-ResizeLarger:
-; Increase window size (both width and height)
-WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-XDir := 1
-YDir := 1
-NewW := WinW + (MoveAmount * XDir)
-NewH := WinH + (MoveAmount * XDir)
-WinMove, A, , , , NewW, NewH
-return
-
-ResizeSmaller:
-; Reduce window size (both width and height)
-WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-XDir := -1
-YDir := -1
-NewW := WinW + (MoveAmount * XDir)
-NewH := WinH + (MoveAmount * XDir)
-WinMove, A, , , , NewW, NewH
-return
-
 Grow:
 Grow2:
 Grow3:
 Grow4:
 ; Increase window size (both width and height) in both directions
-GetMoveCoordinates(A, NewX, NewY, NewW, NewH, -1, -1, 2, 2)
-WinMove, A, , NewX, NewY, NewW, NewH
+DoMoveAndResize(-1, -1, 2, 2)
 return
 
 Shrink:
@@ -364,32 +264,25 @@ Shrink2:
 Shrink3:
 Shrink4:
 ; Decrease window size (both width and height) in both directions
-GetMoveCoordinates(A, NewX, NewY, NewW, NewH, 1, 1, -2, -2)
-WinMove, A, , NewX, NewY, NewW, NewH
+DoMoveAndResize(1, 1, -2, -2)
 return
 
 ; Resize to half of the screen size
 ResizeHalfScreen:
-EnsureWindowIsRestored() ; First, ensure the window is restored
-WinNum := GetWindowNumber()
-SysGet, Mon, MonitorWorkArea, %WinNum%
 ; Calculate width/height (half screen size)
-NewW := (MonRight - MonLeft) * (1/2) ; half of window width
-NewH := (MonBottom - MonTop) * (1/2) ; half of window height
+WinNum := GetWindowNumber()
+CalculateSizeByWinRatio(NewW, NewH, WinNum, 0.5)
 GetCenterCoordinates(A, WinNum, NewX, NewY, NewW, NewH)
-WinMove, A, , NewX, NewY, NewW, NewH
+RestoreMoveAndResize(A, NewX, NewY, NewW, NewH)
 return
 
 ; Resize to three-quarters of the screen size
 ResizeThreeQuarterScreen:
-EnsureWindowIsRestored() ; First, ensure the window is restored
-WinNum := GetWindowNumber()
-SysGet, Mon, MonitorWorkArea, %WinNum%
 ; Calculate width/height (3/4 screen size)
-NewW := (MonRight - MonLeft) * (3/4)
-NewH := (MonBottom - MonTop) * (3/4)
+WinNum := GetWindowNumber()
+CalculateSizeByWinRatio(NewW, NewH, WinNum, 0.75)
 GetCenterCoordinates(A, WinNum, NewX, NewY, NewW, NewH)
-WinMove, A, , NewX, NewY, NewW, NewH
+RestoreMoveAndResize(A, NewX, NewY, NewW, NewH)
 return
 
 ResizeFullScreen:
@@ -404,6 +297,10 @@ NewH := MonBottom - MonTop ; Set the window height equal to the height of the sc
 NewW := MonRight - MonLeft ; Set the window width equal to the width of the screen less the taskbar
 WinMove, A, , NewX, NewY, NewW, NewH
 return
+
+; ======================
+; ===== Restore ========
+; ======================
 
 RestoreToPreviousPosn:
 EnsureWindowIsRestored()
@@ -534,6 +431,89 @@ return
 ; ========================
 ; ===== Functions ========
 ; ========================
+
+MoveToEdge(Edge)
+{
+    ; Get monitor and window dimensions
+    WinNum := GetWindowNumber()
+    SysGet, Mon, MonitorWorkArea, %WinNum%
+    WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
+
+    ; Set window coordinates
+    if InStr(Edge, "Left")
+        NewX := MonLeft
+    if InStr(Edge, "Right")
+        NewX := MonRight - WinW
+    if InStr(Edge, "Top")
+        NewY := MonTop
+    if InStr(Edge, "Bottom")
+        NewY := MonBottom - WinH
+
+    ; MsgBox NewX/NewY = %NewX%,%NewY%
+    RestoreMoveAndResize(A, NewX, NewY, NewW, NewH)
+    return
+}
+
+DoResize(GrowW, GrowH)
+{
+    DoMoveAndResize( , , GrowW, GrowH)
+}
+
+DoMoveAndResize(MoveX:=0, MoveY:=0, GrowW:=0, GrowH:=0)
+{
+    GetMoveCoordinates(A, NewX, NewY, NewW, NewH, MoveX, MoveY, GrowW, GrowH)
+    RestoreMoveAndResize(A, NewX, NewY, NewW, NewH)
+}
+
+CalculateSizeByWinRatio(ByRef NewW, ByRef NewH, WinNum, Ratio)
+{
+    WinNum := GetWindowNumber()
+    SysGet, Mon, MonitorWorkArea, %WinNum%
+    NewW := (MonRight - MonLeft) * Ratio
+    NewH := (MonBottom - MonTop) * Ratio
+}
+
+RestoreMoveAndResize(A, NewX, NewY, NewW, NewH)
+{
+    EnsureWindowIsRestored() ; First, ensure the window is restored
+    WinMove, A, , NewX, NewY, NewW, NewH
+}
+
+MoveWindowToCenter() {
+    WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
+    WinNum := GetWindowNumber()
+    GetCenterCoordinates(A, WinNum, NewX, NewY, WinW, WinH)  ; Returns NewX and NewY and 'A'
+    ; MsgBox Move to: %NewX%, %NewY%, %WinW%, %WinH%
+    EnsureWindowIsRestored() ; First, ensure the window is restored
+    WinMove, A, , NewX, NewY, WinW, WinH
+    return
+}
+
+GetMoveCoordinates(ByRef A, ByRef NewX, ByRef NewY, ByRef NewW, ByRef NewH, MovX:=0, MovY:=0, GrowW:=0, GrowH:=0)
+{
+    MoveAmount = 50 ; The number of pixels to move when resizing windows
+    WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
+    NewW := WinW + (MoveAmount * GrowW)
+    NewH := WinH + (MoveAmount * GrowH)
+    NewX := WinX + (MoveAmount * MovX)
+    NewY := WinY + (MoveAmount * MovY)
+}
+
+GetCenterCoordinates(ByRef A, WinNum, ByRef NewX, ByRef NewY, WinW, WinH)
+{
+    ; Set the screen variables
+    SysGet, Mon, MonitorWorkArea, %WinNum%
+    ScreenW := MonRight - MonLeft
+    ScreenH := MonBottom - MonTop
+
+    ; Calculate the position based on the given dimensions [W|H]
+    NewX := (ScreenW-WinW)/2 + MonLeft ; Adjust for monitor offset
+    NewY := (ScreenH-WinH)/2 + MonTop ; Adjust for monitor offset
+
+    ; Don't allow the Top or Left of the window to be positioned off the visible screen area
+    NewX := NewX < MonLeft ? MonLeft : NewX
+    NewY := NewY < MonTop ? MonTop : NewY
+}
 
 EnsureWindowIsRestored()
 {
