@@ -269,33 +269,18 @@ return
 
 ; Resize to half of the screen size
 ResizeHalfScreen:
-; Calculate width/height (half screen size)
-WinNum := GetWindowNumber()
-CalculateSizeByWinRatio(NewW, NewH, WinNum, 0.5)
-GetCenterCoordinates(A, WinNum, NewX, NewY, NewW, NewH)
-RestoreMoveAndResize(A, NewX, NewY, NewW, NewH)
+ResizeAndCenter(0.5)
 return
 
 ; Resize to three-quarters of the screen size
 ResizeThreeQuarterScreen:
-; Calculate width/height (3/4 screen size)
-WinNum := GetWindowNumber()
-CalculateSizeByWinRatio(NewW, NewH, WinNum, 0.75)
-GetCenterCoordinates(A, WinNum, NewX, NewY, NewW, NewH)
-RestoreMoveAndResize(A, NewX, NewY, NewW, NewH)
+ResizeAndCenter(0.75)
 return
 
 ResizeFullScreen:
 ResizeFullScreen2:
 ; Move and Resize window to full screen
-;WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-WinNum := GetWindowNumber()
-SysGet, Mon, MonitorWorkArea, %WinNum%
-NewX := MonLeft
-NewY := MonTop
-NewH := MonBottom - MonTop ; Set the window height equal to the height of the screen
-NewW := MonRight - MonLeft ; Set the window width equal to the width of the screen less the taskbar
-WinMove, A, , NewX, NewY, NewW, NewH
+ResizeAndCenter(1)
 return
 
 ; ======================
@@ -462,6 +447,14 @@ DoResize(GrowW, GrowH)
 DoMoveAndResize(MoveX:=0, MoveY:=0, GrowW:=0, GrowH:=0)
 {
     GetMoveCoordinates(A, NewX, NewY, NewW, NewH, MoveX, MoveY, GrowW, GrowH)
+    RestoreMoveAndResize(A, NewX, NewY, NewW, NewH)
+}
+
+ResizeAndCenter(Ratio)
+{
+    WinNum := GetWindowNumber()
+    CalculateSizeByWinRatio(NewW, NewH, WinNum, Ratio)
+    GetCenterCoordinates(A, WinNum, NewX, NewY, NewW, NewH)
     RestoreMoveAndResize(A, NewX, NewY, NewW, NewH)
 }
 
