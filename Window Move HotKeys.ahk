@@ -79,6 +79,8 @@ IniRead, Keys_RestoreToPreviousPosnAndSize, %ShortcutsFile%, Shortcuts, Keys_Res
 
 IniRead, Keys_SwitchToPreviousDesktop, %ShortcutsFile%, Shortcuts, Keys_SwitchToPreviousDesktop, ^#,
 IniRead, Keys_SwitchToNextDesktop, %ShortcutsFile%, Shortcuts, Keys_SwitchToNextDesktop, ^#.
+IniRead, Keys_MoveToPreviousDesktop, %ShortcutsFile%, Shortcuts, Keys_MoveToPreviousDesktop, ^+#Left
+IniRead, Keys_MoveToNextDesktop, %ShortcutsFile%, Shortcuts, Keys_MoveToNextDesktop, ^+#Right
 
 IniRead, Keys_TileWindowsVertically, %ShortcutsFile%, Shortcuts, Keys_TileWindowsVertically, !#V
 IniRead, Keys_TileWindowsVertically2, %ShortcutsFile%, Shortcuts, Keys_TileWindowsVertically2, !+#V
@@ -133,6 +135,8 @@ Hotkey, %Keys_RestoreToPreviousPosn%, RestoreToPreviousPosn
 ; Virtual Desktop commands
 Hotkey, %Keys_SwitchToPreviousDesktop%, SwitchToPreviousDesktop
 Hotkey, %Keys_SwitchToNextDesktop%, SwitchToNextDesktop
+Hotkey, %Keys_MoveToPreviousDesktop%, MoveToPreviousDesktop
+Hotkey, %Keys_MoveToNextDesktop%, MoveToNextDesktop
 ; Tile and Cascade windows
 Hotkey, %Keys_TileWindowsVertically%, TileWindowsVertically
 Hotkey, %Keys_TileWindowsHorizontally%, TileWindowsHorizontally
@@ -403,13 +407,72 @@ return
 
 ; Credit to: https://www.autohotkey.com/boards/viewtopic.php?t=17941
 
-SwitchToPreviousDesktop:
-send {LWin down}{LCtrl down}{Left}{LCtrl up}{LWin up}  ; switch to previous virtual desktop
-return
+SwitchToPreviousDesktop()
+{
+    send {LWin down}{LCtrl down}{Left}{LCtrl up}{LWin up}  ; switch to previous virtual desktop
+    return
+}
 
-SwitchToNextDesktop:
-send {LWin down}{LCtrl down}{Right}{LCtrl up}{LWin up}   ; switch to next virtual desktop
-return
+SwitchToNextDesktop()
+{
+    send {LWin down}{LCtrl down}{Right}{LCtrl up}{LWin up}   ; switch to next virtual desktop
+    return
+}
+
+; ====================================================
+; ===== Move window to other Virtual Desktops ========
+; ====================================================
+
+MoveToPreviousDesktop()
+{
+    ; Pre-conditons:
+    ; Check current desktop is not Desktop 1; if on desktop one, abort
+;    if (currentDesktop = 1) {
+;        return
+;    }
+
+    MoveWindowToOtherDesktop(-1) ; Move 1 desktop to the left
+}
+
+MoveToNextDesktop()
+{
+    ; Pre-conditons:
+    ; Check: Is there a desktop to the right? If not, can we create a new one?
+;    if (currentDesktop = numDesktops) {
+;        return
+;    }
+
+    MoveWindowToOtherDesktop(1) ; Move 1 desktop to the right
+}
+
+MoveWindowToOtherDesktop(direction)
+{
+;    ; Pre-conditons:
+;    ; Check: Is there a desktop to the right? If not, can we create a new one?
+;    currentDesktop = 2
+;    numDesktops = 3
+
+    ; Methodology
+    ; 1. Hide the window
+    ; 2. Move to the next/previous desktop
+    ; 3. Unhide the window
+
+    WinWait, A
+    WinHide
+    if (direction > 0) {
+        ; If there is no desktop to the right, create one
+;        if (currentDesktop == numDesktops) {
+;            Send ^#d ; Will automatically take focus to the new desktop
+;        } else {
+            SwitchToNextDesktop()
+;        }
+    } else {
+        SwitchToPreviousDesktop()
+    }
+    Sleep 100
+    WinShow
+    WinActivate
+}
 
 ; ========================
 ; ===== Functions ========
