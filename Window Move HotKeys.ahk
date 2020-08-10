@@ -109,7 +109,7 @@ Hotkey, %Keys_MoveTopRight%, MoveTopRight
 Hotkey, %Keys_MoveBottomLeft%, MoveBottomLeft
 Hotkey, %Keys_MoveBottomRight%, MoveBottomRight
 Hotkey, %Keys_MoveCenter%, MoveCenter
-Hotkey, %Keys_MoveCenter2%, MoveCenter2
+Hotkey, %Keys_MoveCenter2%, MoveCenter
 ; "Resize" commands
 Hotkey, %Keys_ResizeLeft%, ResizeLeft
 Hotkey, %Keys_ResizeRight%, ResizeRight
@@ -119,17 +119,17 @@ Hotkey, %Keys_ResizeLarger%, ResizeLarger
 Hotkey, %Keys_ResizeSmaller%, ResizeSmaller
 ; Resize+Move commands
 Hotkey, %Keys_Grow%, Grow
-Hotkey, %Keys_Grow2%, Grow2
-Hotkey, %Keys_Grow3%, Grow3
-Hotkey, %Keys_Grow4%, Grow4
+Hotkey, %Keys_Grow2%, Grow
+Hotkey, %Keys_Grow3%, Grow
+Hotkey, %Keys_Grow4%, Grow
 Hotkey, %Keys_Shrink%, Shrink
-Hotkey, %Keys_Shrink2%, Shrink2
-Hotkey, %Keys_Shrink3%, Shrink3
-Hotkey, %Keys_Shrink4%, Shrink4
+Hotkey, %Keys_Shrink2%, Shrink
+Hotkey, %Keys_Shrink3%, Shrink
+Hotkey, %Keys_Shrink4%, Shrink
 Hotkey, %Keys_ResizeHalfScreen%, ResizeHalfScreen
 Hotkey, %Keys_ResizeThreeQuarterScreen%, ResizeThreeQuarterScreen
 Hotkey, %Keys_ResizeFullScreen%, ResizeFullScreen
-Hotkey, %Keys_ResizeFullScreen2%, ResizeFullScreen2
+Hotkey, %Keys_ResizeFullScreen2%, ResizeFullScreen
 ; "Restore" commands
 Hotkey, %Keys_RestoreToPreviousPosn%, RestoreToPreviousPosn
 ; Virtual Desktop commands
@@ -139,11 +139,11 @@ Hotkey, %Keys_MoveToPreviousDesktop%, MoveToPreviousDesktop
 Hotkey, %Keys_MoveToNextDesktop%, MoveToNextDesktop
 ; Tile and Cascade windows
 Hotkey, %Keys_TileWindowsVertically%, TileWindowsVertically
+Hotkey, %Keys_TileWindowsVertically2%, TileWindowsVertically
 Hotkey, %Keys_TileWindowsHorizontally%, TileWindowsHorizontally
-Hotkey, %Keys_TileWindowsVertically2%, TileWindowsVertically2
-Hotkey, %Keys_TileWindowsHorizontally2%, TileWindowsHorizontally2
+Hotkey, %Keys_TileWindowsHorizontally2%, TileWindowsHorizontally
 Hotkey, %Keys_CascadeWindows%, CascadeWindows
-Hotkey, %Keys_CascadeWindows2%, CascadeWindows2
+Hotkey, %Keys_CascadeWindows2%, CascadeWindows
 
 
 Return ; End initialization
@@ -175,22 +175,18 @@ return
 ; ------------------------------
 
 MoveTop:
-MoveTop2:
 MoveToEdge("Top")
 return
 
 MoveBottom:
-MoveBottom2:
 MoveToEdge("Bottom")
 return
 
 MoveHardLeft:
-MoveHardLeft2:
 MoveToEdge("HardLeft")
 return
 
 MoveHardRight:
-MoveHardRight2:
 MoveToEdge("HardRight")
 return
 
@@ -215,7 +211,6 @@ return
 ; -- Center --
 
 MoveCenter:
-MoveCenter2:
 MoveWindowToCenter()
 return
 
@@ -254,17 +249,11 @@ return
 ; ======================================
 
 Grow:
-Grow2:
-Grow3:
-Grow4:
 ; Increase window size (both width and height) in both directions
 DoMoveAndResize(-1, -1, 2, 2)
 return
 
 Shrink:
-Shrink2:
-Shrink3:
-Shrink4:
 ; Decrease window size (both width and height) in both directions
 DoMoveAndResize(1, 1, -2, -2)
 return
@@ -280,7 +269,6 @@ ResizeAndCenter(0.75)
 return
 
 ResizeFullScreen:
-ResizeFullScreen2:
 ; Move and Resize window to full screen
 ResizeAndCenter(1)
 return
@@ -313,17 +301,14 @@ return
 ; Cascade windows : DllCall( "CascadeWindows", uInt,0, Int,4, Int,0, Int,0, Int,0 )
 
 TileWindowsVertically:
-TileWindowsVertically2:
 DllCall( "TileWindows", uInt,0, Int,0, Int,0, Int,0, Int,0 )
 return
 
 TileWindowsHorizontally:
-TileWindowsHorizontally2:
 DllCall( "TileWindows", uInt,0, Int,0, Int,0, Int,0, Int,0 )
 return
 
 CascadeWindows:
-CascadeWindows2:
 DllCall( "CascadeWindows", uInt,0, Int,4, Int,0, Int,0, Int,0 )
 return
 
