@@ -64,11 +64,15 @@ IniRead, Keys_ResizeSmaller, %ShortcutsFile%, Shortcuts, Keys_ResizeSmaller, !+#
 IniRead, Keys_Grow, %ShortcutsFile%, Shortcuts, Keys_Grow, !+#=
 IniRead, Keys_Grow2, %ShortcutsFile%, Shortcuts, Keys_Grow2, !+#NumpadAdd
 IniRead, Keys_Grow3, %ShortcutsFile%, Shortcuts, Keys_Grow3, !#=
-IniRead, Keys_Grow4, %ShortcutsFile%, Shortcuts, Keys_Grow4, !#NumpadAdd
+IniRead, Keys_Grow4, %ShortcutsFile%, Shortcuts, Keys_Grow5, ^#NumpadAdd
+IniRead, Keys_Grow5, %ShortcutsFile%, Shortcuts, Keys_Grow6, ^#NumpadAdd
+IniRead, Keys_Grow6, %ShortcutsFile%, Shortcuts, Keys_Grow4, !#NumpadAdd
 IniRead, Keys_Shrink, %ShortcutsFile%, Shortcuts, Keys_Shrink, !+#-
 IniRead, Keys_Shrink2, %ShortcutsFile%, Shortcuts, Keys_Shrink2, !+#NumpadSub
 IniRead, Keys_Shrink3, %ShortcutsFile%, Shortcuts, Keys_Shrink3, !#-
 IniRead, Keys_Shrink4, %ShortcutsFile%, Shortcuts, Keys_Shrink4, !#NumpadSub
+IniRead, Keys_Shrink5, %ShortcutsFile%, Shortcuts, Keys_Shrink5, ^#-
+IniRead, Keys_Shrink6, %ShortcutsFile%, Shortcuts, Keys_Shrink6, ^#NumpadSub
 IniRead, Keys_ResizeHalfScreen, %ShortcutsFile%, Shortcuts, Keys_ResizeHalfScreen, !+#Del
 IniRead, Keys_ResizeThreeQuarterScreen, %ShortcutsFile%, Shortcuts, Keys_ResizeThreeQuarterScreen, !+#Home
 IniRead, Keys_ResizeFullScreen, %ShortcutsFile%, Shortcuts, Keys_ResizeFullScreen, !#Enter
@@ -122,10 +126,14 @@ Hotkey, %Keys_Grow%, Grow
 Hotkey, %Keys_Grow2%, Grow
 Hotkey, %Keys_Grow3%, Grow
 Hotkey, %Keys_Grow4%, Grow
+Hotkey, %Keys_Grow5%, Grow
+Hotkey, %Keys_Grow6%, Grow
 Hotkey, %Keys_Shrink%, Shrink
 Hotkey, %Keys_Shrink2%, Shrink
 Hotkey, %Keys_Shrink3%, Shrink
 Hotkey, %Keys_Shrink4%, Shrink
+Hotkey, %Keys_Shrink5%, Shrink
+Hotkey, %Keys_Shrink6%, Shrink
 Hotkey, %Keys_ResizeHalfScreen%, ResizeHalfScreen
 Hotkey, %Keys_ResizeThreeQuarterScreen%, ResizeThreeQuarterScreen
 Hotkey, %Keys_ResizeFullScreen%, ResizeFullScreen
