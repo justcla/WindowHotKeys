@@ -22,27 +22,84 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 ; ==============================================
 
 ; #Persistent  ; Keep the script running until the user exits it.
-Init()
+
+; ====== Define Global variables ======
+
+; Alternative keyboard layouts
+SettingsFile = HotkeySettings.ini  ; Alt+Win shortcuts
+
+; Read user-preference for shortcut combinations (each defined in a separate shortcutsDef INI file)
+IniRead, ShortcutsFile, %SettingsFile%, General, ShortcutDefs, ShortcutDefs-AltWin.ini
+; Global settings
+IniRead, PixelsPerStep, %SettingsFile%, Settings, PixelsPerStep, 50
+
+InitializeMenu()
+
+InitializeShortcuts()
+
 Return ; End initialization
 
-Init() {
-    InitializeShortcuts()
-    InitializeMenu()
+; ===========================================
+InitializeMenu() {
+    ; Set the System tray icon
+    Menu, Tray, Icon, AltWinHotKeys.ico
+    ; Add items to the SysTray
+    Menu, Tray, Add  ; Creates a separator line.
+    ; Menu, Tray, Add, Item Text, MenuHandler  ; Creates a new menu item.
+    Menu, Tray, Add, Item1, MenuHandler  ; Creates a new menu item.
+
+    InitMenu2()
+
+    ; Move Standard menu items (ie. Pause/Exit) to the bottom
+    Menu, Tray, Add ; Separator
+    Menu, Tray, NoStandard
+    Menu, Tray, Standard
+
+    return
 }
+
+MenuHandler() {
+    MsgBox You selected %A_ThisMenuItem% from menu %A_ThisMenu%.
+    return
+}
+
+InitMenu2() {
+    ; Create the menu (MyMenu) by adding some items to it.
+    Menu, MyMenu, Add, Item1, MenuHandler
+    Menu, MyMenu, Add, Item2, MenuHandler
+    Menu, MyMenu, Add  ; Add a separator line.
+
+    ; Create another menu destined to become a submenu of the above menu.
+    Menu, Submenu1, Add, Item1, MenuHandler
+    Menu, Submenu1, Add, Item2, MenuHandler
+
+    ; Create a submenu in the first menu (a right-arrow indicator). When the user selects it, the second menu is displayed.
+    Menu, MyMenu, Add, My Submenu, :Submenu1
+
+    Menu, MyMenu, Add  ; Add a separator line below the submenu.
+    Menu, MyMenu, Add, Item3, MenuHandler  ; Add another menu item beneath the submenu.
+
+    ; Add MyMenu to the SysTray menu
+    Menu, Tray, Add ; separator
+    Menu, Tray, Add, My Menu, :MyMenu
+
+    return  ; End of script's auto-execute section.
+}
+
+ShowMyMenu() {
+    Menu, MyMenu, Show  ; i.e. press the Win-Z hotkey to show the menu.
+}
+
+; Set the menu to pop up when Win-Z is pressed
+#z::ShowMyMenu()
+
+; ------- End Menu Init -----------
+; ---------------------------------
 
 InitializeShortcuts() {
 
     ; ==== Define the shortcut key combinations ====
-
-    ; Read the shortcut keys from the settings file (or fall back on defaults)
-
-    ; Alternative keyboard layouts
-    SettingsFile = HotkeySettings.ini  ; Alt+Win shortcuts
-
-    ; Read user-preference for shortcut combinations (each defined in a separate shortcutsDef INI file)
-    IniRead, ShortcutsFile, %SettingsFile%, General, ShortcutDefs, ShortcutDefs-AltWin.ini
-    ; Global settings
-    IniRead, PixelsPerStep, %SettingsFile%, Settings, PixelsPerStep, 50
+    ; Read the shortcut keys from the shortcuts file (or fall back on defaults)
 
     ;Move
     IniRead, Keys_MoveLeft, %ShortcutsFile%, Shortcuts, Keys_MoveLeft, !#Left
@@ -164,57 +221,8 @@ InitializeShortcuts() {
     Hotkey, %Keys_CascadeWindows%, CascadeWindows
     Hotkey, %Keys_CascadeWindows2%, CascadeWindows
 
-    Return ; End initialization
+    return ; end shortcuts init
 }
-
-InitializeMenu() {
-    ; Set the System tray icon
-    Menu, Tray, Icon, AltWinHotKeys.ico
-    ; Add items to the SysTray
-    Menu, Tray, Add  ; Creates a separator line.
-    ; Menu, Tray, Add, Item Text, MenuHandler  ; Creates a new menu item.
-    Menu, Tray, Add, Item1, MenuHandler  ; Creates a new menu item.
-
-    InitMenu2()
-
-    ; Move Standard menu items (ie. Pause/Exit) to the bottom
-    Menu, Tray, Add ; Separator
-    Menu, Tray, NoStandard
-    Menu, Tray, Standard
-
-    return
-}
-
-MenuHandler() {
-    MsgBox You selected %A_ThisMenuItem% from menu %A_ThisMenu%.
-    return
-}
-
-
-InitMenu2() {
-    ; Create the popup menu by adding some items to it.
-    Menu, MyMenu, Add, Item1, MenuHandler
-    Menu, MyMenu, Add, Item2, MenuHandler
-    Menu, MyMenu, Add  ; Add a separator line.
-
-    ; Create another menu destined to become a submenu of the above menu.
-    Menu, Submenu1, Add, Item1, MenuHandler
-    Menu, Submenu1, Add, Item2, MenuHandler
-
-    ; Create a submenu in the first menu (a right-arrow indicator). When the user selects it, the second menu is displayed.
-    Menu, MyMenu, Add, My Submenu, :Submenu1
-
-    Menu, MyMenu, Add  ; Add a separator line below the submenu.
-    Menu, MyMenu, Add, Item3, MenuHandler  ; Add another menu item beneath the submenu.
-
-    ; Add MyMenu to the SysTray menu
-    Menu, Tray, Add ; separator
-    Menu, Tray, Add, My Menu, :MyMenu
-
-    return  ; End of script's auto-execute section.
-}
-
-#z::Menu, MyMenu, Show  ; i.e. press the Win-Z hotkey to show the menu.
 
 ; ================================
 ; ==== Move Window commands ====
@@ -590,7 +598,7 @@ CalculateSizeByWinRatio(ByRef NewW, ByRef NewH, WinNum, Ratio)
 RestoreMoveAndResize(A, NewX, NewY, NewW, NewH)
 {
     EnsureWindowIsRestored() ; Always ensure the window is restored before any move or resize operation
-;     MsgBox Move to: %NewX%, %NewY%, %WinW%, %WinH%
+;    MsgBox Move to: %NewX%, %NewY%, %WinW%, %WinH%
     WinMove, A, , NewX, NewY, NewW, NewH
 }
 
