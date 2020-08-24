@@ -21,6 +21,9 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 ; ==== Initialization Section ====
 ; ==============================================
 
+; Set the System Tray icon
+Menu, Tray, Icon, AltWinHotKeys.ico
+
 ; ==== Define the shortcut key combinations ====
 
 ; Read the shortcut keys from the settings file (or fall back on defaults)
