@@ -21,143 +21,200 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 ; ==== Initialization Section ====
 ; ==============================================
 
-; Set the System Tray icon
-Menu, Tray, Icon, AltWinHotKeys.ico
-
-; ==== Define the shortcut key combinations ====
-
-; Read the shortcut keys from the settings file (or fall back on defaults)
-
-; Alternative keyboard layouts
-SettingsFile = HotkeySettings.ini  ; Alt+Win shortcuts
-
-; Read user-preference for shortcut combinations (each defined in a separate shortcutsDef INI file)
-IniRead, ShortcutsFile, %SettingsFile%, General, ShortcutDefs, ShortcutDefs-AltWin.ini
-; Global settings
-IniRead, PixelsPerStep, %SettingsFile%, Settings, PixelsPerStep, 50
-
-;Move
-IniRead, Keys_MoveLeft, %ShortcutsFile%, Shortcuts, Keys_MoveLeft, !#Left
-IniRead, Keys_MoveRight, %ShortcutsFile%, Shortcuts, Keys_MoveRight, !#Right
-IniRead, Keys_MoveUp, %ShortcutsFile%, Shortcuts, Keys_MoveUp, !#Up
-IniRead, Keys_MoveDown, %ShortcutsFile%, Shortcuts, Keys_MoveDown, !#Down
-IniRead, Keys_MoveTop, %ShortcutsFile%, Shortcuts, Keys_MoveTop, !#PgUp
-IniRead, Keys_MoveTop2, %ShortcutsFile%, Shortcuts, Keys_MoveTop2, !#Numpad8
-IniRead, Keys_MoveBottom, %ShortcutsFile%, Shortcuts, Keys_MoveBottom, !#PgDn
-IniRead, Keys_MoveBottom2, %ShortcutsFile%, Shortcuts, Keys_MoveBottom2, !#Numpad2
-IniRead, Keys_MoveHardLeft, %ShortcutsFile%, Shortcuts, Keys_MoveHardLeft, !#Home
-IniRead, Keys_MoveHardLeft2, %ShortcutsFile%, Shortcuts, Keys_MoveHardLeft2, !#Numpad4
-IniRead, Keys_MoveHardRight, %ShortcutsFile%, Shortcuts, Keys_MoveHardRight, !#End
-IniRead, Keys_MoveHardRight2, %ShortcutsFile%, Shortcuts, Keys_MoveHardRight2, !#Numpad6
-IniRead, Keys_MoveTopLeft, %ShortcutsFile%, Shortcuts, Keys_MoveTopLeft, !#Numpad7
-IniRead, Keys_MoveTopRight, %ShortcutsFile%, Shortcuts, Keys_MoveTopRight, !#Numpad9
-IniRead, Keys_MoveBottomLeft, %ShortcutsFile%, Shortcuts, Keys_MoveBottomLeft, !#Numpad1
-IniRead, Keys_MoveBottomRight, %ShortcutsFile%, Shortcuts, Keys_MoveBottomRight, !#Numpad3
-IniRead, Keys_MoveCenter, %ShortcutsFile%, Shortcuts, Keys_MoveCenter, !#Del
-IniRead, Keys_MoveCenter2, %ShortcutsFile%, Shortcuts, Keys_MoveCenter2, !#Numpad5
-
-;Resize (only)
-IniRead, Keys_ResizeLeft, %ShortcutsFile%, Shortcuts, Keys_ResizeLeft, !+#Left
-IniRead, Keys_ResizeRight, %ShortcutsFile%, Shortcuts, Keys_ResizeRight, !+#Right
-IniRead, Keys_ResizeUp, %ShortcutsFile%, Shortcuts, Keys_ResizeUp, !+#Up
-IniRead, Keys_ResizeDown, %ShortcutsFile%, Shortcuts, Keys_ResizeDown, !+#Down
-IniRead, Keys_ResizeLarger, %ShortcutsFile%, Shortcuts, Keys_ResizeLarger, !+#PgDn
-IniRead, Keys_ResizeSmaller, %ShortcutsFile%, Shortcuts, Keys_ResizeSmaller, !+#PgUp
-;Resize and move
-IniRead, Keys_Grow, %ShortcutsFile%, Shortcuts, Keys_Grow, !+#=
-IniRead, Keys_Grow2, %ShortcutsFile%, Shortcuts, Keys_Grow2, !+#NumpadAdd
-IniRead, Keys_Grow3, %ShortcutsFile%, Shortcuts, Keys_Grow3, !#=
-IniRead, Keys_Grow4, %ShortcutsFile%, Shortcuts, Keys_Grow5, ^#NumpadAdd
-IniRead, Keys_Grow5, %ShortcutsFile%, Shortcuts, Keys_Grow6, ^#NumpadAdd
-IniRead, Keys_Grow6, %ShortcutsFile%, Shortcuts, Keys_Grow4, !#NumpadAdd
-IniRead, Keys_Shrink, %ShortcutsFile%, Shortcuts, Keys_Shrink, !+#-
-IniRead, Keys_Shrink2, %ShortcutsFile%, Shortcuts, Keys_Shrink2, !+#NumpadSub
-IniRead, Keys_Shrink3, %ShortcutsFile%, Shortcuts, Keys_Shrink3, !#-
-IniRead, Keys_Shrink4, %ShortcutsFile%, Shortcuts, Keys_Shrink4, !#NumpadSub
-IniRead, Keys_Shrink5, %ShortcutsFile%, Shortcuts, Keys_Shrink5, ^#-
-IniRead, Keys_Shrink6, %ShortcutsFile%, Shortcuts, Keys_Shrink6, ^#NumpadSub
-IniRead, Keys_ResizeHalfScreen, %ShortcutsFile%, Shortcuts, Keys_ResizeHalfScreen, !+#Del
-IniRead, Keys_ResizeThreeQuarterScreen, %ShortcutsFile%, Shortcuts, Keys_ResizeThreeQuarterScreen, !+#Home
-IniRead, Keys_ResizeFullScreen, %ShortcutsFile%, Shortcuts, Keys_ResizeFullScreen, !#Enter
-IniRead, Keys_ResizeFullScreen2, %ShortcutsFile%, Shortcuts, Keys_ResizeFullScreen2, !+#Enter
-
-IniRead, Keys_RestoreToPreviousPosn, %ShortcutsFile%, Shortcuts, Keys_RestoreToPreviousPosn, !#Backspace
-IniRead, Keys_RestoreToPreviousPosnAndSize, %ShortcutsFile%, Shortcuts, Keys_RestoreToPreviousPosnAndSize, !+#Backspace
-
-IniRead, Keys_SwitchToPreviousDesktop, %ShortcutsFile%, Shortcuts, Keys_SwitchToPreviousDesktop, ^#,
-IniRead, Keys_SwitchToNextDesktop, %ShortcutsFile%, Shortcuts, Keys_SwitchToNextDesktop, ^#.
-IniRead, Keys_MoveToPreviousDesktop, %ShortcutsFile%, Shortcuts, Keys_MoveToPreviousDesktop, ^+#Left
-IniRead, Keys_MoveToNextDesktop, %ShortcutsFile%, Shortcuts, Keys_MoveToNextDesktop, ^+#Right
-
-IniRead, Keys_TileWindowsVertically, %ShortcutsFile%, Shortcuts, Keys_TileWindowsVertically, !#V
-IniRead, Keys_TileWindowsVertically2, %ShortcutsFile%, Shortcuts, Keys_TileWindowsVertically2, !+#V
-IniRead, Keys_TileWindowsHorizontally, %ShortcutsFile%, Shortcuts, Keys_TileWindowsHorizontally, !#H
-IniRead, Keys_TileWindowsHorizontally2, %ShortcutsFile%, Shortcuts, Keys_TileWindowsHorizontally2, !+#H
-IniRead, Keys_CascadeWindows, %ShortcutsFile%, Shortcuts, Keys_CascadeWindows, !#C
-IniRead, Keys_CascadeWindows2, %ShortcutsFile%, Shortcuts, Keys_CascadeWindows2, !+#C
-
-; Link the shortcuts with the corresponding actions
-
-; "Move" commands
-Hotkey, %Keys_MoveLeft%, MoveLeft
-Hotkey, %Keys_MoveRight%, MoveRight
-Hotkey, %Keys_MoveUp%, MoveUp
-Hotkey, %Keys_MoveDown%, MoveDown
-Hotkey, %Keys_MoveTop%, MoveTop
-Hotkey, %Keys_MoveTop2%, MoveTop
-Hotkey, %Keys_MoveBottom%, MoveBottom
-Hotkey, %Keys_MoveBottom2%, MoveBottom
-Hotkey, %Keys_MoveHardLeft%, MoveHardLeft
-Hotkey, %Keys_MoveHardLeft2%, MoveHardLeft
-Hotkey, %Keys_MoveHardRight%, MoveHardRight
-Hotkey, %Keys_MoveHardRight2%, MoveHardRight
-Hotkey, %Keys_MoveTopLeft%, MoveTopLeft
-Hotkey, %Keys_MoveTopRight%, MoveTopRight
-Hotkey, %Keys_MoveBottomLeft%, MoveBottomLeft
-Hotkey, %Keys_MoveBottomRight%, MoveBottomRight
-Hotkey, %Keys_MoveCenter%, MoveCenter
-Hotkey, %Keys_MoveCenter2%, MoveCenter
-; "Resize" commands
-Hotkey, %Keys_ResizeLeft%, ResizeLeft
-Hotkey, %Keys_ResizeRight%, ResizeRight
-Hotkey, %Keys_ResizeUp%, ResizeUp
-Hotkey, %Keys_ResizeDown%, ResizeDown
-Hotkey, %Keys_ResizeLarger%, ResizeLarger
-Hotkey, %Keys_ResizeSmaller%, ResizeSmaller
-; Resize+Move commands
-Hotkey, %Keys_Grow%, Grow
-Hotkey, %Keys_Grow2%, Grow
-Hotkey, %Keys_Grow3%, Grow
-Hotkey, %Keys_Grow4%, Grow
-Hotkey, %Keys_Grow5%, Grow
-Hotkey, %Keys_Grow6%, Grow
-Hotkey, %Keys_Shrink%, Shrink
-Hotkey, %Keys_Shrink2%, Shrink
-Hotkey, %Keys_Shrink3%, Shrink
-Hotkey, %Keys_Shrink4%, Shrink
-Hotkey, %Keys_Shrink5%, Shrink
-Hotkey, %Keys_Shrink6%, Shrink
-Hotkey, %Keys_ResizeHalfScreen%, ResizeHalfScreen
-Hotkey, %Keys_ResizeThreeQuarterScreen%, ResizeThreeQuarterScreen
-Hotkey, %Keys_ResizeFullScreen%, ResizeFullScreen
-Hotkey, %Keys_ResizeFullScreen2%, ResizeFullScreen
-; "Restore" commands
-Hotkey, %Keys_RestoreToPreviousPosn%, RestoreToPreviousPosn
-; Virtual Desktop commands
-Hotkey, %Keys_SwitchToPreviousDesktop%, SwitchToPreviousDesktop
-Hotkey, %Keys_SwitchToNextDesktop%, SwitchToNextDesktop
-Hotkey, %Keys_MoveToPreviousDesktop%, MoveToPreviousDesktop
-Hotkey, %Keys_MoveToNextDesktop%, MoveToNextDesktop
-; Tile and Cascade windows
-Hotkey, %Keys_TileWindowsVertically%, TileWindowsVertically
-Hotkey, %Keys_TileWindowsVertically2%, TileWindowsVertically
-Hotkey, %Keys_TileWindowsHorizontally%, TileWindowsHorizontally
-Hotkey, %Keys_TileWindowsHorizontally2%, TileWindowsHorizontally
-Hotkey, %Keys_CascadeWindows%, CascadeWindows
-Hotkey, %Keys_CascadeWindows2%, CascadeWindows
-
-
+; #Persistent  ; Keep the script running until the user exits it.
+Init()
 Return ; End initialization
+
+Init() {
+    InitializeShortcuts()
+    InitializeMenu()
+}
+
+InitializeShortcuts() {
+
+    ; ==== Define the shortcut key combinations ====
+
+    ; Read the shortcut keys from the settings file (or fall back on defaults)
+
+    ; Alternative keyboard layouts
+    SettingsFile = HotkeySettings.ini  ; Alt+Win shortcuts
+
+    ; Read user-preference for shortcut combinations (each defined in a separate shortcutsDef INI file)
+    IniRead, ShortcutsFile, %SettingsFile%, General, ShortcutDefs, ShortcutDefs-AltWin.ini
+    ; Global settings
+    IniRead, PixelsPerStep, %SettingsFile%, Settings, PixelsPerStep, 50
+
+    ;Move
+    IniRead, Keys_MoveLeft, %ShortcutsFile%, Shortcuts, Keys_MoveLeft, !#Left
+    IniRead, Keys_MoveRight, %ShortcutsFile%, Shortcuts, Keys_MoveRight, !#Right
+    IniRead, Keys_MoveUp, %ShortcutsFile%, Shortcuts, Keys_MoveUp, !#Up
+    IniRead, Keys_MoveDown, %ShortcutsFile%, Shortcuts, Keys_MoveDown, !#Down
+    IniRead, Keys_MoveTop, %ShortcutsFile%, Shortcuts, Keys_MoveTop, !#PgUp
+    IniRead, Keys_MoveTop2, %ShortcutsFile%, Shortcuts, Keys_MoveTop2, !#Numpad8
+    IniRead, Keys_MoveBottom, %ShortcutsFile%, Shortcuts, Keys_MoveBottom, !#PgDn
+    IniRead, Keys_MoveBottom2, %ShortcutsFile%, Shortcuts, Keys_MoveBottom2, !#Numpad2
+    IniRead, Keys_MoveHardLeft, %ShortcutsFile%, Shortcuts, Keys_MoveHardLeft, !#Home
+    IniRead, Keys_MoveHardLeft2, %ShortcutsFile%, Shortcuts, Keys_MoveHardLeft2, !#Numpad4
+    IniRead, Keys_MoveHardRight, %ShortcutsFile%, Shortcuts, Keys_MoveHardRight, !#End
+    IniRead, Keys_MoveHardRight2, %ShortcutsFile%, Shortcuts, Keys_MoveHardRight2, !#Numpad6
+    IniRead, Keys_MoveTopLeft, %ShortcutsFile%, Shortcuts, Keys_MoveTopLeft, !#Numpad7
+    IniRead, Keys_MoveTopRight, %ShortcutsFile%, Shortcuts, Keys_MoveTopRight, !#Numpad9
+    IniRead, Keys_MoveBottomLeft, %ShortcutsFile%, Shortcuts, Keys_MoveBottomLeft, !#Numpad1
+    IniRead, Keys_MoveBottomRight, %ShortcutsFile%, Shortcuts, Keys_MoveBottomRight, !#Numpad3
+    IniRead, Keys_MoveCenter, %ShortcutsFile%, Shortcuts, Keys_MoveCenter, !#Del
+    IniRead, Keys_MoveCenter2, %ShortcutsFile%, Shortcuts, Keys_MoveCenter2, !#Numpad5
+
+    ;Resize (only)
+    IniRead, Keys_ResizeLeft, %ShortcutsFile%, Shortcuts, Keys_ResizeLeft, !+#Left
+    IniRead, Keys_ResizeRight, %ShortcutsFile%, Shortcuts, Keys_ResizeRight, !+#Right
+    IniRead, Keys_ResizeUp, %ShortcutsFile%, Shortcuts, Keys_ResizeUp, !+#Up
+    IniRead, Keys_ResizeDown, %ShortcutsFile%, Shortcuts, Keys_ResizeDown, !+#Down
+    IniRead, Keys_ResizeLarger, %ShortcutsFile%, Shortcuts, Keys_ResizeLarger, !+#PgDn
+    IniRead, Keys_ResizeSmaller, %ShortcutsFile%, Shortcuts, Keys_ResizeSmaller, !+#PgUp
+    ;Resize and move
+    IniRead, Keys_Grow, %ShortcutsFile%, Shortcuts, Keys_Grow, !+#=
+    IniRead, Keys_Grow2, %ShortcutsFile%, Shortcuts, Keys_Grow2, !+#NumpadAdd
+    IniRead, Keys_Grow3, %ShortcutsFile%, Shortcuts, Keys_Grow3, !#=
+    IniRead, Keys_Grow4, %ShortcutsFile%, Shortcuts, Keys_Grow5, ^#NumpadAdd
+    IniRead, Keys_Grow5, %ShortcutsFile%, Shortcuts, Keys_Grow6, ^#NumpadAdd
+    IniRead, Keys_Grow6, %ShortcutsFile%, Shortcuts, Keys_Grow4, !#NumpadAdd
+    IniRead, Keys_Shrink, %ShortcutsFile%, Shortcuts, Keys_Shrink, !+#-
+    IniRead, Keys_Shrink2, %ShortcutsFile%, Shortcuts, Keys_Shrink2, !+#NumpadSub
+    IniRead, Keys_Shrink3, %ShortcutsFile%, Shortcuts, Keys_Shrink3, !#-
+    IniRead, Keys_Shrink4, %ShortcutsFile%, Shortcuts, Keys_Shrink4, !#NumpadSub
+    IniRead, Keys_Shrink5, %ShortcutsFile%, Shortcuts, Keys_Shrink5, ^#-
+    IniRead, Keys_Shrink6, %ShortcutsFile%, Shortcuts, Keys_Shrink6, ^#NumpadSub
+    IniRead, Keys_ResizeHalfScreen, %ShortcutsFile%, Shortcuts, Keys_ResizeHalfScreen, !+#Del
+    IniRead, Keys_ResizeThreeQuarterScreen, %ShortcutsFile%, Shortcuts, Keys_ResizeThreeQuarterScreen, !+#Home
+    IniRead, Keys_ResizeFullScreen, %ShortcutsFile%, Shortcuts, Keys_ResizeFullScreen, !#Enter
+    IniRead, Keys_ResizeFullScreen2, %ShortcutsFile%, Shortcuts, Keys_ResizeFullScreen2, !+#Enter
+
+    IniRead, Keys_RestoreToPreviousPosn, %ShortcutsFile%, Shortcuts, Keys_RestoreToPreviousPosn, !#Backspace
+    IniRead, Keys_RestoreToPreviousPosnAndSize, %ShortcutsFile%, Shortcuts, Keys_RestoreToPreviousPosnAndSize, !+#Backspace
+
+    IniRead, Keys_SwitchToPreviousDesktop, %ShortcutsFile%, Shortcuts, Keys_SwitchToPreviousDesktop, ^#,
+    IniRead, Keys_SwitchToNextDesktop, %ShortcutsFile%, Shortcuts, Keys_SwitchToNextDesktop, ^#.
+    IniRead, Keys_MoveToPreviousDesktop, %ShortcutsFile%, Shortcuts, Keys_MoveToPreviousDesktop, ^+#Left
+    IniRead, Keys_MoveToNextDesktop, %ShortcutsFile%, Shortcuts, Keys_MoveToNextDesktop, ^+#Right
+
+    IniRead, Keys_TileWindowsVertically, %ShortcutsFile%, Shortcuts, Keys_TileWindowsVertically, !#V
+    IniRead, Keys_TileWindowsVertically2, %ShortcutsFile%, Shortcuts, Keys_TileWindowsVertically2, !+#V
+    IniRead, Keys_TileWindowsHorizontally, %ShortcutsFile%, Shortcuts, Keys_TileWindowsHorizontally, !#H
+    IniRead, Keys_TileWindowsHorizontally2, %ShortcutsFile%, Shortcuts, Keys_TileWindowsHorizontally2, !+#H
+    IniRead, Keys_CascadeWindows, %ShortcutsFile%, Shortcuts, Keys_CascadeWindows, !#C
+    IniRead, Keys_CascadeWindows2, %ShortcutsFile%, Shortcuts, Keys_CascadeWindows2, !+#C
+
+    ; Link the shortcuts with the corresponding actions
+
+    ; "Move" commands
+    Hotkey, %Keys_MoveLeft%, MoveLeft
+    Hotkey, %Keys_MoveRight%, MoveRight
+    Hotkey, %Keys_MoveUp%, MoveUp
+    Hotkey, %Keys_MoveDown%, MoveDown
+    Hotkey, %Keys_MoveTop%, MoveTop
+    Hotkey, %Keys_MoveTop2%, MoveTop
+    Hotkey, %Keys_MoveBottom%, MoveBottom
+    Hotkey, %Keys_MoveBottom2%, MoveBottom
+    Hotkey, %Keys_MoveHardLeft%, MoveHardLeft
+    Hotkey, %Keys_MoveHardLeft2%, MoveHardLeft
+    Hotkey, %Keys_MoveHardRight%, MoveHardRight
+    Hotkey, %Keys_MoveHardRight2%, MoveHardRight
+    Hotkey, %Keys_MoveTopLeft%, MoveTopLeft
+    Hotkey, %Keys_MoveTopRight%, MoveTopRight
+    Hotkey, %Keys_MoveBottomLeft%, MoveBottomLeft
+    Hotkey, %Keys_MoveBottomRight%, MoveBottomRight
+    Hotkey, %Keys_MoveCenter%, MoveCenter
+    Hotkey, %Keys_MoveCenter2%, MoveCenter
+    ; "Resize" commands
+    Hotkey, %Keys_ResizeLeft%, ResizeLeft
+    Hotkey, %Keys_ResizeRight%, ResizeRight
+    Hotkey, %Keys_ResizeUp%, ResizeUp
+    Hotkey, %Keys_ResizeDown%, ResizeDown
+    Hotkey, %Keys_ResizeLarger%, ResizeLarger
+    Hotkey, %Keys_ResizeSmaller%, ResizeSmaller
+    ; Resize+Move commands
+    Hotkey, %Keys_Grow%, Grow
+    Hotkey, %Keys_Grow2%, Grow
+    Hotkey, %Keys_Grow3%, Grow
+    Hotkey, %Keys_Grow4%, Grow
+    Hotkey, %Keys_Grow5%, Grow
+    Hotkey, %Keys_Grow6%, Grow
+    Hotkey, %Keys_Shrink%, Shrink
+    Hotkey, %Keys_Shrink2%, Shrink
+    Hotkey, %Keys_Shrink3%, Shrink
+    Hotkey, %Keys_Shrink4%, Shrink
+    Hotkey, %Keys_Shrink5%, Shrink
+    Hotkey, %Keys_Shrink6%, Shrink
+    Hotkey, %Keys_ResizeHalfScreen%, ResizeHalfScreen
+    Hotkey, %Keys_ResizeThreeQuarterScreen%, ResizeThreeQuarterScreen
+    Hotkey, %Keys_ResizeFullScreen%, ResizeFullScreen
+    Hotkey, %Keys_ResizeFullScreen2%, ResizeFullScreen
+    ; "Restore" commands
+    Hotkey, %Keys_RestoreToPreviousPosn%, RestoreToPreviousPosn
+    ; Virtual Desktop commands
+    Hotkey, %Keys_SwitchToPreviousDesktop%, SwitchToPreviousDesktop
+    Hotkey, %Keys_SwitchToNextDesktop%, SwitchToNextDesktop
+    Hotkey, %Keys_MoveToPreviousDesktop%, MoveToPreviousDesktop
+    Hotkey, %Keys_MoveToNextDesktop%, MoveToNextDesktop
+    ; Tile and Cascade windows
+    Hotkey, %Keys_TileWindowsVertically%, TileWindowsVertically
+    Hotkey, %Keys_TileWindowsVertically2%, TileWindowsVertically
+    Hotkey, %Keys_TileWindowsHorizontally%, TileWindowsHorizontally
+    Hotkey, %Keys_TileWindowsHorizontally2%, TileWindowsHorizontally
+    Hotkey, %Keys_CascadeWindows%, CascadeWindows
+    Hotkey, %Keys_CascadeWindows2%, CascadeWindows
+
+    Return ; End initialization
+}
+
+InitializeMenu() {
+    ; Set the System tray icon
+    Menu, Tray, Icon, AltWinHotKeys.ico
+    ; Add items to the SysTray
+    Menu, Tray, Add  ; Creates a separator line.
+    ; Menu, Tray, Add, Item Text, MenuHandler  ; Creates a new menu item.
+    Menu, Tray, Add, Item1, MenuHandler  ; Creates a new menu item.
+
+    InitMenu2()
+
+    ; Move Standard menu items (ie. Pause/Exit) to the bottom
+    Menu, Tray, Add ; Separator
+    Menu, Tray, NoStandard
+    Menu, Tray, Standard
+
+    return
+}
+
+MenuHandler() {
+    MsgBox You selected %A_ThisMenuItem% from menu %A_ThisMenu%.
+    return
+}
+
+
+InitMenu2() {
+    ; Create the popup menu by adding some items to it.
+    Menu, MyMenu, Add, Item1, MenuHandler
+    Menu, MyMenu, Add, Item2, MenuHandler
+    Menu, MyMenu, Add  ; Add a separator line.
+
+    ; Create another menu destined to become a submenu of the above menu.
+    Menu, Submenu1, Add, Item1, MenuHandler
+    Menu, Submenu1, Add, Item2, MenuHandler
+
+    ; Create a submenu in the first menu (a right-arrow indicator). When the user selects it, the second menu is displayed.
+    Menu, MyMenu, Add, My Submenu, :Submenu1
+
+    Menu, MyMenu, Add  ; Add a separator line below the submenu.
+    Menu, MyMenu, Add, Item3, MenuHandler  ; Add another menu item beneath the submenu.
+
+    ; Add MyMenu to the SysTray menu
+    Menu, Tray, Add ; separator
+    Menu, Tray, Add, My Menu, :MyMenu
+
+    return  ; End of script's auto-execute section.
+}
+
+#z::Menu, MyMenu, Show  ; i.e. press the Win-Z hotkey to show the menu.
 
 ; ================================
 ; ==== Move Window commands ====
