@@ -29,74 +29,88 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 SettingsFile = HotkeySettings.ini  ; Alt+Win shortcuts
 
 ; Read user-preference for shortcut combinations (each defined in a separate shortcutsDef INI file)
-IniRead, ShortcutsFile, %SettingsFile%, General, ShortcutDefs, ShortcutDefs-AltWin.ini
+IniRead, ShortcutsFile, %SettingsFile%, General, ShortcutDefs, ShortcutDefs-CtrlWin.ini
 ; Global settings
 IniRead, PixelsPerStep, %SettingsFile%, Settings, PixelsPerStep, 50
 
+InitializeIcon()
+
 InitializeMenu()
 
-InitializeShortcuts()
+InitializeShortcuts(ShortcutsFile)
 
 Return ; End initialization
 
 ; ===========================================
-InitializeMenu() {
+
+InitializeIcon() {
     ; Set the System tray icon
     Menu, Tray, Icon, AltWinHotKeys.ico
-    ; Add items to the SysTray
-    Menu, Tray, Add  ; Creates a separator line.
-    ; Menu, Tray, Add, Item Text, MenuHandler  ; Creates a new menu item.
-    Menu, Tray, Add, Item1, MenuHandler  ; Creates a new menu item.
+}
 
-    InitMenu2()
+InitializeMenu() {
 
+    ; Title - link to Help page
+    Menu, Tray, Add, About Alt+Win HotKeys, ShowAboutDialog
+    ; Settings
+    Menu, Tray, Add, Settings, OpenSettings
+    ; Edit shortcuts
+    Menu, Tray, Add, Edit shortcuts, OpenCurrentShortSet
+    Menu, Tray, Add ; separator
+
+    ; HotKey Profiles
+    ;       - [x] Alt+Win shortcuts
+    Menu, Profiles, Add, Alt+Win shortcuts, SetAltKeysShortcuts
+    ;       - [ ] Cltr+Win shortcuts
+    Menu, Profiles, Add, Ctrl+Win shortcuts, SetCtrlKeysShortcuts
+    Menu, Tray, Add, Shortcut &Profiles, :Profiles
+    ; Mark the active profile with a Tick/Check
+    Menu, Profiles, Check, Alt+Win shortcuts
+
+    MoveStandardMenuToBottom()
+}
+
+SetAltKeysShortcuts() {
+    InitializeShortcuts("ShortcutDefs-CtrlWin.ini", true)
+    InitializeShortcuts("ShortcutDefs-AltWin.ini")
+    Menu, Profiles, Check, Alt+Win shortcuts
+    Menu, Profiles, Uncheck, Ctrl+Win shortcuts
+
+    MsgBox Shortcuts profile now using Alt+Win keys
+}
+
+SetCtrlKeysShortcuts() {
+    InitializeShortcuts("ShortcutDefs-AltWin.ini", true)
+    InitializeShortcuts("ShortcutDefs-CtrlWin.ini")
+    Menu, Profiles, Uncheck, Alt+Win shortcuts
+    Menu, Profiles, Check, Ctrl+Win shortcuts
+
+    MsgBox Shortcuts profile now using Ctrl+Win keys
+}
+
+ShowAboutDialog() {
+    MsgBox 0, Alt+Win HotKeys, Alt+Win HotKeys - Utility to move and resize windows.`n`n Developed by Justin Clareburt
+}
+
+OpenSettings() {
+    MsgBox "Open Settings"
+}
+
+OpenCurrentShortSet() {
+    MsgBox "Open Shortcut definitions file"
+}
+
+MoveStandardMenuToBottom() {
     ; Move Standard menu items (ie. Pause/Exit) to the bottom
     Menu, Tray, Add ; Separator
     Menu, Tray, NoStandard
     Menu, Tray, Standard
-
-    return
 }
-
-MenuHandler() {
-    MsgBox You selected %A_ThisMenuItem% from menu %A_ThisMenu%.
-    return
-}
-
-InitMenu2() {
-    ; Create the menu (MyMenu) by adding some items to it.
-    Menu, MyMenu, Add, Item1, MenuHandler
-    Menu, MyMenu, Add, Item2, MenuHandler
-    Menu, MyMenu, Add  ; Add a separator line.
-
-    ; Create another menu destined to become a submenu of the above menu.
-    Menu, Submenu1, Add, Item1, MenuHandler
-    Menu, Submenu1, Add, Item2, MenuHandler
-
-    ; Create a submenu in the first menu (a right-arrow indicator). When the user selects it, the second menu is displayed.
-    Menu, MyMenu, Add, My Submenu, :Submenu1
-
-    Menu, MyMenu, Add  ; Add a separator line below the submenu.
-    Menu, MyMenu, Add, Item3, MenuHandler  ; Add another menu item beneath the submenu.
-
-    ; Add MyMenu to the SysTray menu
-    Menu, Tray, Add ; separator
-    Menu, Tray, Add, My Menu, :MyMenu
-
-    return  ; End of script's auto-execute section.
-}
-
-ShowMyMenu() {
-    Menu, MyMenu, Show  ; i.e. press the Win-Z hotkey to show the menu.
-}
-
-; Set the menu to pop up when Win-Z is pressed
-#z::ShowMyMenu()
 
 ; ------- End Menu Init -----------
 ; ---------------------------------
 
-InitializeShortcuts() {
+InitializeShortcuts(ShortcutsFile, bRemove := false) {
 
     ; ==== Define the shortcut key combinations ====
     ; Read the shortcut keys from the shortcuts file (or fall back on defaults)
@@ -132,9 +146,9 @@ InitializeShortcuts() {
     IniRead, Keys_Grow, %ShortcutsFile%, Shortcuts, Keys_Grow, !+#=
     IniRead, Keys_Grow2, %ShortcutsFile%, Shortcuts, Keys_Grow2, !+#NumpadAdd
     IniRead, Keys_Grow3, %ShortcutsFile%, Shortcuts, Keys_Grow3, !#=
-    IniRead, Keys_Grow4, %ShortcutsFile%, Shortcuts, Keys_Grow5, ^#NumpadAdd
-    IniRead, Keys_Grow5, %ShortcutsFile%, Shortcuts, Keys_Grow6, ^#NumpadAdd
-    IniRead, Keys_Grow6, %ShortcutsFile%, Shortcuts, Keys_Grow4, !#NumpadAdd
+    IniRead, Keys_Grow4, %ShortcutsFile%, Shortcuts, Keys_Grow4, !#NumpadAdd
+    IniRead, Keys_Grow5, %ShortcutsFile%, Shortcuts, Keys_Grow5, ^#+
+    IniRead, Keys_Grow6, %ShortcutsFile%, Shortcuts, Keys_Grow6, ^#NumpadAdd
     IniRead, Keys_Shrink, %ShortcutsFile%, Shortcuts, Keys_Shrink, !+#-
     IniRead, Keys_Shrink2, %ShortcutsFile%, Shortcuts, Keys_Shrink2, !+#NumpadSub
     IniRead, Keys_Shrink3, %ShortcutsFile%, Shortcuts, Keys_Shrink3, !#-
@@ -149,10 +163,12 @@ InitializeShortcuts() {
     IniRead, Keys_RestoreToPreviousPosn, %ShortcutsFile%, Shortcuts, Keys_RestoreToPreviousPosn, !#Backspace
     IniRead, Keys_RestoreToPreviousPosnAndSize, %ShortcutsFile%, Shortcuts, Keys_RestoreToPreviousPosnAndSize, !+#Backspace
 
-    IniRead, Keys_SwitchToPreviousDesktop, %ShortcutsFile%, Shortcuts, Keys_SwitchToPreviousDesktop, ^#,
+    IniRead, Keys_SwitchToPreviousDesktop, %ShortcutsFile%, Shortcuts, Keys_SwitchToPreviousDesktop, "^#,"
     IniRead, Keys_SwitchToNextDesktop, %ShortcutsFile%, Shortcuts, Keys_SwitchToNextDesktop, ^#.
-    IniRead, Keys_MoveToPreviousDesktop, %ShortcutsFile%, Shortcuts, Keys_MoveToPreviousDesktop, ^+#Left
-    IniRead, Keys_MoveToNextDesktop, %ShortcutsFile%, Shortcuts, Keys_MoveToNextDesktop, ^+#Right
+    IniRead, Keys_MoveToPreviousDesktop, %ShortcutsFile%, Shortcuts, Keys_MoveToPreviousDesktop, "^+#,"
+    IniRead, Keys_MoveToPreviousDesktop2, %ShortcutsFile%, Shortcuts, Keys_MoveToPreviousDesktop2, ^+#Left
+    IniRead, Keys_MoveToNextDesktop, %ShortcutsFile%, Shortcuts, Keys_MoveToNextDesktop, ^+#.
+    IniRead, Keys_MoveToNextDesktop2, %ShortcutsFile%, Shortcuts, Keys_MoveToNextDesktop2, ^+#Right
 
     IniRead, Keys_TileWindowsVertically, %ShortcutsFile%, Shortcuts, Keys_TileWindowsVertically, !#V
     IniRead, Keys_TileWindowsVertically2, %ShortcutsFile%, Shortcuts, Keys_TileWindowsVertically2, !+#V
@@ -164,64 +180,78 @@ InitializeShortcuts() {
     ; Link the shortcuts with the corresponding actions
 
     ; "Move" commands
-    Hotkey, %Keys_MoveLeft%, MoveLeft
-    Hotkey, %Keys_MoveRight%, MoveRight
-    Hotkey, %Keys_MoveUp%, MoveUp
-    Hotkey, %Keys_MoveDown%, MoveDown
-    Hotkey, %Keys_MoveTop%, MoveTop
-    Hotkey, %Keys_MoveTop2%, MoveTop
-    Hotkey, %Keys_MoveBottom%, MoveBottom
-    Hotkey, %Keys_MoveBottom2%, MoveBottom
-    Hotkey, %Keys_MoveHardLeft%, MoveHardLeft
-    Hotkey, %Keys_MoveHardLeft2%, MoveHardLeft
-    Hotkey, %Keys_MoveHardRight%, MoveHardRight
-    Hotkey, %Keys_MoveHardRight2%, MoveHardRight
-    Hotkey, %Keys_MoveTopLeft%, MoveTopLeft
-    Hotkey, %Keys_MoveTopRight%, MoveTopRight
-    Hotkey, %Keys_MoveBottomLeft%, MoveBottomLeft
-    Hotkey, %Keys_MoveBottomRight%, MoveBottomRight
-    Hotkey, %Keys_MoveCenter%, MoveCenter
-    Hotkey, %Keys_MoveCenter2%, MoveCenter
+    SetHotkeyAction(Keys_MoveLeft, "MoveLeft", bRemove)
+    SetHotkeyAction(Keys_MoveRight, "MoveRight", bRemove)
+    SetHotkeyAction(Keys_MoveUp, "MoveUp", bRemove)
+    SetHotkeyAction(Keys_MoveDown, "MoveDown", bRemove)
+    SetHotkeyAction(Keys_MoveTop, "MoveTop", bRemove)
+    SetHotkeyAction(Keys_MoveTop2, "MoveTop", bRemove)
+    SetHotkeyAction(Keys_MoveBottom, "MoveBottom", bRemove)
+    SetHotkeyAction(Keys_MoveBottom2, "MoveBottom", bRemove)
+    SetHotkeyAction(Keys_MoveHardLeft, "MoveHardLeft", bRemove)
+    SetHotkeyAction(Keys_MoveHardLeft2, "MoveHardLeft", bRemove)
+    SetHotkeyAction(Keys_MoveHardRight, "MoveHardRight", bRemove)
+    SetHotkeyAction(Keys_MoveHardRight2, "MoveHardRight", bRemove)
+    SetHotkeyAction(Keys_MoveTopLeft, "MoveTopLeft", bRemove)
+    SetHotkeyAction(Keys_MoveTopRight, "MoveTopRight", bRemove)
+    SetHotkeyAction(Keys_MoveBottomLeft, "MoveBottomLeft", bRemove)
+    SetHotkeyAction(Keys_MoveBottomRight, "MoveBottomRight", bRemove)
+    SetHotkeyAction(Keys_MoveCenter, "MoveCenter", bRemove)
+    SetHotkeyAction(Keys_MoveCenter2, "MoveCenter", bRemove)
     ; "Resize" commands
-    Hotkey, %Keys_ResizeLeft%, ResizeLeft
-    Hotkey, %Keys_ResizeRight%, ResizeRight
-    Hotkey, %Keys_ResizeUp%, ResizeUp
-    Hotkey, %Keys_ResizeDown%, ResizeDown
-    Hotkey, %Keys_ResizeLarger%, ResizeLarger
-    Hotkey, %Keys_ResizeSmaller%, ResizeSmaller
+    SetHotkeyAction(Keys_ResizeLeft, "ResizeLeft", bRemove)
+    SetHotkeyAction(Keys_ResizeRight, "ResizeRight", bRemove)
+    SetHotkeyAction(Keys_ResizeUp, "ResizeUp", bRemove)
+    SetHotkeyAction(Keys_ResizeDown, "ResizeDown", bRemove)
+    SetHotkeyAction(Keys_ResizeLarger, "ResizeLarger", bRemove)
+    SetHotkeyAction(Keys_ResizeSmaller, "ResizeSmaller", bRemove)
     ; Resize+Move commands
-    Hotkey, %Keys_Grow%, Grow
-    Hotkey, %Keys_Grow2%, Grow
-    Hotkey, %Keys_Grow3%, Grow
-    Hotkey, %Keys_Grow4%, Grow
-    Hotkey, %Keys_Grow5%, Grow
-    Hotkey, %Keys_Grow6%, Grow
-    Hotkey, %Keys_Shrink%, Shrink
-    Hotkey, %Keys_Shrink2%, Shrink
-    Hotkey, %Keys_Shrink3%, Shrink
-    Hotkey, %Keys_Shrink4%, Shrink
-    Hotkey, %Keys_Shrink5%, Shrink
-    Hotkey, %Keys_Shrink6%, Shrink
-    Hotkey, %Keys_ResizeHalfScreen%, ResizeHalfScreen
-    Hotkey, %Keys_ResizeThreeQuarterScreen%, ResizeThreeQuarterScreen
-    Hotkey, %Keys_ResizeFullScreen%, ResizeFullScreen
-    Hotkey, %Keys_ResizeFullScreen2%, ResizeFullScreen
+    SetHotkeyAction(Keys_Grow, "Grow", bRemove)
+    SetHotkeyAction(Keys_Grow2, "Grow", bRemove)
+    SetHotkeyAction(Keys_Grow3, "Grow", bRemove)
+    SetHotkeyAction(Keys_Grow4, "Grow", bRemove)
+    SetHotkeyAction(Keys_Grow5, "Grow", bRemove)
+    SetHotkeyAction(Keys_Grow6, "Grow", bRemove)
+    SetHotkeyAction(Keys_Shrink, "Shrink", bRemove)
+    SetHotkeyAction(Keys_Shrink2, "Shrink", bRemove)
+    SetHotkeyAction(Keys_Shrink3, "Shrink", bRemove)
+    SetHotkeyAction(Keys_Shrink4, "Shrink", bRemove)
+    SetHotkeyAction(Keys_Shrink5, "Shrink", bRemove)
+    SetHotkeyAction(Keys_Shrink6, "Shrink", bRemove)
+    SetHotkeyAction(Keys_ResizeHalfScreen, "ResizeHalfScreen", bRemove)
+    SetHotkeyAction(Keys_ResizeThreeQuarterScreen, "ResizeThreeQuarterScreen", bRemove)
+    SetHotkeyAction(Keys_ResizeFullScreen, "ResizeFullScreen", bRemove)
+    SetHotkeyAction(Keys_ResizeFullScreen2, "ResizeFullScreen", bRemove)
     ; "Restore" commands
-    Hotkey, %Keys_RestoreToPreviousPosn%, RestoreToPreviousPosn
+    SetHotkeyAction(Keys_RestoreToPreviousPosn, "RestoreToPreviousPosn", bRemove)
     ; Virtual Desktop commands
-    Hotkey, %Keys_SwitchToPreviousDesktop%, SwitchToPreviousDesktop
-    Hotkey, %Keys_SwitchToNextDesktop%, SwitchToNextDesktop
-    Hotkey, %Keys_MoveToPreviousDesktop%, MoveToPreviousDesktop
-    Hotkey, %Keys_MoveToNextDesktop%, MoveToNextDesktop
+    SetHotkeyAction(Keys_SwitchToPreviousDesktop, "SwitchToPreviousDesktop", bRemove)
+    SetHotkeyAction(Keys_SwitchToNextDesktop, "SwitchToNextDesktop", bRemove)
+    SetHotkeyAction(Keys_MoveToPreviousDesktop, "MoveToPreviousDesktop", bRemove)
+    SetHotkeyAction(Keys_MoveToPreviousDesktop2, "MoveToPreviousDesktop", bRemove)
+    SetHotkeyAction(Keys_MoveToNextDesktop, "MoveToNextDesktop", bRemove)
+    SetHotkeyAction(Keys_MoveToNextDesktop2, "MoveToNextDesktop", bRemove)
     ; Tile and Cascade windows
-    Hotkey, %Keys_TileWindowsVertically%, TileWindowsVertically
-    Hotkey, %Keys_TileWindowsVertically2%, TileWindowsVertically
-    Hotkey, %Keys_TileWindowsHorizontally%, TileWindowsHorizontally
-    Hotkey, %Keys_TileWindowsHorizontally2%, TileWindowsHorizontally
-    Hotkey, %Keys_CascadeWindows%, CascadeWindows
-    Hotkey, %Keys_CascadeWindows2%, CascadeWindows
+    SetHotkeyAction(Keys_TileWindowsVertically, "TileWindowsVertically", bRemove)
+    SetHotkeyAction(Keys_TileWindowsVertically2, "TileWindowsVertically", bRemove)
+    SetHotkeyAction(Keys_TileWindowsHorizontally, "TileWindowsHorizontally", bRemove)
+    SetHotkeyAction(Keys_TileWindowsHorizontally2, "TileWindowsHorizontally", bRemove)
+    SetHotkeyAction(Keys_CascadeWindows, "CascadeWindows", bRemove)
+    SetHotkeyAction(Keys_CascadeWindows2, "CascadeWindows", bRemove)
 
     return ; end shortcuts init
+}
+
+SetHotkeyAction(Keys, KeyAction, bRemove := false) {
+;    if (Keys = "^+#Left") {
+;        MsgBox Setting %KeyAction% to %Keys% (Remove = %bRemove%)
+;    }
+
+    if (bRemove) {
+        Hotkey, %Keys%, Off
+    } else {
+        Hotkey, %Keys%, %KeyAction%
+    }
 }
 
 ; ================================
