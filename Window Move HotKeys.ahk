@@ -29,7 +29,7 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 SettingsFile = HotkeySettings.ini  ; Alt+Win shortcuts
 
 ; Read user-preference for shortcut combinations (each defined in a separate shortcutsDef INI file)
-IniRead, ShortcutsFile, %SettingsFile%, General, ShortcutDefs, ShortcutDefs-CtrlWin.ini
+IniRead, ShortcutsFile, %SettingsFile%, General, ShortcutDefs, ShortcutDefs-AltWin.ini
 ; Global settings
 IniRead, PixelsPerStep, %SettingsFile%, Settings, PixelsPerStep, 50
 
