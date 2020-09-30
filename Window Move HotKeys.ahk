@@ -250,7 +250,7 @@ SetHotkeyAction(Keys, KeyAction, bRemove := false) {
     if (bRemove) {
         Hotkey, %Keys%, Off
     } else {
-        Hotkey, %Keys%, %KeyAction%
+        Hotkey, %Keys%, %KeyAction%, On
     }
 }
 
