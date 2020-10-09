@@ -98,6 +98,7 @@ OpenSettings() {
 
 OpenCurrentShortSet() {
     MsgBox "Open Shortcut definitions file"
+    Run, edit "ShortcutDefs-Custom.ini"
 }
 
 MoveStandardMenuToBottom() {
