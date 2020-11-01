@@ -153,7 +153,7 @@ MoveStandardMenuToBottom() {
 ; ------- End Menu Init -----------
 ; ---------------------------------
 
-InitializeShortcuts(ShortcutsFile, bRemove := false) {
+InitializeShortcuts(ShortcutsFile) {
 
     ; MsgBox % "Initialising shortcuts profile from file: " ShortcutsFile
 
@@ -161,133 +161,74 @@ InitializeShortcuts(ShortcutsFile, bRemove := false) {
     ; Read the shortcut keys from the shortcuts file (or fall back on defaults)
 
     ;Move
-    IniRead, Keys_MoveLeft, %ShortcutsFile%, Shortcuts, Keys_MoveLeft, !#Left
-    IniRead, Keys_MoveRight, %ShortcutsFile%, Shortcuts, Keys_MoveRight, !#Right
-    IniRead, Keys_MoveUp, %ShortcutsFile%, Shortcuts, Keys_MoveUp, !#Up
-    IniRead, Keys_MoveDown, %ShortcutsFile%, Shortcuts, Keys_MoveDown, !#Down
-    IniRead, Keys_MoveTop, %ShortcutsFile%, Shortcuts, Keys_MoveTop, !#PgUp
-    IniRead, Keys_MoveTop2, %ShortcutsFile%, Shortcuts, Keys_MoveTop2, !#Numpad8
-    IniRead, Keys_MoveBottom, %ShortcutsFile%, Shortcuts, Keys_MoveBottom, !#PgDn
-    IniRead, Keys_MoveBottom2, %ShortcutsFile%, Shortcuts, Keys_MoveBottom2, !#Numpad2
-    IniRead, Keys_MoveHardLeft, %ShortcutsFile%, Shortcuts, Keys_MoveHardLeft, !#Home
-    IniRead, Keys_MoveHardLeft2, %ShortcutsFile%, Shortcuts, Keys_MoveHardLeft2, !#Numpad4
-    IniRead, Keys_MoveHardRight, %ShortcutsFile%, Shortcuts, Keys_MoveHardRight, !#End
-    IniRead, Keys_MoveHardRight2, %ShortcutsFile%, Shortcuts, Keys_MoveHardRight2, !#Numpad6
-    IniRead, Keys_MoveTopLeft, %ShortcutsFile%, Shortcuts, Keys_MoveTopLeft, !#Numpad7
-    IniRead, Keys_MoveTopRight, %ShortcutsFile%, Shortcuts, Keys_MoveTopRight, !#Numpad9
-    IniRead, Keys_MoveBottomLeft, %ShortcutsFile%, Shortcuts, Keys_MoveBottomLeft, !#Numpad1
-    IniRead, Keys_MoveBottomRight, %ShortcutsFile%, Shortcuts, Keys_MoveBottomRight, !#Numpad3
-    IniRead, Keys_MoveCenter, %ShortcutsFile%, Shortcuts, Keys_MoveCenter, !#Del
-    IniRead, Keys_MoveCenter2, %ShortcutsFile%, Shortcuts, Keys_MoveCenter2, !#Numpad5
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_MoveLeft, "MoveLeft", "!#Left")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_MoveRight, "MoveRight", "!#Right")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_MoveUp, "MoveUp", "!#Up")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_MoveDown, "MoveDown", "!#Down")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_MoveTop, "MoveTop", "!#PgUp")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_MoveTop2, "MoveTop", "!#Numpad8")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_MoveBottom, "MoveBottom", "!#PgDn")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_MoveBottom2, "MoveBottom", "!#Numpad2")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_MoveHardLeft, "MoveHardLeft", "!#Home")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_MoveHardLeft2, "MoveHardLeft", "!#Numpad4")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_MoveHardRight, "MoveHardRight", "!#End")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_MoveHardRight2, "MoveHardRight", "!#Numpad6")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_MoveTopLeft, "MoveTopLeft", "!#Numpad7")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_MoveTopRight, "MoveTopRight", "!#Numpad9")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_MoveBottomLeft, "MoveBottomLeft", "!#Numpad1")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_MoveBottomRight, "MoveBottomRight", "!#Numpad3")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_MoveCenter, "MoveCenter", "!#Del")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_MoveCenter2, "MoveCenter", "!#Numpad5")
 
     ;Resize (only)
-    IniRead, Keys_ResizeLeft, %ShortcutsFile%, Shortcuts, Keys_ResizeLeft, !+#Left
-    IniRead, Keys_ResizeRight, %ShortcutsFile%, Shortcuts, Keys_ResizeRight, !+#Right
-    IniRead, Keys_ResizeUp, %ShortcutsFile%, Shortcuts, Keys_ResizeUp, !+#Up
-    IniRead, Keys_ResizeDown, %ShortcutsFile%, Shortcuts, Keys_ResizeDown, !+#Down
-    IniRead, Keys_ResizeLarger, %ShortcutsFile%, Shortcuts, Keys_ResizeLarger, !+#PgDn
-    IniRead, Keys_ResizeSmaller, %ShortcutsFile%, Shortcuts, Keys_ResizeSmaller, !+#PgUp
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_ResizeLeft, "ResizeLeft", "!+#Left")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_ResizeRight, "ResizeRight", "!+#Right")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_ResizeUp, "ResizeUp", "!+#Up")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_ResizeDown, "ResizeDown", "!+#Down")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_ResizeLarger, "ResizeLarger", "!+#PgDn")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_ResizeSmaller, "ResizeSmaller", "!+#PgUp")
     ;Resize and move
-    IniRead, Keys_Grow, %ShortcutsFile%, Shortcuts, Keys_Grow, !+#=
-    IniRead, Keys_Grow2, %ShortcutsFile%, Shortcuts, Keys_Grow2, !+#NumpadAdd
-    IniRead, Keys_Grow3, %ShortcutsFile%, Shortcuts, Keys_Grow3, !#=
-    IniRead, Keys_Grow4, %ShortcutsFile%, Shortcuts, Keys_Grow4, !#NumpadAdd
-    IniRead, Keys_Grow5, %ShortcutsFile%, Shortcuts, Keys_Grow5, ^#+
-    IniRead, Keys_Grow6, %ShortcutsFile%, Shortcuts, Keys_Grow6, ^#NumpadAdd
-    IniRead, Keys_Shrink, %ShortcutsFile%, Shortcuts, Keys_Shrink, !+#-
-    IniRead, Keys_Shrink2, %ShortcutsFile%, Shortcuts, Keys_Shrink2, !+#NumpadSub
-    IniRead, Keys_Shrink3, %ShortcutsFile%, Shortcuts, Keys_Shrink3, !#-
-    IniRead, Keys_Shrink4, %ShortcutsFile%, Shortcuts, Keys_Shrink4, !#NumpadSub
-    IniRead, Keys_Shrink5, %ShortcutsFile%, Shortcuts, Keys_Shrink5, ^#-
-    IniRead, Keys_Shrink6, %ShortcutsFile%, Shortcuts, Keys_Shrink6, ^#NumpadSub
-    IniRead, Keys_ResizeHalfScreen, %ShortcutsFile%, Shortcuts, Keys_ResizeHalfScreen, !+#Del
-    IniRead, Keys_ResizeThreeQuarterScreen, %ShortcutsFile%, Shortcuts, Keys_ResizeThreeQuarterScreen, !+#Home
-    IniRead, Keys_ResizeFullScreen, %ShortcutsFile%, Shortcuts, Keys_ResizeFullScreen, !#Enter
-    IniRead, Keys_ResizeFullScreen2, %ShortcutsFile%, Shortcuts, Keys_ResizeFullScreen2, !+#Enter
-
-    IniRead, Keys_RestoreToPreviousPosn, %ShortcutsFile%, Shortcuts, Keys_RestoreToPreviousPosn, !#Backspace
-    IniRead, Keys_RestoreToPreviousPosnAndSize, %ShortcutsFile%, Shortcuts, Keys_RestoreToPreviousPosnAndSize, !+#Backspace
-
-    ; Note: Cannot include a comma (",") as part of the text string in the IniRead. So need to store some keys as variables.
-    DefaultKeys_SwitchToPreviousDesktop := "^#,"
-    DefaultKeys_MoveToPreviousDesktop := "^+#,"
-    IniRead, Keys_SwitchToPreviousDesktop, %ShortcutsFile%, Shortcuts, Keys_SwitchToPreviousDesktop, %DefaultKeys_SwitchToPreviousDesktop%
-    IniRead, Keys_SwitchToNextDesktop, %ShortcutsFile%, Shortcuts, Keys_SwitchToNextDesktop, ^#.
-    IniRead, Keys_MoveToPreviousDesktop, %ShortcutsFile%, Shortcuts, Keys_MoveToPreviousDesktop, %DefaultKeys_MoveToPreviousDesktop%
-    IniRead, Keys_MoveToPreviousDesktop2, %ShortcutsFile%, Shortcuts, Keys_MoveToPreviousDesktop2, ^+#Left
-    IniRead, Keys_MoveToNextDesktop, %ShortcutsFile%, Shortcuts, Keys_MoveToNextDesktop, ^+#.
-    IniRead, Keys_MoveToNextDesktop2, %ShortcutsFile%, Shortcuts, Keys_MoveToNextDesktop2, ^+#Right
-
-    IniRead, Keys_TileWindowsVertically, %ShortcutsFile%, Shortcuts, Keys_TileWindowsVertically, !#V
-    IniRead, Keys_TileWindowsVertically2, %ShortcutsFile%, Shortcuts, Keys_TileWindowsVertically2, !+#V
-    IniRead, Keys_TileWindowsHorizontally, %ShortcutsFile%, Shortcuts, Keys_TileWindowsHorizontally, !#H
-    IniRead, Keys_TileWindowsHorizontally2, %ShortcutsFile%, Shortcuts, Keys_TileWindowsHorizontally2, !+#H
-    IniRead, Keys_CascadeWindows, %ShortcutsFile%, Shortcuts, Keys_CascadeWindows, !#C
-    IniRead, Keys_CascadeWindows2, %ShortcutsFile%, Shortcuts, Keys_CascadeWindows2, !+#C
-
-    ; Link the shortcuts with the corresponding actions
-
-    ; "Move" commands
-    SetHotkeyAction(Keys_MoveLeft, "MoveLeft")
-    SetHotkeyAction(Keys_MoveRight, "MoveRight")
-    SetHotkeyAction(Keys_MoveUp, "MoveUp")
-    SetHotkeyAction(Keys_MoveDown, "MoveDown")
-    SetHotkeyAction(Keys_MoveTop, "MoveTop")
-    SetHotkeyAction(Keys_MoveTop2, "MoveTop")
-    SetHotkeyAction(Keys_MoveBottom, "MoveBottom")
-    SetHotkeyAction(Keys_MoveBottom2, "MoveBottom")
-    SetHotkeyAction(Keys_MoveHardLeft, "MoveHardLeft")
-    SetHotkeyAction(Keys_MoveHardLeft2, "MoveHardLeft")
-    SetHotkeyAction(Keys_MoveHardRight, "MoveHardRight")
-    SetHotkeyAction(Keys_MoveHardRight2, "MoveHardRight")
-    SetHotkeyAction(Keys_MoveTopLeft, "MoveTopLeft")
-    SetHotkeyAction(Keys_MoveTopRight, "MoveTopRight")
-    SetHotkeyAction(Keys_MoveBottomLeft, "MoveBottomLeft")
-    SetHotkeyAction(Keys_MoveBottomRight, "MoveBottomRight")
-    SetHotkeyAction(Keys_MoveCenter, "MoveCenter")
-    SetHotkeyAction(Keys_MoveCenter2, "MoveCenter")
-    ; "Resize" commands
-    SetHotkeyAction(Keys_ResizeLeft, "ResizeLeft")
-    SetHotkeyAction(Keys_ResizeRight, "ResizeRight")
-    SetHotkeyAction(Keys_ResizeUp, "ResizeUp")
-    SetHotkeyAction(Keys_ResizeDown, "ResizeDown")
-    SetHotkeyAction(Keys_ResizeLarger, "ResizeLarger")
-    SetHotkeyAction(Keys_ResizeSmaller, "ResizeSmaller")
-    ; Resize+Move commands
-    SetHotkeyAction(Keys_Grow, "Grow")
-    SetHotkeyAction(Keys_Grow2, "Grow")
-    SetHotkeyAction(Keys_Grow3, "Grow")
-    SetHotkeyAction(Keys_Grow4, "Grow")
-    SetHotkeyAction(Keys_Grow5, "Grow")
-    SetHotkeyAction(Keys_Grow6, "Grow")
-    SetHotkeyAction(Keys_Shrink, "Shrink")
-    SetHotkeyAction(Keys_Shrink2, "Shrink")
-    SetHotkeyAction(Keys_Shrink3, "Shrink")
-    SetHotkeyAction(Keys_Shrink4, "Shrink")
-    SetHotkeyAction(Keys_Shrink5, "Shrink")
-    SetHotkeyAction(Keys_Shrink6, "Shrink")
-    SetHotkeyAction(Keys_ResizeHalfScreen, "ResizeHalfScreen")
-    SetHotkeyAction(Keys_ResizeThreeQuarterScreen, "ResizeThreeQuarterScreen")
-    SetHotkeyAction(Keys_ResizeFullScreen, "ResizeFullScreen")
-    SetHotkeyAction(Keys_ResizeFullScreen2, "ResizeFullScreen")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_Grow, "Grow", "!+#=")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_Grow2, "Grow", "!+#NumpadAdd")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_Grow3, "Grow", "!#=")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_Grow4, "Grow", "!#NumpadAdd")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_Grow5, "Grow", "^#+")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_Grow6, "Grow", "^#NumpadAdd")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_Shrink, "Shrink", "!+#-")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_Shrink2, "Shrink", "!+#NumpadSub")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_Shrink3, "Shrink", "!#-")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_Shrink4, "Shrink", "!#NumpadSub")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_Shrink5, "Shrink", "^#-")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_Shrink6, "Shrink", "^#NumpadSub")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_ResizeHalfScreen, "ResizeHalfScreen", "!+#Del")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_ResizeThreeQuarterScreen, "ResizeThreeQuarterScreen", "!+#Home")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_ResizeFullScreen, "ResizeFullScreen", "!#Enter")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_ResizeFullScreen2, "ResizeFullScreen", "!+#Enter")
     ; "Restore" commands
-    SetHotkeyAction(Keys_RestoreToPreviousPosn, "RestoreToPreviousPosn")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_RestoreToPreviousPosn, "RestoreToPreviousPosn", "!#Backspace")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_RestoreToPreviousPosnAndSize, "RestoreToPreviousPosnAndSize", "!+#Backspace")
     ; Virtual Desktop commands
-    SetHotkeyAction(Keys_SwitchToPreviousDesktop, "SwitchToPreviousDesktop")
-    SetHotkeyAction(Keys_SwitchToNextDesktop, "SwitchToNextDesktop")
-    SetHotkeyAction(Keys_MoveToPreviousDesktop, "MoveToPreviousDesktop")
-    SetHotkeyAction(Keys_MoveToPreviousDesktop2, "MoveToPreviousDesktop")
-    SetHotkeyAction(Keys_MoveToNextDesktop, "MoveToNextDesktop")
-    SetHotkeyAction(Keys_MoveToNextDesktop2, "MoveToNextDesktop")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_SwitchToPreviousDesktop, "SwitchToPreviousDesktop", "^#,")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_SwitchToNextDesktop, "SwitchToNextDesktop", "^#.")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_MoveToPreviousDesktop, "MoveToPreviousDesktop", "^+#,")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_MoveToPreviousDesktop2, "MoveToPreviousDesktop", "^+#Left")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_MoveToNextDesktop, "MoveToNextDesktop", "^+#.")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_MoveToNextDesktop2, "MoveToNextDesktop", "^+#Right")
     ; Tile and Cascade windows
-    SetHotkeyAction(Keys_TileWindowsVertically, "TileWindowsVertically")
-    SetHotkeyAction(Keys_TileWindowsVertically2, "TileWindowsVertically")
-    SetHotkeyAction(Keys_TileWindowsHorizontally, "TileWindowsHorizontally")
-    SetHotkeyAction(Keys_TileWindowsHorizontally2, "TileWindowsHorizontally")
-    SetHotkeyAction(Keys_CascadeWindows, "CascadeWindows")
-    SetHotkeyAction(Keys_CascadeWindows2, "CascadeWindows")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_TileWindowsVertically, "TileWindowsVertically", "!#V")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_TileWindowsVertically2, "TileWindowsVertically", "!+#V")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_TileWindowsHorizontally, "TileWindowsHorizontally", "!#H")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_TileWindowsHorizontally2, "TileWindowsHorizontally", "!+#H")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_CascadeWindows, "CascadeWindows", "!#C")
+    ReadAndStoreHotKeyAction(ShortcutsFile, Keys_CascadeWindows2, "CascadeWindows", "!+#C")
 
     return ; end shortcuts init
+}
+
+ReadAndStoreHotKeyAction(ShortcutsFile, KeyCode, KeyAction, DefaultKeys) {
+    ; Read the KeyCombo from the shortcuts definition file. Should be stored in the [Shortcuts] category.
+    IniRead, KeyCombo, %ShortcutsFile%, Shortcuts, KeyCode, %DefaultKeys%
+    SetHotkeyAction(KeyCombo, KeyAction)
 }
 
 SetHotkeyAction(Keys, KeyAction) {
