@@ -25,11 +25,24 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
 ; ====== Define Global variables ======
 
+class ShortcutsProfile {
+    __New(profileName, profileFile) {
+        this.Name := profileName
+        this.File := profileFile
+    }
+}
+class Profiles {
+    ; Shortcut Profiles
+    static AltWin := new ShortcutsProfile("Alt+Win shortcuts", "ShortcutDefs-AltWin.ini")
+    static CtrlWin := new ShortcutsProfile("Ctrl+Win shortcuts", "ShortcutDefs-CtrlWin.ini")
+    static Custom := new ShortcutsProfile("Custom shortcuts", "ShortcutDefs-Custom.ini")
+}
+
 ; Alternative keyboard layouts
-SettingsFile = HotkeySettings.ini  ; Alt+Win shortcuts
+SettingsFile = HotkeySettings.ini
 
 ; Read user-preference for shortcut combinations (each defined in a separate shortcutsDef INI file)
-IniRead, ShortcutsFile, %SettingsFile%, General, ShortcutDefs, ShortcutDefs-AltWin.ini
+IniRead, InitialShortcutsProfile, %SettingsFile%, General, ShortcutDefs, Profiles.AltWin.File
 ; Global settings
 IniRead, PixelsPerStep, %SettingsFile%, Settings, PixelsPerStep, 50
 
@@ -37,7 +50,10 @@ InitializeIcon()
 
 InitializeMenu()
 
-InitializeShortcuts(ShortcutsFile)
+; Prepare an array to store all the HotKeys created by this tool.
+; Will be used when clearing all shortcuts (ie. during shortcuts profile change)
+KeysInUse := []
+InitializeShortcuts(InitialShortcutsProfile)
 
 Return ; End initialization
 
@@ -55,37 +71,63 @@ InitializeMenu() {
     ; Settings
     Menu, Tray, Add, Settings, OpenSettings
     ; Edit shortcuts
-    Menu, Tray, Add, Edit shortcuts, OpenCurrentShortSet
+    Menu, Tray, Add, Edit Custom shortcuts, OpenCurrentShortSet
     Menu, Tray, Add ; separator
 
     ; HotKey Profiles
     ;       - [x] Alt+Win shortcuts
-    Menu, Profiles, Add, Alt+Win shortcuts, SetAltKeysShortcuts
+    Menu, Profiles, Add, % Profiles.AltWin.Name, SetAltKeyShortcuts
     ;       - [ ] Cltr+Win shortcuts
-    Menu, Profiles, Add, Ctrl+Win shortcuts, SetCtrlKeysShortcuts
+    Menu, Profiles, Add, % Profiles.CtrlWin.Name, SetCtrlKeyShortcuts
+    ;       - [ ] Custom shortcuts
+    Menu, Profiles, Add, % Profiles.Custom.Name, SetCustomShortcuts
     Menu, Tray, Add, Shortcut &Profiles, :Profiles
     ; Mark the active profile with a Tick/Check
-    Menu, Profiles, Check, Alt+Win shortcuts
+    ; Note: Hard-coded to start with the Alt+Win profile!
+    Menu, Profiles, Check, % Profiles.AltWin.Name
 
     MoveStandardMenuToBottom()
 }
 
-SetAltKeysShortcuts() {
-    InitializeShortcuts("ShortcutDefs-CtrlWin.ini", true)
-    InitializeShortcuts("ShortcutDefs-AltWin.ini")
-    Menu, Profiles, Check, Alt+Win shortcuts
-    Menu, Profiles, Uncheck, Ctrl+Win shortcuts
-
-    MsgBox Shortcuts profile now using Alt+Win keys
+SetAltKeyShortcuts() {
+    ChangeShortcutsProfile(Profiles.AltWin)
 }
 
-SetCtrlKeysShortcuts() {
-    InitializeShortcuts("ShortcutDefs-AltWin.ini", true)
-    InitializeShortcuts("ShortcutDefs-CtrlWin.ini")
-    Menu, Profiles, Uncheck, Alt+Win shortcuts
-    Menu, Profiles, Check, Ctrl+Win shortcuts
+SetCtrlKeyShortcuts() {
+    ChangeShortcutsProfile(Profiles.CtrlWin)
+}
 
-    MsgBox Shortcuts profile now using Ctrl+Win keys
+SetCustomShortcuts() {
+    ChangeShortcutsProfile(Profiles.Custom)
+}
+
+ChangeShortcutsProfile(ShortcutsProfile) {
+    ; First remove all shortcuts and uncheck all profiles
+    ClearAllShortcuts()
+    UncheckAllProfiles()
+
+    ; Now set the new shortcuts profile
+    SetShortcutsProfile(ShortcutsProfile)
+    MsgBox % "Now using " ShortcutsProfile.Name
+}
+
+ClearAllShortcuts() {
+    global KeysInUse
+    For index, Keys in KeysInUse {
+        Hotkey, %Keys%, Off
+    }
+}
+
+UncheckAllProfiles() {
+    Menu, Profiles, Uncheck, % Profiles.AltWin.Name
+    Menu, Profiles, Uncheck, % Profiles.CtrlWin.Name
+    Menu, Profiles, Uncheck, % Profiles.Custom.Name
+}
+
+SetShortcutsProfile(ShortcutsProfile) {
+    ; MsgBox % "Setting shortcuts profile: " ShortcutsProfile.Name " - from file: " ShortcutsProfile.File
+    InitializeShortcuts(ShortcutsProfile.File)
+    Menu, Profiles, Check, % ShortcutsProfile.Name
 }
 
 ShowAboutDialog() {
@@ -93,12 +135,12 @@ ShowAboutDialog() {
 }
 
 OpenSettings() {
-    MsgBox "Open Settings"
+    global SettingsFile
+    Run, % "edit " SettingsFile
 }
 
 OpenCurrentShortSet() {
-    MsgBox "Open Shortcut definitions file"
-    Run, edit "ShortcutDefs-Custom.ini"
+    Run, % "edit " Profiles.Custom.File
 }
 
 MoveStandardMenuToBottom() {
@@ -112,6 +154,8 @@ MoveStandardMenuToBottom() {
 ; ---------------------------------
 
 InitializeShortcuts(ShortcutsFile, bRemove := false) {
+
+    ; MsgBox % "Initialising shortcuts profile from file: " ShortcutsFile
 
     ; ==== Define the shortcut key combinations ====
     ; Read the shortcut keys from the shortcuts file (or fall back on defaults)
@@ -164,9 +208,12 @@ InitializeShortcuts(ShortcutsFile, bRemove := false) {
     IniRead, Keys_RestoreToPreviousPosn, %ShortcutsFile%, Shortcuts, Keys_RestoreToPreviousPosn, !#Backspace
     IniRead, Keys_RestoreToPreviousPosnAndSize, %ShortcutsFile%, Shortcuts, Keys_RestoreToPreviousPosnAndSize, !+#Backspace
 
-    IniRead, Keys_SwitchToPreviousDesktop, %ShortcutsFile%, Shortcuts, Keys_SwitchToPreviousDesktop, "^#,"
+    ; Note: Cannot include a comma (",") as part of the text string in the IniRead. So need to store some keys as variables.
+    DefaultKeys_SwitchToPreviousDesktop := "^#,"
+    DefaultKeys_MoveToPreviousDesktop := "^+#,"
+    IniRead, Keys_SwitchToPreviousDesktop, %ShortcutsFile%, Shortcuts, Keys_SwitchToPreviousDesktop, %DefaultKeys_SwitchToPreviousDesktop%
     IniRead, Keys_SwitchToNextDesktop, %ShortcutsFile%, Shortcuts, Keys_SwitchToNextDesktop, ^#.
-    IniRead, Keys_MoveToPreviousDesktop, %ShortcutsFile%, Shortcuts, Keys_MoveToPreviousDesktop, "^+#,"
+    IniRead, Keys_MoveToPreviousDesktop, %ShortcutsFile%, Shortcuts, Keys_MoveToPreviousDesktop, %DefaultKeys_MoveToPreviousDesktop%
     IniRead, Keys_MoveToPreviousDesktop2, %ShortcutsFile%, Shortcuts, Keys_MoveToPreviousDesktop2, ^+#Left
     IniRead, Keys_MoveToNextDesktop, %ShortcutsFile%, Shortcuts, Keys_MoveToNextDesktop, ^+#.
     IniRead, Keys_MoveToNextDesktop2, %ShortcutsFile%, Shortcuts, Keys_MoveToNextDesktop2, ^+#Right
@@ -244,15 +291,10 @@ InitializeShortcuts(ShortcutsFile, bRemove := false) {
 }
 
 SetHotkeyAction(Keys, KeyAction, bRemove := false) {
-;    if (Keys = "^+#Left") {
-;        MsgBox Setting %KeyAction% to %Keys% (Remove = %bRemove%)
-;    }
-
-    if (bRemove) {
-        Hotkey, %Keys%, Off
-    } else {
-        Hotkey, %Keys%, %KeyAction%, On
-    }
+    global KeysInUse
+    Hotkey, %Keys%, %KeyAction%, On
+    ; Add the Hotkey to the KeysInUse array (so it can be removed later)
+    KeysInUse.Push(Keys)
 }
 
 ; ================================
