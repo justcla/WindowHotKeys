@@ -116,6 +116,8 @@ ClearAllShortcuts() {
     For index, Keys in KeysInUse {
         Hotkey, %Keys%, Off
     }
+    ; Reset the KeysInUse array
+    KeysInUse := []
 }
 
 UncheckAllProfiles() {
