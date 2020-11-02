@@ -25,6 +25,10 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
 ; ====== Define Global variables ======
 
+; SettingsFile holds program settings and defaults
+SettingsFile = HotkeySettings.ini
+
+; Configure shortcut profiles
 class ShortcutsProfile {
     __New(profileName, profileFile) {
         this.Name := profileName
@@ -36,24 +40,25 @@ class Profiles {
     static AltWin := new ShortcutsProfile("Alt+Win shortcuts", "ShortcutDefs-AltWin.ini")
     static CtrlWin := new ShortcutsProfile("Ctrl+Win shortcuts", "ShortcutDefs-CtrlWin.ini")
     static Custom := new ShortcutsProfile("Custom shortcuts", "ShortcutDefs-Custom.ini")
+
+    ; Global var for storing the profile currently in use
+    static Current := AltWin
 }
-
-; Alternative keyboard layouts
-SettingsFile = HotkeySettings.ini
-
+; Set the current shortcuts profile based on profile defined in settings file
 ; Read user-preference for shortcut combinations (each defined in a separate shortcutsDef INI file)
-IniRead, InitialShortcutsProfile, %SettingsFile%, General, ShortcutDefs, Profiles.AltWin.File
-; Global settings
+IniRead, InitialShortcutsProfileName, %SettingsFile%, General, InitialShortcutsProfile
+InitialShortcutsProfile := GetShortcutsProfileFromName(InitialShortcutsProfileName)
+
+; PixelsPerStep - Defines the number of pixels used by each move or resize action
 IniRead, PixelsPerStep, %SettingsFile%, Settings, PixelsPerStep, 50
 
+; Initialize the System Tray icon and menu
 InitializeIcon()
-
 InitializeMenu()
 
-; Prepare an array to store all the HotKeys created by this tool.
-; Will be used when clearing all shortcuts (ie. during shortcuts profile change)
-KeysInUse := []
-InitializeShortcuts(InitialShortcutsProfile)
+; Initialize the shortcuts
+KeysInUse := []   ; Stores all keys currently in use. Used when clearing all shortcuts. 
+SetShortcutsProfile(InitialShortcutsProfile)
 
 Return ; End initialization
 
@@ -75,18 +80,20 @@ InitializeMenu() {
     Menu, Tray, Add ; separator
 
     ; HotKey Profiles
-    ;       - [x] Alt+Win shortcuts
     Menu, Profiles, Add, % Profiles.AltWin.Name, SetAltKeyShortcuts
-    ;       - [ ] Cltr+Win shortcuts
     Menu, Profiles, Add, % Profiles.CtrlWin.Name, SetCtrlKeyShortcuts
-    ;       - [ ] Custom shortcuts
     Menu, Profiles, Add, % Profiles.Custom.Name, SetCustomShortcuts
     Menu, Tray, Add, Shortcut &Profiles, :Profiles
-    ; Mark the active profile with a Tick/Check
-    ; Note: Hard-coded to start with the Alt+Win profile!
-    Menu, Profiles, Check, % Profiles.AltWin.Name
 
     MoveStandardMenuToBottom()
+}
+
+GetShortcutsProfileFromName(ShortcutsProfileName) {
+    switch ShortcutsProfileName {
+        case Profiles.CtrlWin.Name: return Profiles.CtrlWin
+        case Profiles.Custom.Name: return Profiles.Custom
+        default: return Profiles.AltWin   ; fall back to Alt+Win profile as a default
+    }
 }
 
 SetAltKeyShortcuts() {
@@ -102,13 +109,13 @@ SetCustomShortcuts() {
 }
 
 ChangeShortcutsProfile(ShortcutsProfile) {
-    ; First remove all shortcuts and uncheck all profiles
+    ; First remove all shortcuts and uncheck all profiles in the menu
     ClearAllShortcuts()
     UncheckAllProfiles()
 
     ; Now set the new shortcuts profile
     SetShortcutsProfile(ShortcutsProfile)
-    MsgBox % "Now using " ShortcutsProfile.Name
+    MsgBox % "Move and Resize Windows is now configured for " Profiles.Current.Name
 }
 
 ClearAllShortcuts() {
@@ -128,7 +135,8 @@ UncheckAllProfiles() {
 
 SetShortcutsProfile(ShortcutsProfile) {
     ; MsgBox % "Setting shortcuts profile: " ShortcutsProfile.Name " - from file: " ShortcutsProfile.File
-    InitializeShortcuts(ShortcutsProfile.File)
+    Profiles.Current := ShortcutsProfile
+    SetShortcutsFromFile(ShortcutsProfile.File)
     Menu, Profiles, Check, % ShortcutsProfile.Name
 }
 
@@ -155,9 +163,9 @@ MoveStandardMenuToBottom() {
 ; ------- End Menu Init -----------
 ; ---------------------------------
 
-InitializeShortcuts(ShortcutsFile) {
+SetShortcutsFromFile(ShortcutsFile) {
 
-    ; MsgBox % "Initialising shortcuts profile from file: " ShortcutsFile
+    ; MsgBox % "Setting shortcuts from file: " ShortcutsFile
 
     ; ==== Define the shortcut key combinations ====
     ; Read the shortcut keys from the shortcuts file (or fall back on defaults)
