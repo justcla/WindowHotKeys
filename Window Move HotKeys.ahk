@@ -237,9 +237,16 @@ SetShortcutsFromFile(ShortcutsFile) {
 
 ReadAndStoreHotKeyAction(ShortcutsFile, KeyCode, KeyAction, DefaultKeys) {
     ; Read the KeyCombo from the shortcuts definition file. Should be stored in the [Shortcuts] category.
-    IniRead, KeyCombo, %ShortcutsFile%, Shortcuts, %KeyCode%, %DefaultKeys%
-    ; Set the action to trigger when the key-combo is pressed.
-    SetHotkeyAction(KeyCombo, KeyAction)
+    ; Business logic: If profile is "Custom", only apply functions that have defined key mappings.
+    if (Profiles.Current == Profiles.Custom) {
+        IniRead, KeyCombo, %ShortcutsFile%, Shortcuts, %KeyCode%
+    } else {
+        IniRead, KeyCombo, %ShortcutsFile%, Shortcuts, %KeyCode%, %DefaultKeys%
+    }
+    ; Set the action to trigger when the key-combo is pressed - only if keys are valid
+    if (KeyCombo != "ERROR") {
+        SetHotkeyAction(KeyCombo, KeyAction)
+    }
 }
 
 SetHotkeyAction(Keys, KeyAction) {
