@@ -40,13 +40,14 @@ class Profiles {
     static AltWin := new ShortcutsProfile("Alt+Win shortcuts", "ShortcutDefs-AltWin.ini")
     static CtrlWin := new ShortcutsProfile("Ctrl+Win shortcuts", "ShortcutDefs-CtrlWin.ini")
     static Custom := new ShortcutsProfile("Custom shortcuts", "ShortcutDefs-Custom.ini")
+    static None := new ShortcutsProfile("None (Default keys)", "")
 
     ; Global var for storing the profile currently in use
     static Current := AltWin
 }
 ; Set the current shortcuts profile based on profile defined in settings file
 ; Read user-preference for shortcut combinations (each defined in a separate shortcutsDef INI file)
-IniRead, InitialShortcutsProfileName, %SettingsFile%, General, InitialShortcutsProfile
+IniRead, InitialShortcutsProfileName, %SettingsFile%, General
 InitialShortcutsProfile := GetShortcutsProfileFromName(InitialShortcutsProfileName)
 
 ; PixelsPerStep - Defines the number of pixels used by each move or resize action
@@ -83,6 +84,7 @@ InitializeMenu() {
     Menu, Profiles, Add, % Profiles.AltWin.Name, SetAltKeyShortcuts
     Menu, Profiles, Add, % Profiles.CtrlWin.Name, SetCtrlKeyShortcuts
     Menu, Profiles, Add, % Profiles.Custom.Name, SetCustomShortcuts
+    Menu, Profiles, Add, % Profiles.None.Name, SetDefaultShortcuts
     Menu, Tray, Add, Shortcut &Profiles, :Profiles
 
     MoveStandardMenuToBottom()
@@ -90,9 +92,10 @@ InitializeMenu() {
 
 GetShortcutsProfileFromName(ShortcutsProfileName) {
     switch ShortcutsProfileName {
+        case Profiles.AltWin.Name: return Profiles.AltWin
         case Profiles.CtrlWin.Name: return Profiles.CtrlWin
         case Profiles.Custom.Name: return Profiles.Custom
-        default: return Profiles.AltWin   ; fall back to Alt+Win profile as a default
+        default: return Profiles.None
     }
 }
 
@@ -106,6 +109,10 @@ SetCtrlKeyShortcuts() {
 
 SetCustomShortcuts() {
     ChangeShortcutsProfile(Profiles.Custom)
+}
+
+SetDefaultShortcuts() {
+    ChangeShortcutsProfile(Profiles.None)
 }
 
 ChangeShortcutsProfile(ShortcutsProfile) {
@@ -131,6 +138,7 @@ UncheckAllProfiles() {
     Menu, Profiles, Uncheck, % Profiles.AltWin.Name
     Menu, Profiles, Uncheck, % Profiles.CtrlWin.Name
     Menu, Profiles, Uncheck, % Profiles.Custom.Name
+    Menu, Profiles, Uncheck, % Profiles.None.Name
 }
 
 SetShortcutsProfile(ShortcutsProfile) {
@@ -237,11 +245,11 @@ SetShortcutsFromFile(ShortcutsFile) {
 
 ReadAndStoreHotKeyAction(ShortcutsFile, KeyCode, KeyAction, DefaultKeys) {
     ; Read the KeyCombo from the shortcuts definition file. Should be stored in the [Shortcuts] category.
-    ; Business logic: If profile is "Custom", only apply functions that have defined key mappings.
-    if (Profiles.Current == Profiles.Custom) {
-        IniRead, KeyCombo, %ShortcutsFile%, Shortcuts, %KeyCode%
-    } else {
+    ; Business logic: Use default keys if (and only if) no profile is set
+    if (Profiles.Current == Profiles.None) {
         IniRead, KeyCombo, %ShortcutsFile%, Shortcuts, %KeyCode%, %DefaultKeys%
+    } else {
+        IniRead, KeyCombo, %ShortcutsFile%, Shortcuts, %KeyCode%
     }
     ; Set the action to trigger when the key-combo is pressed - only if keys are valid
     if (KeyCombo != "ERROR") {
