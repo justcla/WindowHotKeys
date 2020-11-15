@@ -17,8 +17,6 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 ; Symbol	+	= Shift
 ; Symbol	& = An ampersand may be used between any two keys or mouse buttons to combine them into a custom hotkey.
 
-#Include *i MultiColumnLayout.ahk    ; Note: *i flag means code won't fail if file not found
-
 ; ==============================================
 ; ==== Initialization Section ====
 ; ==============================================
@@ -263,11 +261,11 @@ SetShortcuts(ShortcutsProfile) {
     ReadAndStoreHotKeyAction(ShortcutsFile, "CascadeWindows", "CascadeWindows", "!#C")
     ReadAndStoreHotKeyAction(ShortcutsFile, "CascadeWindows2", "CascadeWindows", "!+#C")
     ; Multi-column layout shortcuts
-    ReadAndStoreHotKeyAction(ShortcutsFile, "MoveLeftOneQuarter", "", "!#,")
-    ReadAndStoreHotKeyAction(ShortcutsFile, "MoveRightOneQuarter", "", "!#.")
     ReadAndStoreHotKeyAction(ShortcutsFile, "ResizeTo3Column", "", "!+#3")
     ReadAndStoreHotKeyAction(ShortcutsFile, "ResizeTo4Column", "", "!+#4")
     ReadAndStoreHotKeyAction(ShortcutsFile, "ResizeTo5Column", "", "!+#5")
+    ReadAndStoreHotKeyAction(ShortcutsFile, "MoveLeftOneQuarter", "", "!#,")
+    ReadAndStoreHotKeyAction(ShortcutsFile, "MoveRightOneQuarter", "", "!#.")
 
     return ; end shortcuts init
 }
@@ -643,4 +641,125 @@ GetWindowNumber()
         }
     }
     return 1    ; If we can't find a matching window, just return 1 (Primary)
+}
+
+; ==================================
+; ===== Multi-column Layout ========
+; ==================================
+
+; ===== Multi-column Key Bindings ========
+
+ResizeTo3Column() {
+    ResizeToMultiColumn(3)
+}
+ResizeTo4Column() {
+    ResizeToMultiColumn(4)
+}
+ResizeTo5Column() {
+    ResizeToMultiColumn(5)
+}
+
+MoveLeftOneQuarter() {
+    ; Move to the Quarter-Column to the Left
+    GoToColNum := GetPrevColNum(4)
+    SnapToQuarterScreen(GoToColNum)
+}
+
+MoveRightOneQuarter() {
+    ; Move to the Quarter-Column to the Right
+    GoToColNum := GetNextColNum(4)
+    SnapToQuarterScreen(GoToColNum)
+}
+
+; ===== Multi-column Layout functions ========
+
+ResizeToMultiColumn(ColCount) {
+    ; Make window fit one column (based on ColCount) with full height
+
+    ; Get active window and monitor details
+    WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
+    WinNum := GetWindowNumber()
+    SysGet, Mon, MonitorWorkArea, %WinNum%
+    ; MsgBox, Mon (P) - Left: %MonLeft% -- Top: %MonTop% -- Right: %MonRight% -- Bottom %MonBottom%.
+
+    ; Generate new co-ordinates
+    MonWorkingWidth := MonRight - MonLeft
+    MonWorkingHeight := MonBottom - MonTop
+    WinPaddingX := 0 ; Adjustment amount to fix small window offset issue (Note: Not using WinPadding)
+    NewY := MonTop   ; Should be monitor top
+    NewW := (MonWorkingWidth / ColCount) + (WinPaddingX * 2) ; ie. Set to 1/4 mon width for 4-column layout
+    NewH := MonWorkingHeight    ; full window height
+
+    ; Resize window
+    ; MsgBox, Moving to X,Y = %NewX%,%NewY% and W,H = %NewW%,%NewH%
+    RestoreMoveAndResize(A, WinX, NewY, NewW, NewH)
+}
+
+SnapToQuarterScreen(ColNum) {
+    ; Get active window and monitor details
+    WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
+    WinNum := GetWindowNumber()
+    SysGet, Mon, MonitorWorkArea, %WinNum%
+    MonWorkingWidth := MonRight - MonLeft
+
+    ; Generate new co-ordinates
+    ColWidth := MonWorkingWidth * (1/4) ; With 4-columns layout, width is one quarter of the screen
+    WinPaddingX := 0 ; Adjustment amount to fix small window offset issue
+    NewX := MonLeft + ((ColNum-1) * ColWidth) - WinPaddingX
+
+    ; Move window
+    RestoreMoveAndResize(A, NewX, WinY, WinW, WinH)
+}
+
+GetPrevColNum(ColCount) {
+    DestCol := GetCurrentColNum(ColCount, bOnColEdge)
+    if (bOnColEdge) {
+        DestCol--
+    }
+    if (DestCol < 1) {
+        ; TODO: Push onto previous monitor, if there is one
+        ; For now, keep it on the current screen
+        DestCol := 1
+    }
+    return DestCol
+}
+GetNextColNum(ColCount) {
+    DestCol := GetCurrentColNum(ColCount)
+    DestCol++
+    if (DestCol > ColCount) {
+        ; TODO: Push onto next monitor, if there is one
+        ; For now, keep it on the current screen
+        DestCol := ColCount
+    }
+    return DestCol
+}
+
+GetCurrentColNum(ColCount, ByRef bOnColEdge := false)
+{
+    ; Get active window and monitor details
+    WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
+    WinNum := GetWindowNumber()
+    SysGet, Mon, MonitorWorkArea, %WinNum%
+    ; MsgBox, Mon (P) - Left: %MonLeft% -- Top: %MonTop% -- Right: %MonRight% -- Bottom %MonBottom%.
+    MonWorkingWidth := MonRight - MonLeft
+    MonWorkingHeight := MonBottom - MonTop
+
+    ColWidth := MonWorkingWidth / ColCount
+    AdjustX := 0 ; Adjustment amount to fix small window offset issue
+
+    ; In which column is the top left corner?
+    ; Loop through each column to see if the X,Y co-ordinates are in the column
+    CurrentCol := 1
+    loop, %ColCount% {
+        ColStartX := MonLeft + (ColWidth * (A_Index-1))
+        ColEndX := MonLeft + (ColWidth * A_Index)
+        if (WinX+AdjustX < ColEndX) {
+            bOnColEdge := (WinX = ColStartX-AdjustX)
+            CurrentCol := A_Index
+            break   ; We've found the column this window fits into - exit now
+        }
+    }
+
+    ; MsgBox Current column = %CurrentCol%
+    return CurrentCol
 }
