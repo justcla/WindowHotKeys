@@ -1,42 +1,8 @@
-; ==============================
-; ===== 4-column Layout ========
-; ==============================
+; ==================================
+; ===== Multi-column Layout ========
+; ==================================
 
-; ===== 4-column Key Bindings ========
-
-; !#1::
-; ; Move to Column 1 of 4-column layout
-; MoveToFourColumnLayout(1)
-; return
-;
-; !#2::
-; ; Move to Column 2 of 4-column layout
-; MoveToFourColumnLayout(2)
-; return
-;
-; !#3::
-; ; Move to Column 3 of 4-column layout
-; MoveToFourColumnLayout(3)
-; return
-;
-; !#4::
-; ; Move to Column 4 of 4-column layout
-; MoveToFourColumnLayout(4)
-; return
-;
-; !#,::
-; ; Move to the Column to the Left
-; GoToColNum := GetPrevColNum()
-; ; MsgBox GoToColNum: %GoToColNum%
-; MoveToFourColumnLayout(GoToColNum)
-; return
-
-; !#.::
-; ; Move to the Column to the Right
-; GoToColNum := GetNextColNum()
-; ; MsgBox GoToColNum: %GoToColNum%
-; MoveToFourColumnLayout(GoToColNum)
-; return
+; ===== Multi-column Key Bindings ========
 
 ResizeTo3Column() {
     ResizeToMultiColumn(3)
@@ -60,12 +26,10 @@ MoveRightOneQuarter() {
     SnapToQuarterScreen(GoToColNum)
 }
 
-;=== Move and Resize to fit 4-Column layout ==
-
 ; ===== Multi-column Layout functions ========
 
 ResizeToMultiColumn(ColCount) {
-    ; Make window fit one column (based on ColCount) and full height
+    ; Make window fit one column (based on ColCount) with full height
 
     ; Get active window and monitor details
     WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
