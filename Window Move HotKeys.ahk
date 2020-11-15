@@ -17,6 +17,8 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 ; Symbol	+	= Shift
 ; Symbol	& = An ampersand may be used between any two keys or mouse buttons to combine them into a custom hotkey.
 
+#Include *i MultiColumnLayout.ahk    ; Note: *i flag means code won't fail if file not found
+
 ; ==============================================
 ; ==== Initialization Section ====
 ; ==============================================
@@ -200,10 +202,10 @@ SetShortcuts(ShortcutsProfile) {
     ; Read the shortcut keys from the shortcuts file (or fall back on defaults)
 
     ;Move
-    ReadAndStoreHotKeyAction(ShortcutsFile, "MoveLeft", "MoveLeft", "!#Left")
-    ReadAndStoreHotKeyAction(ShortcutsFile, "MoveRight", "MoveRight", "!#Right")
-    ReadAndStoreHotKeyAction(ShortcutsFile, "MoveUp", "MoveUp", "!#Up")
-    ReadAndStoreHotKeyAction(ShortcutsFile, "MoveDown", "MoveDown", "!#Down")
+    ReadAndStoreHotKeyAction(ShortcutsFile, "MoveLeft", "", "!#Left")
+    ReadAndStoreHotKeyAction(ShortcutsFile, "MoveRight", "", "!#Right")
+    ReadAndStoreHotKeyAction(ShortcutsFile, "MoveUp", "", "!#Up")
+    ReadAndStoreHotKeyAction(ShortcutsFile, "MoveDown", "", "!#Down")
     ReadAndStoreHotKeyAction(ShortcutsFile, "MoveTop", "MoveTop", "!#PgUp")
     ReadAndStoreHotKeyAction(ShortcutsFile, "MoveTop2", "MoveTop", "!#Numpad8")
     ReadAndStoreHotKeyAction(ShortcutsFile, "MoveBottom", "MoveBottom", "!#PgDn")
@@ -260,6 +262,12 @@ SetShortcuts(ShortcutsProfile) {
     ReadAndStoreHotKeyAction(ShortcutsFile, "TileWindowsHorizontally2", "TileWindowsHorizontally", "!+#H")
     ReadAndStoreHotKeyAction(ShortcutsFile, "CascadeWindows", "CascadeWindows", "!#C")
     ReadAndStoreHotKeyAction(ShortcutsFile, "CascadeWindows2", "CascadeWindows", "!+#C")
+    ; Multi-column layout shortcuts
+    ReadAndStoreHotKeyAction(ShortcutsFile, "MoveLeftOneQuarter", "", "!#,")
+    ReadAndStoreHotKeyAction(ShortcutsFile, "MoveRightOneQuarter", "", "!#.")
+    ReadAndStoreHotKeyAction(ShortcutsFile, "ResizeTo3Column", "", "!+#3")
+    ReadAndStoreHotKeyAction(ShortcutsFile, "ResizeTo4Column", "", "!+#4")
+    ReadAndStoreHotKeyAction(ShortcutsFile, "ResizeTo5Column", "", "!+#5")
 
     return ; end shortcuts init
 }
@@ -274,7 +282,11 @@ ReadAndStoreHotKeyAction(ShortcutsFile, KeyCode, KeyAction, DefaultKeys) {
     }
     ; Set the action to trigger when the key-combo is pressed - only if keys are valid
     if (KeyCombo != "ERROR") {
-        SetHotkeyAction(KeyCombo, KeyAction)
+        if (KeyAction == "") {
+            SetHotkeyAction(KeyCombo, KeyCode)
+        } else {
+            SetHotkeyAction(KeyCombo, KeyAction)
+        }
     }
 }
 
@@ -450,80 +462,6 @@ DllCall( "CascadeWindows", uInt,0, Int,4, Int,0, Int,0, Int,0 )
 return
 
 ; ==============================
-; ===== 4-column Layout ========
-; ==============================
-
-!#1::
-; Move to Column 1 of 4-column layout
-MoveToFourColumnLayout(1)
-return
-
-!#2::
-; Move to Column 2 of 4-column layout
-MoveToFourColumnLayout(2)
-return
-
-!#3::
-; Move to Column 3 of 4-column layout
-MoveToFourColumnLayout(3)
-return
-
-!#4::
-; Move to Column 4 of 4-column layout
-MoveToFourColumnLayout(4)
-return
-
-!#,::
-; Move to the Column to the Left
-GoToColNum := GetPrevColNum()
-; MsgBox GoToColNum: %GoToColNum%
-MoveToFourColumnLayout(GoToColNum)
-return
-
-!#.::
-; Move to the Column to the Right
-GoToColNum := GetNextColNum()
-; MsgBox GoToColNum: %GoToColNum%
-MoveToFourColumnLayout(GoToColNum)
-return
-
-;=== Move and Resize to fit 4-Column layout ==
-
-!+#1::
-; Resize to Column 1 of 4-column layout
-ResizeToFourColumnLayout(1)
-return
-
-!+#2::
-; Resize to Column 2 of 4-column layout
-ResizeToFourColumnLayout(2)
-return
-
-!+#3::
-; Resize to Column 3 of 4-column layout
-ResizeToFourColumnLayout(3)
-return
-
-!+#4::
-; Resize to Column 4 of 4-column layout
-ResizeToFourColumnLayout(4)
-return
-
-!+#,::
-; Move to the Column to the Left
-GoToColNum := GetPrevColNum()
-; MsgBox GoToColNum: %GoToColNum%
-ResizeToFourColumnLayout(GoToColNum)
-return
-
-!+#.::
-; Move to the Column to the Right
-GoToColNum := GetNextColNum()
-; MsgBox GoToColNum: %GoToColNum%
-ResizeToFourColumnLayout(GoToColNum)
-return
-
-; ==============================
 ; ===== Switch desktops ========
 ; ==============================
 
@@ -547,7 +485,7 @@ SwitchToNextDesktop()
 
 MoveToPreviousDesktop()
 {
-    ; Pre-conditons:
+    ; Pre-conditions:
     ; Check current desktop is not Desktop 1; if on desktop one, abort
 ;    if (currentDesktop = 1) {
 ;        return
@@ -558,7 +496,7 @@ MoveToPreviousDesktop()
 
 MoveToNextDesktop()
 {
-    ; Pre-conditons:
+    ; Pre-conditions:
     ; Check: Is there a desktop to the right? If not, can we create a new one?
 ;    if (currentDesktop = numDesktops) {
 ;        return
@@ -569,7 +507,7 @@ MoveToNextDesktop()
 
 MoveWindowToOtherDesktop(direction)
 {
-;    ; Pre-conditons:
+;    ; Pre-conditions:
 ;    ; Check: Is there a desktop to the right? If not, can we create a new one?
 ;    currentDesktop = 2
 ;    numDesktops = 3
@@ -622,6 +560,13 @@ MoveToEdge(Edge)
     return
 }
 
+MoveWindowToCenter() {
+    WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
+    WinNum := GetWindowNumber()
+    DoResizeAndCenter(WinNum, WinW, WinH)
+    return
+}
+
 DoMoveAndResize(MoveX:=0, MoveY:=0, GrowW:=0, GrowH:=0)
 {
     GetMoveCoordinates(A, NewX, NewY, NewW, NewH, MoveX, MoveY, GrowW, GrowH)
@@ -639,13 +584,6 @@ ResizeAndCenter(Ratio)
     WinNum := GetWindowNumber()
     CalculateSizeByWinRatio(NewW, NewH, WinNum, Ratio)
     DoResizeAndCenter(WinNum, NewW, NewH)
-}
-
-MoveWindowToCenter() {
-    WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-    WinNum := GetWindowNumber()
-    DoResizeAndCenter(WinNum, WinW, WinH)
-    return
 }
 
 CalculateSizeByWinRatio(ByRef NewW, ByRef NewH, WinNum, Ratio)
@@ -705,103 +643,4 @@ GetWindowNumber()
         }
     }
     return 1    ; If we can't find a matching window, just return 1 (Primary)
-}
-
-MoveToFourColumnLayout(ColNum) {
-    ; Get active window and monitor details
-    WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-    WinNum := GetWindowNumber()
-    SysGet, Mon, MonitorWorkArea, %WinNum%
-    TaskBarW = 0 ; This should be set >0 if the Taskbar is on the left or right.
-    MonWorkingWidth := MonRight - MonLeft - TaskBarW
-    ; Generate new co-ordinates
-    ColWidth := MonWorkingWidth * (1/4) ; With 4-columns layout, width is one quarter of the screen
-    AdjustX := 10 ; Adjustment amount to fix small window offset issue
-    NewX := MonLeft + ((ColNum-1) * ColWidth) - AdjustX ; Should be monitor left + offset (colNum-1 * colWidth)
-    ; Move window
-    WinMove, A, , NewX, , ,
-    return
-}
-
-ResizeToFourColumnLayout(ColNum) {
-    ; MsgBox Moving to column #%ColNum%
-    ; Get active window and monitor details
-    WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-    WinNum := GetWindowNumber()
-    SysGet, Mon, MonitorWorkArea, %WinNum%
-    ; MsgBox, Mon (P) - Left: %MonLeft% -- Top: %MonTop% -- Right: %MonRight% -- Bottom %MonBottom%.
-    TaskBarW = 0 ; This should be set >0 if the Taskbar is on the left or right.
-    TaskBarH = 50 ; Allow for the Windows Taskbar to be visible - Set this to 0 if Taskbar on AutoHide
-    ; MonWorkingWidth := A_ScreenWidth - TaskBarW
-    MonWorkingHeight := A_ScreenHeight - TaskBarH
-    MonWorkingWidth := MonRight - MonLeft - TaskBarW
-    ; MonWorkingHeight := MonTop - MonBottom - TaskBarH
-    ; Generate new co-ordinates
-    ColWidth := MonWorkingWidth * (1/4) ; With 4-columns layout, width is one quarter of the screen
-    AdjustX := 10 ; Adjustment amount to fix small window offset issue
-    NewX := MonLeft + ((ColNum-1) * ColWidth) - AdjustX ; Should be monitor left + offset (colNum-1 * colWidth)
-    NewY := MonTop   ; Should be monitor top
-    NewW := (MonWorkingWidth / 4) + (AdjustX * 2) ; Set to 1/4 mon width for 4-column layout
-    NewH := MonWorkingHeight    ; full window height
-    ; MsgBox, Moving to X,Y = %NewX%,%NewY% and W,H = %NewW%,%NewH%
-    WinMove, A, , NewX, NewY, NewW, NewH
-    return
-}
-
-GetPrevColNum() {
-    return GetCurrentColNum(true)
-}
-GetNextColNum() {
-    return GetCurrentColNum(false)
-}
-
-GetCurrentColNum(bGetPrevious)
-{
-    ; Get active window and monitor details
-    WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-    WinNum := GetWindowNumber()
-    SysGet, Mon, MonitorWorkArea, %WinNum%
-    ; MsgBox, Mon (P) - Left: %MonLeft% -- Top: %MonTop% -- Right: %MonRight% -- Bottom %MonBottom%.
-    TaskBarW = 0 ; This should be set >0 if the Taskbar is on the left or right.
-    TaskBarH = 50 ; Allow for the Windows Taskbar to be visible - Set this to 0 if Taskbar on AutoHide
-    ; MonWorkingWidth := A_ScreenWidth - TaskBarW
-    MonWorkingHeight := A_ScreenHeight - TaskBarH
-    MonWorkingWidth := MonRight - MonLeft - TaskBarW
-    ; MonWorkingHeight := MonTop - MonBottom - TaskBarH
-    ; Generate new co-ordinates
-    ColWidth := MonWorkingWidth * (1/4) ; With 4-columns layout, width is one quarter of the screen
-    AdjustX := 10 ; Adjustment amount to fix small window offset issue
-
-    ; Where is the current top corner of the active window?
-    DistanceFromLeft := WinX - MonLeft
-    Col1X := MonLeft
-    Col2X := MonLeft + ColWidth
-    Col3X := MonLeft + (ColWidth * 2)
-    Col4X := MonLeft + (ColWidth * 3)
-    ; MsgBox ColEdges: %Col1X%, %Col2X%, %Col3X%, %Col4X%
-    ; MsgBox WinX = %WinX%
-    AdjustedWinX := WinX + AdjustX
-    ; MsgBox AdjustedWinX = %AdjustedWinX%
-    ; If WinX is currently on a column boundary, return ColNum based on bGetPrevious
-    if (AdjustedWinX == Col1X) {
-        CurrentCol := (bGetPrevious ? 1 : 2)   ; Note: Effective no-op on move-prev when already hard left
-    } else if (AdjustedWinX == Col2X) {
-        CurrentCol := (bGetPrevious ? 1 : 3)
-    } else if (AdjustedWinX == Col3X) {
-        CurrentCol := (bGetPrevious ? 2 : 4)
-    } else if (AdjustedWinX == Col4X) {
-        CurrentCol := (bGetPrevious ? 3 : 4)   ; Note: Effective no-op on move-next when already hard right
-    }
-    ; Now handle the window in between column boundaries
-    else if (AdjustedWinX < Col2X) {
-        CurrentCol := (bGetPrevious ? 1 : 2)
-    } else if (AdjustedWinX < Col3X) {
-        CurrentCol := (bGetPrevious ? 2 : 3)
-    } else if (AdjustedWinX < Col4X) {
-        CurrentCol := (bGetPrevious ? 3 : 4)
-    } else {
-        CurrentCol := 4  ; Snap into 4th column if WinX already partly in 4th column
-    }
-    ; MsgBox Current column = %CurrentCol%
-    return CurrentCol
 }
