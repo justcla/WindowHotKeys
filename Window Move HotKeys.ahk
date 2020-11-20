@@ -661,14 +661,35 @@ ResizeTo5Column() {
 
 MoveLeftOneQuarter() {
     ; Move to the Quarter-Column to the Left
-    GoToColNum := GetPrevColNum(4)
-    SnapToQuarterScreen(GoToColNum)
+    WinNum := GetWindowNumber()
+    GoToColNum := GetPrevColNum(4, WinNum)
+    ; Should we move this to the last column on the monitor to the left?
+    if (GoToColNum < 1) {
+        if (WinNum > 1) {
+            WinNum--
+            GoToColNum := 4
+        } else {
+            GoToColNum := 1
+        }
+    }
+    SnapToQuarterScreen(GoToColNum, WinNum)
 }
 
 MoveRightOneQuarter() {
     ; Move to the Quarter-Column to the Right
-    GoToColNum := GetNextColNum(4)
-    SnapToQuarterScreen(GoToColNum)
+    WinNum := GetWindowNumber()
+    GoToColNum := GetNextColNum(4, WinNum)
+    ; Should we move this to the first column on the monitor to the right?
+    if (GoToColNum > 4) {
+        SysGet, numMonitors, MonitorCount
+        if (WinNum < numMonitors) {
+            WinNum++
+            GoToColNum := 1
+        } else {
+            GoToColNum := 4
+        }
+    }
+    SnapToQuarterScreen(GoToColNum, WinNum)
 }
 
 ; ===== Multi-column Layout functions ========
@@ -695,10 +716,9 @@ ResizeToMultiColumn(ColCount) {
     RestoreMoveAndResize(A, WinX, NewY, NewW, NewH)
 }
 
-SnapToQuarterScreen(ColNum) {
+SnapToQuarterScreen(ColNum, WinNum) {
     ; Get active window and monitor details
     WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-    WinNum := GetWindowNumber()
     SysGet, Mon, MonitorWorkArea, %WinNum%
     MonWorkingWidth := MonRight - MonLeft
 
@@ -711,34 +731,23 @@ SnapToQuarterScreen(ColNum) {
     RestoreMoveAndResize(A, NewX, WinY, WinW, WinH)
 }
 
-GetPrevColNum(ColCount) {
-    DestCol := GetCurrentColNum(ColCount, bOnColEdge)
+GetPrevColNum(ColCount, WinNum) {
+    DestCol := GetCurrentColNum(WinNum, ColCount, bOnColEdge)
     if (bOnColEdge) {
         DestCol--
     }
-    if (DestCol < 1) {
-        ; TODO: Push onto previous monitor, if there is one
-        ; For now, keep it on the current screen
-        DestCol := 1
-    }
     return DestCol
 }
-GetNextColNum(ColCount) {
-    DestCol := GetCurrentColNum(ColCount)
+GetNextColNum(ColCount, WinNum) {
+    DestCol := GetCurrentColNum(WinNum, ColCount)
     DestCol++
-    if (DestCol > ColCount) {
-        ; TODO: Push onto next monitor, if there is one
-        ; For now, keep it on the current screen
-        DestCol := ColCount
-    }
     return DestCol
 }
 
-GetCurrentColNum(ColCount, ByRef bOnColEdge := false)
+GetCurrentColNum(WinNum, ColCount, ByRef bOnColEdge := false)
 {
     ; Get active window and monitor details
     WinGetPos, WinX, WinY, WinW, WinH, A  ; "A" to get the active window's pos.
-    WinNum := GetWindowNumber()
     SysGet, Mon, MonitorWorkArea, %WinNum%
     ; MsgBox, Mon (P) - Left: %MonLeft% -- Top: %MonTop% -- Right: %MonRight% -- Bottom %MonBottom%.
     MonWorkingWidth := MonRight - MonLeft
