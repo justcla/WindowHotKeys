@@ -703,7 +703,7 @@ SnapToQuarterScreen(ColNum) {
     MonWorkingWidth := MonRight - MonLeft
 
     ; Generate new co-ordinates
-    ColWidth := MonWorkingWidth * (1/4) ; With 4-columns layout, width is one quarter of the screen
+    ColWidth := MonWorkingWidth / 4 ; With 4-columns layout, width is one quarter of the screen
     WinPaddingX := 0 ; Adjustment amount to fix small window offset issue
     NewX := MonLeft + ((ColNum-1) * ColWidth) - WinPaddingX
 
@@ -751,8 +751,9 @@ GetCurrentColNum(ColCount, ByRef bOnColEdge := false)
     ; Loop through each column to see if the X,Y co-ordinates are in the column
     CurrentCol := 1
     loop, %ColCount% {
-        ColStartX := MonLeft + (ColWidth * (A_Index-1))
-        ColEndX := MonLeft + (ColWidth * A_Index)
+        ; Note: Dividing the screen can leave decimals. Round the figures down for reliable movement.
+        ColStartX := Floor(MonLeft + (ColWidth * (A_Index-1)))
+        ColEndX := Floor(MonLeft + (ColWidth * A_Index))
         if (WinX+AdjustX < ColEndX) {
             bOnColEdge := (WinX = ColStartX-AdjustX)
             CurrentCol := A_Index
