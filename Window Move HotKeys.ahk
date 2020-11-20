@@ -595,7 +595,7 @@ CalculateSizeByWinRatio(ByRef NewW, ByRef NewH, WinNum, Ratio)
 RestoreMoveAndResize(A, NewX, NewY, NewW, NewH)
 {
     EnsureWindowIsRestored() ; Always ensure the window is restored before any move or resize operation
-;    MsgBox Move to: %NewX%, %NewY%, %WinW%, %WinH%
+;    MsgBox Move to: (X/Y) %NewX%, %NewY%; (W/H) %NewW%, %NewH%
     WinMove, A, , NewX, NewY, NewW, NewH
 }
 
@@ -635,7 +635,7 @@ GetWindowNumber()
     SysGet, numMonitors, MonitorCount
     Loop %numMonitors% {
         SysGet, monitor, MonitorWorkArea, %A_Index%
-        if (monitorLeft <= WinX && WinX <= monitorRight && monitorTop <= WinY && WinY <= monitorBottom){
+        if (monitorLeft <= WinX && WinX < monitorRight && monitorTop <= WinY && WinY <= monitorBottom){
             ; We have found the monitor that this window sits inside (at least the top-left corner)
             return %A_Index%
         }
