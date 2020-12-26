@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<DOCUMENT Type="Advanced Installer" CreateVersion="17.2" version="17.3" Modules="simple" RootPath="." Language="en" Id="{D43F090D-F0F4-4EC4-ADCB-7CF0BAC5DD4C}">
+<DOCUMENT Type="Advanced Installer" CreateVersion="17.2" version="17.8" Modules="simple" RootPath="." Language="en" Id="{D43F090D-F0F4-4EC4-ADCB-7CF0BAC5DD4C}">
   <COMPONENT cid="caphyon.advinst.msicomp.MsiPropsComponent">
     <ROW Property="AI_BITMAP_DISPLAY_MODE" Value="0"/>
     <ROW Property="AI_IA_APPLICATION_ID" Value="5f09703eb009fc63ca21c4eb"/>
     <ROW Property="AI_IA_ENABLE" Value="1"/>
     <ROW Property="AI_PREDEF_LCONDS_PROPS" Value="AI_DETECTED_ALL"/>
     <ROW Property="ALLUSERS" Value="1" MultiBuildValue="DefaultBuild:"/>
-    <ROW Property="ARPCOMMENTS" Value="Provides keyboard shortcuts to Move and Resize windows" ValueLocId="*"/>
+    <ROW Property="ARPCOMMENTS" Value="Move and Resize windows with keyboard shortcuts" ValueLocId="*"/>
     <ROW Property="ARPHELPLINK" Value="https://github.com/justcla/WindowHotKeys/blob/master/README.md"/>
     <ROW Property="ARPNOMODIFY" MultiBuildValue="DefaultBuild:1"/>
     <ROW Property="ARPNOREPAIR" Value="1"/>
@@ -17,7 +17,7 @@
     <ROW Property="ProductCode" Value="1033:{F8D02DE7-3595-4A11-9A09-B47B23E13EE8} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="Alt+Win HotKeys"/>
-    <ROW Property="ProductVersion" Value="1.3.0" Type="32"/>
+    <ROW Property="ProductVersion" Value="1.4.0" Type="32"/>
     <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{ED42B1B5-3014-4135-BB12-5C58FFB8B478}"/>
@@ -51,11 +51,13 @@
     <ATTRIBUTE name="CurrentFeature" value="MainFeature"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFilesComponent">
-    <ROW File="AltWinKeysv0.1.exe" Component_="AltWinKeysv0.1.exe" FileName="ALTWIN~2.EXE|AltWin-HotKeys.exe" Attributes="0" SourcePath="AltWin-HotKeys.exe" SelfReg="false" DigSign="true"/>
+    <ROW File="AltWinKeysv0.1.exe" Component_="AltWinKeysv0.1.exe" FileName="ALTWIN~2.EXE|AltWin-HotKeys.exe" Attributes="0" SourcePath="..\Window Move HotKeys.exe" SelfReg="false" DigSign="true"/>
     <ROW File="InstallationReadme.txt" Component_="InstallationReadme.txt" FileName="INSTAL~1.TXT|Installation-Readme.txt" Attributes="0" SourcePath="Installation-Readme.txt" SelfReg="false"/>
     <ROW File="HotkeySettings.ini" Component_="InstallationReadme.txt" FileName="HOTKEY~1.INI|HotkeySettings.ini" Attributes="0" SourcePath="..\HotkeySettings.ini" SelfReg="false"/>
     <ROW File="ShortcutDefsAltWin.ini" Component_="InstallationReadme.txt" FileName="SHORTC~1.INI|ShortcutDefs-AltWin.ini" Attributes="0" SourcePath="..\ShortcutDefs-AltWin.ini" SelfReg="false"/>
     <ROW File="ShortcutDefsCtrlWin.ini" Component_="InstallationReadme.txt" FileName="SHORTC~2.INI|ShortcutDefs-CtrlWin.ini" Attributes="0" SourcePath="..\ShortcutDefs-CtrlWin.ini" SelfReg="false"/>
+    <ROW File="ShortcutDefsCustom.ini" Component_="InstallationReadme.txt" FileName="SHORTC~3.INI|ShortcutDefs-Custom.ini" Attributes="0" SourcePath="..\ShortcutDefs-Custom.ini" SelfReg="false"/>
+    <ROW File="AltWinHotKeys.ico" Component_="InstallationReadme.txt" FileName="ALTWIN~1.ICO|AltWinHotKeys.ico" Attributes="0" SourcePath="..\AltWinHotKeys.ico" SelfReg="false"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.custcomp.MsiEmbeddedUIComponent">
     <ROW MsiEmbeddedUI="embeddeduiproxy" FileName="embeddeduiproxy.dll" Attributes="3" MessageFilter="201359327" Data="&lt;AI_HOME&gt;bin\x86\embeddeduiproxy.dll"/>
