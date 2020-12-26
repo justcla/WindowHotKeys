@@ -68,8 +68,10 @@ Return ; End initialization
 ; ===========================================
 
 InitializeIcon() {
-    ; Set the System tray icon
-    Menu, Tray, Icon, AltWinHotKeys.ico
+    ; Set the System tray icon (should sit next to the AHK file)
+    if FileExist("AltWinHotKeys.ico") {
+        Menu, Tray, Icon, AltWinHotKeys.ico
+    }
 }
 
 InitializeMenu() {
