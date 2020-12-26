@@ -4,7 +4,7 @@ Shortcuts to move and resize windows in Windows.
 ![Alt+Win HotKeys logo](https://user-images.githubusercontent.com/17131343/87220588-6f73bf00-c3a8-11ea-9ae1-1919b0ad552c.png)
 
 Download the **Installation Wizard**
-- Download the [Windows installer MSI](https://github.com/justcla/WindowHotKeys/blob/master/Packaging/Setup%20Files/AltWinHotKeys.msi?raw=true) <br>
+- Download the [Windows installer MSI](https://github.com/justcla/WindowHotKeys/blob/master/Packaging/AltWin-HotKeys.msi?raw=true) <br>
 - Note MSI Windows Installer installs the EXE plus additional shortcut profiles and config file.
 - Also installs
 
