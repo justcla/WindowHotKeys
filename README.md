@@ -3,8 +3,21 @@ Shortcuts to move and resize windows in Windows.
 
 ![Alt+Win HotKeys logo](https://user-images.githubusercontent.com/17131343/87220588-6f73bf00-c3a8-11ea-9ae1-1919b0ad552c.png)
 
-* Download the [latest release](https://github.com/justcla/WindowHotKeys/releases/latest) self-installer (MSI) for Windows
-* Download the executable [AltWin-HotKeys.exe](https://github.com/justcla/WindowHotKeys/raw/master/Packaging/AltWin-HotKeys.exe)
+Download the **Installation Wizard**
+- Download the [Windows installer MSI](https://github.com/justcla/WindowHotKeys/blob/v1.4.0/Packaging/Setup%20Files/AltWinHotKeys.msi?raw=true)
+- Note MSI Windows Installer installs the EXE plus additional shortcut profiles and config file.
+- Also installs
+
+*Alternatively* - to just get the EXE (no extra profiles and config files):
+- Download and run the executable [AltWin-HotKeys.exe](https://github.com/justcla/WindowHotKeys/raw/master/Packaging/AltWin-HotKeys.exe)
+
+*Admin User Issues?*
+- Install [AutoHotKey](http://autohotkey.com/) on your machine. (You might have better luck getting that through IT/Networking/Admin)
+- Run the [AltWin-Hotkey AHK script](https://github.com/justcla/WindowHotKeys/blob/master/AltWin-HotKeys.ahk) directly
+
+## Latest Stable Release
+
+* Go to [latest release](https://github.com/justcla/WindowHotKeys/releases/latest) for all options
 
 [![Move window with Alt+Win + (direction)](https://user-images.githubusercontent.com/17131343/87670959-ed263900-c7b3-11ea-9575-bf87f05f28fb.png)](https://www.youtube.com/watch?v=iSf4AKjFQLs&t=18)
 
