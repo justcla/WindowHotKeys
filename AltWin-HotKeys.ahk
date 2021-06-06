@@ -18,6 +18,11 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 ; Symbol	& = An ampersand may be used between any two keys or mouse buttons to combine them into a custom hotkey.
 
 ; ==============================================
+; Includes section
+; ==============================================
+#Include lib\VirtualDesktopNavigation.ahk
+
+; ==============================================
 ; ==== Initialization Section ====
 ; ==============================================
 
@@ -485,51 +490,52 @@ SwitchToNextDesktop()
 
 MoveToPreviousDesktop()
 {
-    ; Pre-conditions:
+    global CurrentDesktop, DesktopCount
+    mapDesktopsFromRegistry()
     ; Check current desktop is not Desktop 1; if on desktop one, abort
-;    if (currentDesktop = 1) {
-;        return
-;    }
-
-    MoveWindowToOtherDesktop(-1) ; Move 1 desktop to the left
+    if (CurrentDesktop = 1) {
+        return
+    }
+    ; Move the window to the v-desktop on the left
+    MoveWindowToOtherDesktop(CurrentDesktop, CurrentDesktop-1, DesktopCount) ; Move 1 v-desktop to the left
 }
 
 MoveToNextDesktop()
 {
-    ; Pre-conditions:
-    ; Check: Is there a desktop to the right? If not, can we create a new one?
-;    if (currentDesktop = numDesktops) {
-;        return
-;    }
-
-    MoveWindowToOtherDesktop(1) ; Move 1 desktop to the right
+    global CurrentDesktop, DesktopCount
+    mapDesktopsFromRegistry()
+    MoveWindowToOtherDesktop(CurrentDesktop, CurrentDesktop+1, DesktopCount) ; Move 1 v-desktop to the right
 }
 
-MoveWindowToOtherDesktop(direction)
+MoveWindowToOtherDesktop(CurrentDesktop, DestinationDesktop, DesktopCount)
 {
-;    ; Pre-conditions:
-;    ; Check: Is there a desktop to the right? If not, can we create a new one?
-;    currentDesktop = 2
-;    numDesktops = 3
-
     ; Methodology
     ; 1. Hide the window
-    ; 2. Move to the next/previous desktop
+    ; 2. Move to the next/previous desktop (Create new if needed)
     ; 3. Unhide the window
 
+    ; #1. Hide the window
     WinWait, A
     WinHide
-    if (direction > 0) {
+
+    ; #2. Move to the next/previous desktop
+    if (DestinationDesktop > CurrentDesktop) {
+        ; Moving to the right
         ; If there is no desktop to the right, create one
-;        if (currentDesktop == numDesktops) {
-;            Send ^#d ; Will automatically take focus to the new desktop
-;        } else {
+        ;MsgBox % "Current Desktop: " CurrentDesktop ". Desktop count: " DesktopCount
+        if (CurrentDesktop == DesktopCount) {
+            Send ^#d
+            ; Focus is automatically swtiched to the new desktop
+        } else {
             SwitchToNextDesktop()
-;        }
+        }
     } else {
+        ; Moving to the left
         SwitchToPreviousDesktop()
     }
-    Sleep 100
+
+    ; #3. Unhide the window
+    Sleep 100   ; Let it sleep so the window move operation can fully complete
     WinShow
     WinActivate
 }
