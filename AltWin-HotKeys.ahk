@@ -492,11 +492,8 @@ MoveToPreviousDesktop()
 {
     global CurrentDesktop, DesktopCount
     mapDesktopsFromRegistry()
-    ; Check current desktop is not Desktop 1; if on desktop one, abort
-    if (CurrentDesktop = 1) {
-        return
-    }
-    ; Move the window to the v-desktop on the left
+
+    ; Move the window to the v-desktop on the left. If already left-most, window will simply flash.
     MoveWindowToOtherDesktop(CurrentDesktop, CurrentDesktop-1, DesktopCount) ; Move 1 v-desktop to the left
 }
 
