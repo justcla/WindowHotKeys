@@ -1,5 +1,8 @@
 # Alt+Win HotKeys
-Shortcuts to move and resize windows in Windows.
+## Shortcuts to move and resize windows in Windows.<br>
+
+### !! Including shortcuts to <u>Move Windows between Virtual Desktops</u>!!
+<br>
 
 ![Alt+Win HotKeys logo](https://user-images.githubusercontent.com/17131343/87220588-6f73bf00-c3a8-11ea-9ae1-1919b0ad552c.png)
 
@@ -23,6 +26,9 @@ Download the **Installation Wizard**
 
 **Move Window:** Alt+Win + [Up/Down/Left/Right/PgUp/PgDn/Home/End/Del]
 
+**Move Window between Virtual Desktops:** Ctrl+Shift+Win + [Left/Right]<br>
+*Note: Will create a new Virtual Desktop if needed and move the current window into it.*
+
 **Resize Window:** Alt+Win+Shift + [Up/Down/Left/Right/PgUp/PgDn/Home/End/Del]
 
 **Special move/resize:** Alt+Win+Shift + [Plus/Minus/Enter/Home/Del]
@@ -34,6 +40,14 @@ Download the **Installation Wizard**
 **Tile/Cascade:** Alt+Win + [H/V/F12]
 
 ## Usage (Keyboard Shortcuts)
+
+### Move Window between Virtual Desktops *(Ctrl+Shift+Win)*
+The following table lists the default shortcut combinations for **moving windows between Virtual Desktops**.
+
+Keyboard Shortcut | Action
+--- | ---
+Ctrl+Shift+Win + Left | Move window previous virtual desktop
+Ctrl+Shift+Win + Right | Move window to next virtual desktop<br> *Note: Will create new v-desktop if needed*
 
 ### Move Window *(Alt+Win)*
 The following table lists the default shortcut combinations for **moving windows**.
