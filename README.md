@@ -131,6 +131,15 @@ Alt+Win+Shift + 4 | Snap window to Column 4
 Alt+Win+Shift + ,(<) | Snap window to the Column on the Left
 Alt+Win+Shift + .(>) | Snap window to the Column on the Right
 
+## Additional Windows Shortcuts
+### Adjust Volume *(Ctrl+Alt+ NumPad Plus/Minus/Asterisk)*
+The following table lists the default shortcut combinations for **adjusting volume**.
+
+Keyboard Shortcut | Action
+--- | ---
+Ctrl+Alt+NumPadAdd (NumPad +)| Volume Up
+Ctrl+Alt+NumPadSub (NumPad -)| Volume Down
+Ctrl+Alt+NumPadMult (NumPad *) | Volume Mute
 
 ## Technical details:
 Uses [AutoHotkey](https://www.autohotkey.com/).
