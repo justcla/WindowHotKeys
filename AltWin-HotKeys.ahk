@@ -60,6 +60,9 @@ InitialShortcutsProfile := GetShortcutsProfileFromName(InitialShortcutsProfileNa
 ; PixelsPerStep - Defines the number of pixels used by each move or resize action
 IniRead, PixelsPerStep, %SettingsFile%, Settings, PixelsPerStep, 50
 
+; VolumeStep - Defines the number of points (out of 100) to change the volume
+IniRead, VolumeStep, %SettingsFile%, Settings, VolumeStep, 5
+
 ; Initialize the System Tray icon and menu
 InitializeIcon()
 InitializeMenu()
@@ -274,6 +277,14 @@ SetShortcuts(ShortcutsProfile) {
     ReadAndStoreHotKeyAction(ShortcutsFile, "MoveLeftOneQuarter", "", "!#,")
     ReadAndStoreHotKeyAction(ShortcutsFile, "MoveRightOneQuarter", "", "!#.")
 
+    ; -------------------------------
+    ; Other useful Windows shortcuts
+    ; -------------------------------
+    ; Volumne shortcuts
+    ReadAndStoreHotKeyAction(ShortcutsFile, "VolumeUp", "", "!^NumpadAdd")
+    ReadAndStoreHotKeyAction(ShortcutsFile, "VolumeDown", "", "!^NumpadSub")
+    ReadAndStoreHotKeyAction(ShortcutsFile, "VolumeMute", "", "!^NumpadMult")
+
     return ; end shortcuts init
 }
 
@@ -481,6 +492,30 @@ SwitchToPreviousDesktop()
 SwitchToNextDesktop()
 {
     send {LWin down}{LCtrl down}{Right}{LCtrl up}{LWin up}   ; switch to next virtual desktop
+    return
+}
+
+; ==============================
+; ===== Volume Controls ========
+; ==============================
+
+; Credit to: https://www.autohotkey.com/boards/viewtopic.php?t=17941
+
+VolumeUp()
+{
+    global VolumeStep
+    send {Volume_Up %VolumeStep%}
+    return
+}
+VolumeDown()
+{
+    global VolumeStep
+    send {Volume_Down %VolumeStep%}
+    return
+}
+VolumeMute()
+{
+    send {Volume_Mute}
     return
 }
 

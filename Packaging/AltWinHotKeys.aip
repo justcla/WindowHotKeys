@@ -2,7 +2,7 @@
 <DOCUMENT Type="Advanced Installer" CreateVersion="17.2" version="18.3" Modules="simple" RootPath="." Language="en" Id="{D43F090D-F0F4-4EC4-ADCB-7CF0BAC5DD4C}">
   <COMPONENT cid="caphyon.advinst.msicomp.MsiPropsComponent">
     <ROW Property="AI_BITMAP_DISPLAY_MODE" Value="0"/>
-    <ROW Property="AI_CURRENT_YEAR" Value="2021" ValueLocId="-"/>
+    <ROW Property="AI_CURRENT_YEAR" Value="2023" ValueLocId="-"/>
     <ROW Property="AI_IA_APPLICATION_ID" Value="5f09703eb009fc63ca21c4eb"/>
     <ROW Property="AI_IA_ENABLE" Value="1"/>
     <ROW Property="AI_PREDEF_LCONDS_PROPS" Value="AI_DETECTED_ALL"/>
@@ -18,7 +18,7 @@
     <ROW Property="ProductCode" Value="1033:{F8D02DE7-3595-4A11-9A09-B47B23E13EE8} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="Alt+Win HotKeys"/>
-    <ROW Property="ProductVersion" Value="1.6.0" Type="32"/>
+    <ROW Property="ProductVersion" Value="1.7.0" Type="32"/>
     <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{ED42B1B5-3014-4135-BB12-5C58FFB8B478}"/>
