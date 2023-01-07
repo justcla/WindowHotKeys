@@ -39,6 +39,8 @@ Download the **Installation Wizard**
 
 **Tile/Cascade:** Alt+Win + [H/V/F12]
 
+**Volume controls:** Ctrl+Alt + [Numpad Plus/Minus/Star]
+
 ## Usage (Keyboard Shortcuts)
 
 ### Move Window between Virtual Desktops *(Ctrl+Shift+Win)*
