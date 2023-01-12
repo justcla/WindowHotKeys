@@ -813,3 +813,10 @@ GetCurrentColNum(WinNum, ColCount, ByRef bOnColEdge := false)
     ; MsgBox Current column = %CurrentCol%
     return CurrentCol
 }
+
+; =======================================
+; ===== Special! Author's choice ========
+; =======================================
+
+; Print the Euro symbol (€) when AltGr+5 is pressed (ie. RightAlt+5)
+>!5:: Send, €
