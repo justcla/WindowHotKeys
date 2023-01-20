@@ -3,7 +3,7 @@
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
-; Author: Justin Clareburt (@justcla)
+; Author: Justin Clareburt (@justcla)  [Justo Tech]
 ; Created: 26-May-2020
 
 ; Notes:
@@ -77,15 +77,15 @@ Return ; End initialization
 
 InitializeIcon() {
     ; Set the System tray icon (should sit next to the AHK file)
-    if FileExist("AltWinHotKeys.ico") {
-        Menu, Tray, Icon, AltWinHotKeys.ico
+    if FileExist("MoveAndResizeHotkeys.ico") {
+        Menu, Tray, Icon, MoveAndResizeHotkeys.ico
     }
 }
 
 InitializeMenu() {
 
     ; Title - link to Help page
-    Menu, Tray, Add, About Alt+Win HotKeys, ShowAboutDialog
+    Menu, Tray, Add, About Move and Resize Hotkeys, ShowAboutDialog
     ; Settings
     Menu, Tray, Add, Settings, OpenSettings
     ; Edit shortcuts
@@ -174,7 +174,7 @@ SetShortcutsProfile(ShortcutsProfile) {
 }
 
 ShowAboutDialog() {
-    MsgBox 0, Alt+Win HotKeys, Alt+Win HotKeys - Utility to move and resize windows.`n`n Developed by Justin Clareburt
+    MsgBox 0, Move and Resize Hotkeys, Move and Resize Hotkeys - Utility to move and resize windows.`n`nDeveloped by Justin Clareburt`n© Justo Tech 2022
 }
 
 OpenSettings() {

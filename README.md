@@ -1,10 +1,10 @@
-# Alt+Win HotKeys
+# Move And Resize Hotkeys
 ## Shortcuts to move and resize windows in Windows.<br>
 
 ### !! Including shortcuts to <u>Move Windows between Virtual Desktops</u>!!
 <br>
 
-![Alt+Win HotKeys logo](https://user-images.githubusercontent.com/17131343/87220588-6f73bf00-c3a8-11ea-9ae1-1919b0ad552c.png)
+![Move And Resize Hotkeys logo](https://user-images.githubusercontent.com/17131343/87220588-6f73bf00-c3a8-11ea-9ae1-1919b0ad552c.png)
 
 Download the **Installation Wizard**
 - Download the [Windows installer MSI](https://github.com/justcla/WindowHotKeys/blob/master/Packaging/AltWin-HotKeys.msi?raw=true) <br>
@@ -133,23 +133,28 @@ Alt+Win+Shift + 4 | Snap window to Column 4
 Alt+Win+Shift + ,(<) | Snap window to the Column on the Left
 Alt+Win+Shift + .(>) | Snap window to the Column on the Right
 
-## Additional Windows Shortcuts
-### Adjust Volume *(Ctrl+Alt+ NumPad Plus/Minus/Asterisk)*
-The following table lists the default shortcut combinations for **adjusting volume**.
+## Author's additional shortcuts
+Shortcuts added just because the author wanted them.
 
+### Adjust Volume *(Ctrl+Alt+ NumPad Plus/Minus/Asterisk)*
 Keyboard Shortcut | Action
 --- | ---
 Ctrl+Alt+NumPadAdd (NumPad +)| Volume Up
 Ctrl+Alt+NumPadSub (NumPad -)| Volume Down
 Ctrl+Alt+NumPadMult (NumPad *) | Volume Mute
 
+### International keyboards
+Symbols  | Action
+--- | ---
+AltGr + 5<br>Right-Alt + 5 | Print Euro symbol (€)
+
 ## Technical details:
 Uses [AutoHotkey](https://www.autohotkey.com/).
 
-Works for Windows 10
+Works for Windows 10 and Windows 11
 
 ## Manual Installation Instructions:
-1. Download the Windows executable: AltWinKeys-v0.1.exe
+1. Download the Windows executable: Move and Resize Hotkeys.exe
 2. Include the EXE in the windows Startup folder. (or run it on demand)
 
 ### Where is the Startup folder on the Windows Start Menu?

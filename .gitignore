@@ -2,5 +2,4 @@
 /.idea/
 
 # Packaging files (Advanced Installer)
-/Packaging/AltWinHotKeys-cache/
-/Packaging/AltWinHotKeys.back.aip
+/Packaging/MoveAndResizeHotkeys-cache/
