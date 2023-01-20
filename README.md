@@ -7,16 +7,16 @@
 ![Move And Resize Hotkeys logo](https://user-images.githubusercontent.com/17131343/87220588-6f73bf00-c3a8-11ea-9ae1-1919b0ad552c.png)
 
 Download the **Installation Wizard**
-- Download the [Windows installer MSI](https://github.com/justcla/WindowHotKeys/blob/master/Packaging/AltWin-HotKeys.msi?raw=true) <br>
+- Download the [Windows installer MSI](https://github.com/justcla/WindowHotKeys/raw/master/Packaging/Move%20and%20Resize%20Hotkeys.msi)
 - Note MSI Windows Installer installs the EXE plus additional shortcut profiles and config file.
-- Also installs
+- Also installs system tray icon with access to settings.
 
 *Alternatively* - to just get the EXE (no extra profiles and config files):
-- Download and run the executable [AltWin-HotKeys.exe](https://github.com/justcla/WindowHotKeys/raw/master/Packaging/AltWin-HotKeys.exe)
+- Download and run the executable [Move and Resize Hotkeys.exe](https://github.com/justcla/WindowHotKeys/raw/master/Move%20and%20Resize%20Hotkeys.exe)
 
 *Admin User Issues?*
 - Install [AutoHotKey](http://autohotkey.com/) on your machine. (You might have better luck getting that through IT/Networking/Admin)
-- Run the [AltWin-Hotkey AHK script](https://github.com/justcla/WindowHotKeys/blob/master/AltWin-HotKeys.ahk) directly
+- Run the [Move and Resize AHK script](https://github.com/justcla/WindowHotKeys/blob/master/Move%20and%20Resize%20Hotkeys.ahk) directly
 
 ## Latest Stable Release
 
