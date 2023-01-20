@@ -12,13 +12,13 @@
     <ROW Property="ARPNOMODIFY" MultiBuildValue="DefaultBuild:1"/>
     <ROW Property="ARPNOREPAIR" Value="1"/>
     <ROW Property="ARPURLINFOABOUT" Value="https://github.com/justcla/WindowHotKeys/issues"/>
-    <ROW Property="AppFolderName" Value="AltWinHotKeys" Options="1"/>
+    <ROW Property="AppFolderName" Value="MoveAndResizeHotkeys" Options="1"/>
     <ROW Property="CTRLS" Value="3"/>
-    <ROW Property="Manufacturer" Value="JustoTech"/>
+    <ROW Property="Manufacturer" Value="Justo Tech"/>
     <ROW Property="ProductCode" Value="1033:{F8D02DE7-3595-4A11-9A09-B47B23E13EE8} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
-    <ROW Property="ProductName" Value="Alt+Win HotKeys"/>
-    <ROW Property="ProductVersion" Value="1.7.1" Type="32"/>
+    <ROW Property="ProductName" Value="Move and Resize HotKeys"/>
+    <ROW Property="ProductVersion" Value="2.0.0" Type="32"/>
     <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{ED42B1B5-3014-4135-BB12-5C58FFB8B478}"/>
@@ -54,13 +54,13 @@
     <ATTRIBUTE name="CurrentFeature" value="MainFeature"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFilesComponent">
-    <ROW File="AltWinKeysv0.1.exe" Component_="AltWinKeysv0.1.exe" FileName="ALTWIN~2.EXE|AltWin-HotKeys.exe" Attributes="0" SourcePath="..\AltWin-HotKeys.exe" SelfReg="false" DigSign="true"/>
+    <ROW File="AltWinKeysv0.1.exe" Component_="AltWinKeysv0.1.exe" FileName="MOVEAN~2.EXE|Move and Resize Hotkeys.exe" Attributes="0" SourcePath="..\Move and Resize Hotkeys.exe" SelfReg="false" DigSign="true"/>
     <ROW File="InstallationReadme.txt" Component_="InstallationReadme.txt" FileName="INSTAL~1.TXT|Installation-Readme.txt" Attributes="0" SourcePath="Installation-Readme.txt" SelfReg="false"/>
     <ROW File="HotkeySettings.ini" Component_="InstallationReadme.txt" FileName="HOTKEY~1.INI|HotkeySettings.ini" Attributes="0" SourcePath="..\HotkeySettings.ini" SelfReg="false"/>
     <ROW File="ShortcutDefsAltWin.ini" Component_="InstallationReadme.txt" FileName="SHORTC~1.INI|ShortcutDefs-AltWin.ini" Attributes="0" SourcePath="..\ShortcutDefs-AltWin.ini" SelfReg="false"/>
     <ROW File="ShortcutDefsCtrlWin.ini" Component_="InstallationReadme.txt" FileName="SHORTC~2.INI|ShortcutDefs-CtrlWin.ini" Attributes="0" SourcePath="..\ShortcutDefs-CtrlWin.ini" SelfReg="false"/>
     <ROW File="ShortcutDefsCustom.ini" Component_="InstallationReadme.txt" FileName="SHORTC~3.INI|ShortcutDefs-Custom.ini" Attributes="0" SourcePath="..\ShortcutDefs-Custom.ini" SelfReg="false"/>
-    <ROW File="AltWinHotKeys.ico" Component_="InstallationReadme.txt" FileName="ALTWIN~1.ICO|AltWinHotKeys.ico" Attributes="0" SourcePath="..\AltWinHotKeys.ico" SelfReg="false"/>
+    <ROW File="AltWinHotKeys.ico" Component_="InstallationReadme.txt" FileName="MOVEAN~1.ICO|MoveAndResizeHotKeys.ico" Attributes="0" SourcePath="..\MoveAndResizeHotKeys.ico" SelfReg="false"/>
     <ROW File="VirtualDesktopNavigation.ahk" Component_="VirtualDesktopNavigation.ahk" FileName="VIRTUA~1.AHK|VirtualDesktopNavigation.ahk" Attributes="0" SourcePath="..\lib\VirtualDesktopNavigation.ahk" SelfReg="false"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.custcomp.MsiEmbeddedUIComponent">
@@ -77,7 +77,7 @@
     <ROW Action="AI_DetectSoftware" Sequence="151"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.BuildComponent">
-    <ROW BuildKey="DefaultBuild" BuildName="DefaultBuild" BuildOrder="1" BuildType="0" PackageFolder="." PackageFileName="AltWin-HotKeys" Languages="en" InstallationType="4" UseLargeSchema="true"/>
+    <ROW BuildKey="DefaultBuild" BuildName="DefaultBuild" BuildOrder="1" BuildType="0" PackageFolder="." PackageFileName="Move and Resize Hotkeys" Languages="en" InstallationType="4" UseLargeSchema="true"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.DictionaryComponent">
     <ROW Path="&lt;AI_DICTS&gt;ui.ail"/>
@@ -211,9 +211,9 @@
     <ROW Registry="Version" Root="-1" Key="Software\[Manufacturer]\[ProductName]" Name="Version" Value="[ProductVersion]" Component_="ProductInformation"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiShortsComponent">
-    <ROW Shortcut="AltWinMoveandResize" Directory_="SHORTCUTDIR" Name="ALT_WI~2|Alt+Win HotKeys" Component_="AltWinKeysv0.1.exe" Target="[#AltWinKeysv0.1.exe]" Description="Alt+Win Move and Resize" Hotkey="0" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
-    <ROW Shortcut="AltWinMoveandResize_1" Directory_="DesktopFolder" Name="ALT_WI~2|Alt+Win HotKeys" Component_="AltWinKeysv0.1.exe" Target="[#AltWinKeysv0.1.exe]" Description="Alt+Win Move and Resize" Hotkey="0" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
-    <ROW Shortcut="AltWinMoveandResize_2" Directory_="StartupFolder" Name="ALT_WI~2|Alt+Win HotKeys" Component_="AltWinKeysv0.1.exe" Target="[#AltWinKeysv0.1.exe]" Description="Provides keyboard shortcuts to move and resize windows with Alt+Windows keys" Hotkey="0" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
+    <ROW Shortcut="AltWinMoveandResize" Directory_="SHORTCUTDIR" Name="MOVEAN~1|Move and Resize Hotkeys" Component_="AltWinKeysv0.1.exe" Target="[#AltWinKeysv0.1.exe]" Description="Move and Resize Hotkeys" Hotkey="0" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
+    <ROW Shortcut="AltWinMoveandResize_1" Directory_="DesktopFolder" Name="MOVEAN~1|Move and Resize Hotkeys" Component_="AltWinKeysv0.1.exe" Target="[#AltWinKeysv0.1.exe]" Description="Move and Resize Hotkeys" Hotkey="0" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
+    <ROW Shortcut="AltWinMoveandResize_2" Directory_="StartupFolder" Name="MOVEAN~1|Move and Resize Hotkeys" Component_="AltWinKeysv0.1.exe" Target="[#AltWinKeysv0.1.exe]" Description="Provides keyboard shortcuts to move and resize windows with Alt+Windows keys" Hotkey="0" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiThemeComponent">
     <ATTRIBUTE name="UsedTheme" value="classic"/>
