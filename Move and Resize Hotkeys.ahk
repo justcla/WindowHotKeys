@@ -17,6 +17,17 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 ; Symbol	+	= Shift
 ; Symbol	& = An ampersand may be used between any two keys or mouse buttons to combine them into a custom hotkey.
 
+; Watch out for the Microsoft Office Apps Pop-up!
+; Pops up whhen user presses various combinations of Windows key with Alt and Shift and Home.
+; To disable the Microsoft Office 360 pop-up, add this registry ket to your system:
+; Note: Solution taken from AHK Forum: https://www.autohotkey.com/boards/viewtopic.php?t=65573
+; ----
+; Run: REG ADD HKCU\Software\Classes\ms-officeapp\Shell\Open\Command /t REG_SZ /d rundll32
+; This will add a registry key that will make the Office key run a useless command, effectively disabling it.
+; It does not block the individual hot keys - it only removes the loading of the Office app.
+; To reverse it, just delete the key (the Shell folder did not previously exist, so it can be completely removed)
+; Run: REG DELETE HKCU\Software\Classes\ms-officeapp\Shell
+
 ; ==============================================
 ; Includes section
 ; ==============================================
